@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-<meta name="7searchppc" content="d41d8cd98f00b204e9800998ecf8427e"/>
+    <meta name="7searchppc" content="d41d8cd98f00b204e9800998ecf8427e"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Short2Crypto - Earn Rewards!</title>
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src='//libtl.com/sdk.js' data-zone='9365298' data-sdk='show_9365298'></script>
+    <!-- Telegram Web App script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
@@ -767,7 +769,12 @@
         // --- Main JavaScript Logic ---
         console.log("Main script block started. (Log 1)");
 
+        // This mock Telegram object will be created ONLY if the official telegram-web-app.js
+        // (loaded above) fails to define window.Telegram.WebApp, or if it's not available.
+        // This ensures that if the official script loads (even in a browser), this mock
+        // is NOT created, and the code relies on the official object (or its absence of user data).
         if (typeof window.Telegram === 'undefined' || typeof window.Telegram.WebApp === 'undefined') {
+            console.log("Official Telegram.WebApp not found or not fully initialized, creating mock. (Log 2)");
             window.Telegram = {
                 WebApp: {
                     initDataUnsafe: {
@@ -778,24 +785,41 @@
                             username: "MockTGUser" + (Math.floor(Math.random() * 900) + 100),
                             language_code: "en"
                         },
-                        start_param: null
+                        start_param: null // Can be 'ref_MOCK_REFERRER_ID' for testing referrals
                     },
                     ready: () => console.log("Mock Telegram WebApp is ready."),
                     expand: () => console.log("Mock Telegram WebApp expand called."),
                     close: () => console.log("Mock Telegram WebApp close called."),
+                    // Add other methods you might call, so they don't cause errors
+                    onEvent: (eventType, callback) => console.log(`Mock onEvent: ${eventType}`),
+                    sendData: (data) => console.log('Mock sendData:', data),
+                    // Mock common properties
+                    colorScheme: 'light',
+                    themeParams: {
+                        bg_color: '#ffffff',
+                        text_color: '#000000',
+                    },
+                    isExpanded: true,
+                    viewportHeight: window.innerHeight,
+                    viewportStableHeight: window.innerHeight,
+                    version: '6.0', // Mock version
+                    platform: 'tdesktop', // Mock platform
                 }
             };
-            console.log("Mock Telegram object created. (Log 2)");
+        } else {
+            console.log("Official Telegram.WebApp found. (Log 2)");
         }
 
 
         let currentUser;
-        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+        // This logic correctly uses the real Telegram.WebApp if available and populated,
+        // otherwise, it falls back to mock user data. This is key for "website compatibility".
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user && window.Telegram.WebApp.initDataUnsafe.user.id) {
             const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
             currentUser = {
                 id: tgUser.id.toString(),
-                username: tgUser.username || `${tgUser.first_name}${tgUser.last_name || ''}`,
-                referrals: 0,
+                username: tgUser.username || `${tgUser.first_name}${tgUser.last_name || ''}`.replace(/\s+/g, '') || `User${tgUser.id}`,
+                referrals: 0, // This will be updated from stored data or API
                 referredBy: null
             };
             const startParam = window.Telegram.WebApp.initDataUnsafe.start_param;
@@ -803,11 +827,19 @@
                 currentUser.referredBy = startParam.substring(4);
                 console.log(`User was referred by: ${currentUser.referredBy}`);
             }
+            console.log("Using Telegram user data. (Log 3.1)", currentUser);
         } else {
-            currentUser = { username: 'VibeUser_Fallback', id: 'fallback001', referrals: 0, referredBy: null };
-            console.warn("Telegram data not found, using fallback currentUser. (Log 2.1)");
+            // Fallback if real user data is not available (e.g., running in a browser, or mock is active)
+             let mockId = Math.floor(Math.random() * 100000000) + 10000000;
+             currentUser = {
+                id: 'fallback' + mockId, // Ensure fallback ID is distinct
+                username: 'BrowserUser' + (Math.floor(Math.random() * 900) + 100),
+                referrals: 0,
+                referredBy: null
+            };
+            console.warn("Telegram user data not found or incomplete, using fallback currentUser. (Log 3.2)", currentUser);
         }
-        console.log("CurrentUser initialized:", currentUser, "(Log 3)");
+        console.log("CurrentUser initialized:", currentUser, "(Log 3.3)");
 
 
         const COIN_VALUE_USD = 0.005;
@@ -836,7 +868,7 @@
         let mockLeaderboardData = [
             { rank: 1, username: '@ProGamerX', coins: 25000, referrals: 15 },
             { rank: 2, username: '@CoinMaster', coins: 22500, referrals: 12 },
-            { rank: 3, username: currentUser.username, coins: 0, referrals: 0 },
+            { rank: 3, username: currentUser.username, coins: 0, referrals: 0 }, // Placeholder for current user
             { rank: 4, username: '@EarlyBird', coins: 18000, referrals: 8 },
             { rank: 5, username: '@NewbieNick', coins: 1500, referrals: 2 },
             { rank: 6, username: '@PlayerOne', coins: 1200, referrals: 1},
@@ -940,18 +972,23 @@
                 platformAllTimeWithdrawalsEl = document.getElementById('platform-alltime-withdrawals');
                 console.log("All DOM elements fetched. (Log 7.1)");
 
-                currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length;
-                totalCoins += currentUser.referrals * COINS_PER_REFERRAL;
-                const userLeaderboardEntry = mockLeaderboardData.find(entry => entry.username === currentUser.username);
-                if (userLeaderboardEntry) {
-                    userLeaderboardEntry.coins = totalCoins;
-                    userLeaderboardEntry.referrals = currentUser.referrals;
+                // Initialize user stats for leaderboard (if using mock data)
+                const userLeaderboardEntryIndex = mockLeaderboardData.findIndex(entry => entry.username === currentUser.username || entry.username === "@telegram_user"); // Adjust if needed
+                if (userLeaderboardEntryIndex !== -1) {
+                     mockLeaderboardData[userLeaderboardEntryIndex].username = currentUser.username; // Ensure username matches
+                     currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length;
+                     totalCoins += currentUser.referrals * COINS_PER_REFERRAL; // Initial coins from referrals
+                     mockLeaderboardData[userLeaderboardEntryIndex].coins = totalCoins;
+                     mockLeaderboardData[userLeaderboardEntryIndex].referrals = currentUser.referrals;
                 } else {
+                    currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length;
+                    totalCoins += currentUser.referrals * COINS_PER_REFERRAL;
                     mockLeaderboardData.push({ rank: 0, username: currentUser.username, coins: totalCoins, referrals: currentUser.referrals });
                 }
 
+
                 if (profileUsernameDisplay) profileUsernameDisplay.textContent = `@${currentUser.username}`;
-                if (referralLinkDisplay) referralLinkDisplay.textContent = `https://yourapp.t.me/bot?start=ref_${currentUser.id}`;
+                if (referralLinkDisplay) referralLinkDisplay.textContent = `https://yourapp.t.me/bot?start=ref_${currentUser.id}`; // Replace 'yourapp.t.me/bot' with your actual bot link
                 if (shortlinkLimitDisplayEl) shortlinkLimitDisplayEl.textContent = SHORTLINK_LIMIT;
                 console.log("Initial totalCoins from referrals:", totalCoins, "(Log 7.2)");
 
@@ -992,9 +1029,40 @@
                 document.body.addEventListener('click', (event) => { if (event.target.closest('.clickable-sound')) { playSound('tap'); }});
                 console.log("All event listeners attached. (Log 13.1)");
 
+                // Initialize Telegram Web App
                 if (window.Telegram && window.Telegram.WebApp) {
-                    window.Telegram.WebApp.ready();
-                    window.Telegram.WebApp.expand();
+                    try {
+                        window.Telegram.WebApp.ready(); // Inform Telegram the app is ready
+                        window.Telegram.WebApp.expand(); // Expand the app to full height
+                        console.log("Telegram.WebApp.ready() and expand() called.");
+
+                        // Example: Listen for theme changes from Telegram
+                        window.Telegram.WebApp.onEvent('themeChanged', function() {
+                            document.body.setAttribute('style', '--bg-color:' + window.Telegram.WebApp.themeParams.bg_color + '; --text-color:' + window.Telegram.WebApp.themeParams.text_color + ';');
+                             if (window.Telegram.WebApp.colorScheme === 'dark') {
+                                document.body.classList.remove('light-mode');
+                                if(themeToggle) themeToggle.checked = false;
+                                localStorage.setItem('theme', 'dark');
+                            } else {
+                                document.body.classList.add('light-mode');
+                                if(themeToggle) themeToggle.checked = true;
+                                localStorage.setItem('theme', 'light');
+                            }
+                            console.log("Telegram theme changed, applied to body/toggle.");
+                        });
+                         // Set initial theme based on Telegram
+                        if (window.Telegram.WebApp.colorScheme === 'dark') {
+                            document.body.classList.remove('light-mode');
+                            if(themeToggle) themeToggle.checked = false;
+                        } else {
+                            document.body.classList.add('light-mode');
+                            if(themeToggle) themeToggle.checked = true;
+                        }
+
+
+                    } catch (e) {
+                        console.error("Error initializing Telegram WebApp specific features:", e);
+                    }
                 }
 
             } catch (e) {
@@ -1020,7 +1088,7 @@
                 case 'levelup': soundToPlay = levelUpSound; break;
                 case 'tap': default: soundToPlay = tapSound; break;
             }
-            if (isSoundEnabled && soundToPlay && soundToPlay.readyState >= 2) {
+            if (isSoundEnabled && soundToPlay && soundToPlay.readyState >= 2) { // readyState 2 (HAVE_CURRENT_DATA) or higher
                 soundToPlay.currentTime = 0;
                 soundToPlay.play().catch(error => console.warn("Sound play failed or interrupted:", error));
             } else if (!soundToPlay) {
@@ -1032,14 +1100,24 @@
 
         function initializeSettings() {
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') { document.body.classList.add('light-mode'); if(themeToggle) themeToggle.checked = true; }
-            else { if(themeToggle) themeToggle.checked = false; }
+            // Telegram theme might override this if in Telegram environment
+            if (!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData)) { // Only apply if not in real TG
+                 if (savedTheme === 'light') { document.body.classList.add('light-mode'); if(themeToggle) themeToggle.checked = true; }
+                 else { document.body.classList.remove('light-mode'); if(themeToggle) themeToggle.checked = false; } // Default to dark
+            }
+
             const savedSound = localStorage.getItem('soundEnabled');
             if (savedSound === 'false') { isSoundEnabled = false; if(soundToggle) soundToggle.checked = false; }
-            else { isSoundEnabled = true; if(soundToggle) soundToggle.checked = true; }
+            else { isSoundEnabled = true; if(soundToggle) soundToggle.checked = true; } // Default to true
         }
-        function toggleTheme() { document.body.classList.toggle('light-mode'); localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); }
-        function toggleSound() { isSoundEnabled = soundToggle.checked; localStorage.setItem('soundEnabled', isSoundEnabled); console.log("Sound enabled:", isSoundEnabled); }
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const newTheme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            // If running in Telegram, you might want to inform Telegram about the change,
+            // though usually, the app should adapt to Telegram's theme.
+        }
+        function toggleSound() { isSoundEnabled = soundToggle.checked; localStorage.setItem('soundEnabled', isSoundEnabled.toString()); console.log("Sound enabled:", isSoundEnabled); }
 
 
         function showSection(newSectionId, initialLoad = false) {
@@ -1051,23 +1129,22 @@
                 if (s.id === newSectionId) {
                     if (initialLoad) {
                         s.style.transition = 'none'; s.classList.add('active');
-                        void s.offsetWidth; s.style.transition = '';
+                        void s.offsetWidth; // Force reflow to apply initial state before transition class
+                        s.style.transition = ''; // Re-enable transitions
                     } else { s.classList.add('active'); }
                 } else { s.classList.remove('active'); }
             });
 
             currentActiveSectionId = newSectionId;
             const contentArea = document.querySelector('.content-area');
-            if (contentArea) contentArea.scrollTop = 0;
+            if (contentArea) contentArea.scrollTop = 0; // Scroll to top of new section
 
+            // Update specific section content or start/stop intervals
             if (newSectionId === 'more-section') startServerTimeUpdates(); else stopServerTimeUpdates();
             if (newSectionId === 'leaderboard-section') { populateLeaderboard(); populateReferralLeaderboard(); }
             if (newSectionId === 'withdraw-section') { updateWithdrawalFormUI(); populateWithdrawalHistory(); updatePlatformStatsDisplay(); }
             if (newSectionId === 'profile-section') { updateProfileStats(); populateReferredUsersList(); }
             if (newSectionId === 'earn-section') { updateShortlinkUI(); }
-
-            // REMOVED: Ad call on section navigation was here.
-            // Ads are now only explicitly called within the shortlink process.
         }
 
 
@@ -1075,7 +1152,7 @@
             const item = event.currentTarget;
             if (shortlinkProcessActive) { alert("Please complete the current ad viewing and claiming process first."); return; }
             const newSectionId = item.dataset.section;
-            if (newSectionId === currentActiveSectionId) return;
+            if (newSectionId === currentActiveSectionId) return; // Already on this section
             navItems.forEach(nav => nav.classList.remove('active'));
             item.classList.add('active');
             showSection(newSectionId);
@@ -1084,7 +1161,7 @@
         function handleLeaderboardIconClick() {
             if (shortlinkProcessActive) { alert("Please complete the current ad viewing and claiming process first."); return; }
             showSection('leaderboard-section');
-            showLeaderboardTab('points');
+            showLeaderboardTab('points'); // Default to points tab
         }
         function handleCloseLeaderboard() { const defaultSection = 'earn-section'; showSection(defaultSection); navItems.forEach(nav => { nav.classList.toggle('active', nav.dataset.section === defaultSection); });}
         function showLeaderboardTab(tabName) { leaderboardTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === tabName)); leaderboardTabContents.forEach(content => content.classList.toggle('active', content.id === `leaderboard-${tabName}-content`));}
@@ -1092,7 +1169,7 @@
         function startServerTimeUpdates() { if (serverTimeDisplayEl && !serverTimeInterval) { const update = () => { if (serverTimeDisplayEl) serverTimeDisplayEl.textContent = getIndianTime(); const currentDate = new Date().toDateString(); if (currentDate !== lastResetDate) { console.log("Server time detected new day, resetting daily stats."); platformStats.todayShortlinks = 0; shortlinksCompletedThisSession = 0; updateShortlinkUI(); lastResetDate = currentDate; } updatePlatformStatsDisplay(); }; update(); serverTimeInterval = setInterval(update, 1000); } }
         function stopServerTimeUpdates() { if (serverTimeInterval) { clearInterval(serverTimeInterval); serverTimeInterval = null; } }
         function updatePlatformStatsDisplay() { if (platformTodayQuotaEl) platformTodayQuotaEl.textContent = `${platformStats.todayWithdrawalQuota} Coins`; if (platformYesterdayRevenueEl) platformYesterdayRevenueEl.textContent = `$${platformStats.yesterdayRevenue.toFixed(2)}`; if (platformTodayShortlinksEl) platformTodayShortlinksEl.textContent = platformStats.todayShortlinks; if (platformAllTimeShortlinksEl) platformAllTimeShortlinksEl.textContent = platformStats.allTimeShortlinks; platformStats.allTimeRevenue = platformStats.allTimeShortlinks * COIN_VALUE_USD; if (platformAllTimeRevenueEl) platformAllTimeRevenueEl.textContent = `$${platformStats.allTimeRevenue.toFixed(2)}`; if (platformAllTimeWithdrawalsEl) platformAllTimeWithdrawalsEl.textContent = `${platformStats.allTimeWithdrawals} Coins`;}
-        function updateShortlinkUI() { if(currentStageDisplayEl) currentStageDisplayEl.textContent = shortlinksCompletedThisSession + 1; const limitReached = shortlinksCompletedThisSession >= SHORTLINK_LIMIT; if(earnShortlinkButton) { earnShortlinkButton.disabled = limitReached || shortlinkProcessActive; earnShortlinkButton.textContent = limitReached ? "LIMIT!" : (shortlinkProcessActive ? "LOADING..." : "PLAY!"); } if(limitReached && shortlinkMessageEl && !shortlinkProcessActive) { shortlinkMessageEl.textContent = "Daily shortlink limit reached!"; } else if (!shortlinkProcessActive && shortlinkMessageEl && claimShortlinkRewardButton && !claimShortlinkRewardButton.disabled) {} else if (!shortlinkProcessActive && shortlinkMessageEl) { shortlinkMessageEl.textContent = ""; }}
+        function updateShortlinkUI() { if(currentStageDisplayEl) currentStageDisplayEl.textContent = shortlinksCompletedThisSession + 1; const limitReached = shortlinksCompletedThisSession >= SHORTLINK_LIMIT; if(earnShortlinkButton) { earnShortlinkButton.disabled = limitReached || shortlinkProcessActive; earnShortlinkButton.textContent = limitReached ? "LIMIT!" : (shortlinkProcessActive ? "LOADING..." : "PLAY!"); } if(limitReached && shortlinkMessageEl && !shortlinkProcessActive) { shortlinkMessageEl.textContent = "Daily shortlink limit reached!"; } else if (!shortlinkProcessActive && shortlinkMessageEl && claimShortlinkRewardButton && !claimShortlinkRewardButton.disabled) { /* Message might be "Ads viewed! Click Claim." */ } else if (!shortlinkProcessActive && shortlinkMessageEl) { shortlinkMessageEl.textContent = ""; }}
 
 
         function startShortlinkProcess() {
@@ -1140,10 +1217,8 @@
                 proceedButton.addEventListener('click', () => {
                     if (typeof show_9365298 === 'function') {
                         console.log("Attempting to show Rewarded Interstitial ad before next step (shortlink sequence).");
-                        // Using the same ad ID as the "Watch Ad" button
                         show_9365298().then(() => {
                             console.log("Rewarded Interstitial ad (for next step) viewed or closed by user.");
-                            // alert('Ad viewed for next step!'); // Optional: for testing
                             currentAdStep++;
                             setupAdPageForNextAd();
                         }).catch(e => {
@@ -1176,9 +1251,8 @@
 
             if (typeof show_9365298 === 'function') {
                 console.log("Attempting to show Rewarded Interstitial ad.");
-                show_9365298().then(() => { // This is the "smart ad id" / Rewarded Interstitial
+                show_9365298().then(() => {
                     console.log("Rewarded Interstitial ad viewed!");
-                    // alert('You have seen an ad!');
                     if (watchAdBtn) {
                         watchAdBtn.textContent = "Timer Running...";
                     }
@@ -1196,7 +1270,7 @@
                 if (watchAdBtn) {
                     watchAdBtn.textContent = "Timer Running...";
                 }
-                startAdTimerCountdown();
+                startAdTimerCountdown(); // Fallback to timer if ad SDK is missing
             }
         }
 
@@ -1243,7 +1317,7 @@
             updateShortlinkUI(); updateWalletBalance(); updateProfileStats(); updatePlatformStatsDisplay();
             if(shortlinkMessageEl) shortlinkMessageEl.textContent = "1 Coin Claimed!";
             if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = true;
-            if (shortlinksCompletedThisSession % 10 === 0 && shortlinksCompletedThisSession > 0) { playSound('levelup'); if(shortlinkMessageEl) shortlinkMessageEl.textContent += " Stage Up!"; }
+            if (shortlinksCompletedThisSession % 10 === 0 && shortlinksCompletedThisSession > 0 && shortlinksCompletedThisSession <= SHORTLINK_LIMIT) { playSound('levelup'); if(shortlinkMessageEl) shortlinkMessageEl.textContent += " Stage Up!"; }
             currentAdStep = 0;
             console.log(`Claimed. Total coins: ${totalCoins}, Shortlinks this session: ${shortlinksCompletedThisSession}`);
         }
@@ -1252,8 +1326,8 @@
         function updateWalletBalance() { if (walletCoinsDisplayEl) walletCoinsDisplayEl.textContent = totalCoins; if (walletUsdValueDisplayEl) walletUsdValueDisplayEl.textContent = (totalCoins * COIN_VALUE_USD).toFixed(3); }
         function populateReferredUsersList() { if (!referredUsersListEl) return; referredUsersListEl.innerHTML = ''; const usersReferredByCurrentUser = mockReferredUsers.filter(user => user.referredBy === currentUser.id); if (usersReferredByCurrentUser.length === 0) { const li = document.createElement('li'); li.textContent = "You haven't referred anyone yet."; li.style.textAlign = 'center'; li.style.color = 'var(--text-muted-dark-theme)'; referredUsersListEl.appendChild(li); return; } usersReferredByCurrentUser.forEach(user => { const li = document.createElement('li'); li.classList.add('stat-item'); const usernameSpan = document.createElement('span'); usernameSpan.textContent = user.username; const dateSpan = document.createElement('span'); dateSpan.textContent = `Joined: ${user.date}`; dateSpan.style.color = 'var(--text-muted-dark-theme)'; dateSpan.style.fontSize = '0.9em'; li.appendChild(usernameSpan); li.appendChild(dateSpan); referredUsersListEl.appendChild(li); }); }
         function updateProfileStats() { if (profileTotalCoinsEl) profileTotalCoinsEl.textContent = totalCoins; if (profileShortlinksCompletedEl) profileShortlinksCompletedEl.textContent = shortlinksCompletedThisSession; currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length; if (profileReferralsEl) profileReferralsEl.textContent = currentUser.referrals; if (profileReferralEarningsEl) profileReferralEarningsEl.textContent = `${currentUser.referrals * COINS_PER_REFERRAL} Coins`; }
-        function populateLeaderboard() { if (!leaderboardListEl) return; leaderboardListEl.innerHTML = ''; const sortedLeaderboard = [...mockLeaderboardData].sort((a, b) => { if (b.coins === a.coins) { return b.referrals - a.referrals; } return b.coins - a.coins; }); sortedLeaderboard.forEach((player, index) => player.rank = index + 1); if (sortedLeaderboard.length === 0) { leaderboardListEl.innerHTML = '<li>Leaderboard is empty.</li>'; return; } sortedLeaderboard.forEach(player => { const li = document.createElement('li'); li.innerHTML = `<span class="rank">#${player.rank}</span><span class="username">${player.username === currentUser.username ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="coins">${player.coins} Coins</span>`; if (player.username === currentUser.username) { li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)'; } leaderboardListEl.appendChild(li); }); }
-        function populateReferralLeaderboard() { if (!referralLeaderboardListEl) return; referralLeaderboardListEl.innerHTML = ''; const sortedReferralBoard = [...mockLeaderboardData].sort((a, b) => { if (b.referrals === a.referrals) { return b.coins - a.coins; } return b.referrals - a.referrals; }); sortedReferralBoard.forEach((player, index) => player.referralRank = index + 1); if (sortedReferralBoard.length === 0) { referralLeaderboardListEl.innerHTML = '<li>Leaderboard is empty.</li>'; return; } sortedReferralBoard.forEach(player => { const li = document.createElement('li'); li.innerHTML = `<span class="rank">#${player.referralRank}</span><span class="username">${player.username === currentUser.username ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="referrals-count">${player.referrals} Refs</span>`; if (player.username === currentUser.username) { li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)'; } referralLeaderboardListEl.appendChild(li); }); }
+        function populateLeaderboard() { if (!leaderboardListEl) return; leaderboardListEl.innerHTML = ''; const userEntry = mockLeaderboardData.find(entry => entry.username === currentUser.username); if(userEntry) { userEntry.coins = totalCoins; userEntry.referrals = currentUser.referrals;} const sortedLeaderboard = [...mockLeaderboardData].sort((a, b) => { if (b.coins === a.coins) { return b.referrals - a.referrals; } return b.coins - a.coins; }); sortedLeaderboard.forEach((player, index) => player.rank = index + 1); if (sortedLeaderboard.length === 0) { leaderboardListEl.innerHTML = '<li>Leaderboard is empty.</li>'; return; } sortedLeaderboard.forEach(player => { const li = document.createElement('li'); li.innerHTML = `<span class="rank">#${player.rank}</span><span class="username">${player.username === currentUser.username ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="coins">${player.coins} Coins</span>`; if (player.username === currentUser.username) { li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)'; } leaderboardListEl.appendChild(li); }); }
+        function populateReferralLeaderboard() { if (!referralLeaderboardListEl) return; referralLeaderboardListEl.innerHTML = ''; const userEntry = mockLeaderboardData.find(entry => entry.username === currentUser.username); if(userEntry) { userEntry.coins = totalCoins; userEntry.referrals = currentUser.referrals;} const sortedReferralBoard = [...mockLeaderboardData].sort((a, b) => { if (b.referrals === a.referrals) { return b.coins - a.coins; } return b.referrals - a.referrals; }); sortedReferralBoard.forEach((player, index) => player.referralRank = index + 1); if (sortedReferralBoard.length === 0) { referralLeaderboardListEl.innerHTML = '<li>Leaderboard is empty.</li>'; return; } sortedReferralBoard.forEach(player => { const li = document.createElement('li'); li.innerHTML = `<span class="rank">#${player.referralRank}</span><span class="username">${player.username === currentUser.username ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="referrals-count">${player.referrals} Refs</span>`; if (player.username === currentUser.username) { li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)'; } referralLeaderboardListEl.appendChild(li); }); }
 
 
         function updateWithdrawalFormUI() {
@@ -1265,14 +1339,15 @@
                 if (amountCoins > 0) { netAmount = amountCoins - fee; if (netAmount < 0) netAmount = 0; }
                 networkFeeDisplayEl.textContent = `${fee} Coins`; finalAmountReceiveDisplayEl.textContent = `${netAmount} Coins`;
                 const minWithdrawal = config.min; const hasEnoughReferrals = currentUser.referrals >= MIN_REFERRALS_FOR_WITHDRAWAL;
-                if (amountCoins >= minWithdrawal && hasEnoughReferrals && totalCoins >= amountCoins && amountCoins > 0) { initiateWithdrawButtonEl.disabled = false; initiateWithdrawButtonEl.textContent = "Withdraw"; }
+                if (amountCoins >= minWithdrawal && hasEnoughReferrals && totalCoins >= amountCoins && amountCoins > 0 && netAmount > 0) { initiateWithdrawButtonEl.disabled = false; initiateWithdrawButtonEl.textContent = "Withdraw"; }
                 else {
                     initiateWithdrawButtonEl.disabled = true;
                     if (!hasEnoughReferrals) { initiateWithdrawButtonEl.textContent = `Need ${MIN_REFERRALS_FOR_WITHDRAWAL} Referrals`; }
                     else if (amountCoins > 0 && totalCoins < amountCoins) { initiateWithdrawButtonEl.textContent = "Insufficient Balance"; }
                     else if (amountCoins > 0 && amountCoins < minWithdrawal) { initiateWithdrawButtonEl.textContent = `Min ${minWithdrawal} Coins`; }
+                    else if (amountCoins > 0 && netAmount <=0) { initiateWithdrawButtonEl.textContent = "Fee > Amount"; }
                     else if (amountCoins === 0 && initiateWithdrawButtonEl.textContent !== `Need ${MIN_REFERRALS_FOR_WITHDRAWAL} Referrals`) { initiateWithdrawButtonEl.textContent = "Enter Amount"; }
-                    else { initiateWithdrawButtonEl.textContent = "Withdraw"; }
+                    else { initiateWithdrawButtonEl.textContent = "Withdraw"; } // Default if no other condition met
                 }
             } else { networkFeeDisplayEl.textContent = `0 Coins`; finalAmountReceiveDisplayEl.textContent = `0 Coins`; initiateWithdrawButtonEl.disabled = true; initiateWithdrawButtonEl.textContent = "Select Method"; }
         }
@@ -1281,14 +1356,16 @@
         function handleNewWithdraw() {
             const selectedMethod = withdrawMethodSelectEl.value; const amountCoins = parseInt(withdrawAmountCoinsInputEl.value); const address = withdrawAddressInputEl.value.trim(); const config = WITHDRAWAL_CONFIG[selectedMethod];
             if (!config) { alert("Invalid withdrawal method selected."); return; } if (!address) { alert(`Please enter your ${config.label.toLowerCase().replace(":", "")}.`); return; } if (isNaN(amountCoins) || amountCoins <= 0) { alert("Please enter a valid amount of coins."); return; } if (currentUser.referrals < MIN_REFERRALS_FOR_WITHDRAWAL) { alert(`You need at least ${MIN_REFERRALS_FOR_WITHDRAWAL} referrals to withdraw.`); return; } if (amountCoins < config.min) { alert(`Minimum withdrawal for ${selectedMethod} is ${config.min} coins.`); return; } if (totalCoins < amountCoins) { alert("You do not have enough coins for this withdrawal."); return; }
-            const netAmount = amountCoins - config.fee; if (netAmount <= 0) { alert("Amount after fee is too low to process."); return; }
+            const netAmount = amountCoins - config.fee; if (netAmount <= 0) { alert("Amount after fee is zero or less. Cannot process withdrawal."); return; }
             console.log(`Withdrawal initiated: ${amountCoins} Coins via ${selectedMethod} to ${address}. Fee: ${config.fee}. Net: ${netAmount}`);
+            // Here you would typically send this data to a backend server.
+            // For this frontend-only example, we'll just update locally.
             totalCoins -= amountCoins; platformStats.allTimeWithdrawals += amountCoins;
             const newWithdrawal = { id: 'wd' + Date.now().toString().slice(-5), date: new Date().toISOString().split('T')[0], method: selectedMethod, amount: amountCoins, status: 'Pending', address: address };
-            withdrawalHistory.unshift(newWithdrawal);
+            withdrawalHistory.unshift(newWithdrawal); // Add to the beginning of the array
             updateWalletBalance(); updateProfileStats(); updatePlatformStatsDisplay(); populateWithdrawalHistory(); updateWithdrawalFormUI();
-            withdrawAmountCoinsInputEl.value = ''; withdrawAddressInputEl.value = '';
-            alert(`Withdrawal request for ${amountCoins} coins submitted! You will receive ${netAmount} (after ${config.fee} coin fee).`);
+            withdrawAmountCoinsInputEl.value = ''; withdrawAddressInputEl.value = ''; // Clear fields
+            alert(`Withdrawal request for ${amountCoins} coins submitted! You will receive ${netAmount} (after ${config.fee} coin fee). Status: Pending.`);
             const successMsgEl = document.getElementById('withdraw-success-message');
             if (successMsgEl) { successMsgEl.textContent = "Withdrawal request sent!"; successMsgEl.style.display = 'block'; setTimeout(() => { successMsgEl.style.display = 'none'; }, 3000); }
         }
