@@ -1,511 +1,459 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="7searchppc" content="d41d8cd98f00b204e9800998ecf8427e"/>
     <meta charset="UTF-8">
+<meta name="7searchppc" content="d41d8cd98f00b204e9800998ecf8427e"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Vibe Rewards - Mock UI</title>
+    <title>Short2Crypto - Earn Rewards!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src='//libtl.com/sdk.js' data-zone='9365298' data-sdk='show_9365298'></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
 
         :root {
-            --primary-bg: #1c1c3a;
-            --secondary-bg: #2a2a4a;
-            --card-bg: #39395c;
-            --text-light: #f0f0f0;
-            --text-dark: #333; /* For light mode text */
-            --text-muted: #a0a0c0;
+            /* Game Theme Colors */
+            --game-bg-start: #45caff; /* Light Sky Blue */
+            --game-bg-end: #00a2c7;   /* Deeper Sky Blue */
+            --game-primary-text: #ffffff;
+            --game-title-blue: #29b6f6; /* Bright Blue */
+            --game-title-red: #ef5350;   /* Bright Red */
+            --game-title-yellow: #ffeb3b; /* Bright Yellow */
+            --game-accent-green: #66bb6a; /* Bright Green */
+            --game-accent-orange: #ffa726; /* Bright Orange */
+            --pink: #ec407a; /* Added pink for button */
 
-            --teal: #00f5d4;
-            --lime: #9ef01a;
-            --purple: #7000ff;
-            --pink: #ff4081;
-            --gold: #ffd700;
 
-            --gradient-main: linear-gradient(135deg, var(--purple), var(--teal));
-            --gradient-alt: linear-gradient(135deg, var(--lime), var(--teal));
-            --gradient-reward: linear-gradient(45deg, var(--gold), #ff8c00);
+            --game-button-bg: #ffffff;
+            --game-button-icon: #00796b; /* Dark Teal for icons */
+            --game-button-active-border: var(--game-title-yellow);
+
+            --game-panel-bg: rgba(255, 255, 255, 0.15);
+            --game-panel-border: rgba(255, 255, 255, 0.3);
+            --game-text-darker: #2c3e50; /* Darker text for light backgrounds - Improved contrast */
+            --text-muted-dark-theme: #c0d6e4; /* Lighter muted for dark theme - Improved contrast */
+            --text-muted-light-theme: #527080; /* Darker muted for light theme - Improved contrast */
+
 
             --border-radius-sm: 8px;
-            --border-radius-md: 12px;
-            --border-radius-lg: 20px;
+            --border-radius-md: 15px; /* More rounded */
+            --border-radius-lg: 25px; /* More rounded */
+            --border-radius-circle: 50%;
 
-            --font-family: 'Poppins', sans-serif;
+            --font-family-title: 'Luckiest Guy', cursive;
+            --font-family-body: 'Poppins', sans-serif;
         }
 
         /* Light Mode Variables */
         body.light-mode {
-            --primary-bg: #f4f7f6;
-            --secondary-bg: #e9ecef;
-            --card-bg: #ffffff;
-            --text-light: #333333; /* Dark text on light background */
-            --text-muted: #6c757d;
-            --teal: #17a2b8; /* Adjusted for light mode visibility */
+            --game-bg-start: #e0f7fa; /* Lighter sky blue for light mode */
+            --game-bg-end: #b2ebf2;   /* Slightly deeper light sky blue */
+            --game-primary-text: var(--game-text-darker);
+            --game-panel-bg: rgba(0, 0, 0, 0.03); /* Very subtle dark panel */
+            --game-panel-border: rgba(0, 0, 0, 0.08);
+            --game-button-icon: var(--game-title-blue);
+            --text-muted-dark-theme: var(--text-muted-light-theme); /* Use light theme's muted color */
+            --teal: #17a2b8;
             --lime: #28a745;
-            --purple: #6f42c1;
-            --gold: #ffc107;
-
-            --gradient-main: linear-gradient(135deg, var(--purple), var(--teal));
-            --gradient-alt: linear-gradient(135deg, var(--lime), var(--teal));
         }
-        body.light-mode .button {
-            color: var(--text-light); /* Ensuring button text is visible */
+        body.light-mode .game-logo .logo-part1,
+        body.light-mode .game-logo .logo-vs,
+        body.light-mode .game-logo .logo-part2,
+        body.light-mode .highscore-display,
+        body.light-mode .shortlink-level-display,
+        body.light-mode .game-title-super {
+             color: var(--game-text-darker);
+             text-shadow: 1px 1px 0px rgba(255,255,255,0.3); /* Light shadow for dark text */
         }
-        body.light-mode .button.purple {
-            color: #f0f0f0; /* Original light text for purple button */
+        body.light-mode .game-logo {
+            background-color: rgba(255,255,255,0.5); /* Lighter panel for logo */
+            border-color: var(--game-text-darker);
         }
-        body.light-mode input[type="text"],
-        body.light-mode input[type="number"],
-        body.light-mode .withdraw-form-container select.input-style {
-             background-color: #e9ecef; /* Lighter input background */
-             color: var(--text-dark);
-             border-color: #ced4da;
+         body.light-mode .highscore-display { background-color: rgba(255,255,255,0.6); }
+         body.light-mode .shortlink-level-display {
+            background-color: var(--game-title-yellow);
+            color: var(--game-text-darker); /* Ensure dark text on yellow */
+            border-color: var(--game-text-darker);
+         }
+        body.light-mode .card { background-color: rgba(255,255,255,0.85); color: var(--game-text-darker);}
+        body.light-mode .card h3 { color: var(--game-title-blue); }
+        body.light-mode .details-dropdown summary {color: var(--game-text-darker);}
+        body.light-mode .details-dropdown .details-content {color: var(--text-muted-light-theme);}
+        body.light-mode input[type="text"], body.light-mode input[type="number"],
+        body.light-mode .details-dropdown .withdraw-form-content select.input-style {
+            background-color: rgba(255,255,255,0.8);
+            color: var(--game-text-darker);
+            border-color: rgba(0,0,0,0.2);
         }
-        body.light-mode input[type="text"]:focus,
-        body.light-mode input[type="number"]:focus,
-        body.light-mode .withdraw-form-container select.input-style:focus {
-            border-color: var(--teal); box-shadow: 0 0 5px var(--teal);
+        body.light-mode input[type="text"]:focus, body.light-mode input[type="number"]:focus,
+        body.light-mode .details-dropdown .withdraw-form-content select.input-style:focus {
+            border-color: var(--game-title-blue);
+            box-shadow: 0 0 8px var(--game-title-blue);
         }
-        body.light-mode #leaderboard-icon-container {
-            background-color: var(--card-bg);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        body.light-mode .profile-picture svg { fill: var(--game-text-darker); }
+        body.light-mode label { color: var(--text-muted-light-theme); }
+        body.light-mode .final-amount-display, body.light-mode .platform-stats-container p {
+            color: var(--text-muted-light-theme);
         }
-        /* Leaderboard icon for light mode - if the png is dark */
-        /* body.light-mode #leaderboard-icon-container img { filter: invert(1); } */
-
-        body.light-mode .nav-item.active { color: var(--teal); }
-        body.light-mode .profile-picture svg { fill: var(--text-muted); }
-        body.light-mode .details-dropdown summary { color: var(--text-dark); }
-        body.light-mode .details-dropdown summary:hover { background-color: var(--secondary-bg); }
-        body.light-mode .details-dropdown .details-content,
-        body.light-mode .details-dropdown .more-options-list,
-        body.light-mode .details-dropdown .rules-list,
-        body.light-mode .details-dropdown #withdrawal-history-list,
-        body.light-mode .details-dropdown .withdraw-form-content { /* Added for withdraw details content */
-             color: var(--text-muted);
+        body.light-mode .final-amount-display span, body.light-mode .platform-stats-container p strong {
+            color: var(--game-accent-green); /* Keep accent green for values */
         }
-        body.light-mode .final-amount-display { color: var(--text-muted); }
-        body.light-mode .final-amount-display span { color: var(--lime); }
-        /* Social icons for light mode - if pngs are dark and need inverting */
-        /* body.light-mode .social-icon img { filter: invert(1) opacity(0.7); } */
-        /* body.light-mode .social-icon:hover img { filter: invert(1) opacity(1); } */
-        body.light-mode .mock-banner {
-            background-color: #e9ecef;
-            border-color: #ced4da;
-            color: #6c757d;
-        }
+        body.light-mode #server-time-display { color: var(--game-accent-green); }
 
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: var(--font-family);
-            background-color: var(--primary-bg);
-            color: var(--text-light);
+            font-family: var(--font-family-body);
+            background: linear-gradient(180deg, var(--game-bg-start) 0%, var(--game-bg-end) 100%);
+            color: var(--game-primary-text);
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        body::before, body::after {
+            content: ''; position: absolute; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1); opacity: 0.6; z-index: -1;
+        }
+        body::before { width: 300px; height: 300px; top: 10%; left: -100px; animation: floatCloud 25s infinite linear;}
+        body::after { width: 200px; height: 200px; bottom: 5%; right: -80px; animation: floatCloud 35s infinite linear reverse;}
+        @keyframes floatCloud {
+            0% { transform: translateX(0px) translateY(0px); } 25% { transform: translateX(20px) translateY(-15px); }
+            50% { transform: translateX(0px) translateY(-30px); } 75% { transform: translateX(-20px) translateY(-15px); }
+            100% { transform: translateX(0px) translateY(0px); }
         }
 
         #loading-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            /* background: var(--gradient-main); Changed to fallback color */
-            background-color: var(--primary-bg); /* Fallback if image fails */
+            background: linear-gradient(180deg, var(--game-bg-start) 0%, var(--game-bg-end) 100%);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 1000; transition: opacity 0.5s ease-out;
-            overflow: hidden; /* To ensure bg image doesn't cause scrollbars */
+            z-index: 1000; opacity: 1; visibility: visible;
+            transition: opacity 0.5s ease-out, visibility 0s linear 0.5s;
         }
-        .loading-screen-bg-image { /* New style for the background image */
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Will cover the screen, may crop if aspect ratio differs */
-        }
+        #loading-screen.hidden { opacity: 0; visibility: hidden; transition-delay: 0s;}
         .logo-animation {
             width: 80px; height: 80px; border-radius: 50%;
-            border: 5px solid var(--lime); border-top-color: var(--purple);
+            border: 5px solid var(--game-accent-green); border-top-color: var(--game-title-blue);
             animation: spin 1s linear infinite; margin-bottom: 20px;
-            position: relative; /* Ensure it's above the background image */
-            z-index: 1;         /* Ensure it's above the background image */
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #loading-screen p {
-            font-size: 1.2em; color: #f0f0f0; /* Fixed color for loading text */
-            position: relative; /* Ensure it's above the background image */
-            z-index: 1;         /* Ensure it's above the background image */
+            font-family: var(--font-family-title); font-size: 1.5em;
+            color: var(--game-primary-text); text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
         #app-container {
-            display: none; flex-direction: column; height: 100%; width: 100%; overflow: hidden;
+            display: flex; flex-direction: column; height: 100%; width: 100%;
+            overflow: hidden; position: relative; z-index: 1;
+            opacity: 0; transition: opacity 0.5s ease-in 0.5s;
         }
+        #app-container.visible { opacity: 1;}
 
         .content-area {
-            flex-grow: 1; overflow-y: auto; padding: 20px; padding-bottom: 80px;
+            flex-grow: 1; overflow-y: auto; overflow-x: hidden;
+            padding: 20px; padding-top: 70px; padding-bottom: 100px; position: relative;
         }
-        .section { display: none; animation: fadeIn 0.3s ease-in-out; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .bottom-nav {
+        .section {
+            width: 100%; position: absolute; top: 0; left: 0;
+            padding: inherit; padding-top: 0; padding-bottom: 0;
+            opacity: 0; transform: translateX(100%);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Slightly faster */
+            pointer-events: none; z-index: 1;
+        }
+        .section.active {
+            opacity: 1; transform: translateX(0); pointer-events: auto;
+            z-index: 2; position: relative;
+        }
+
+        .game-controls {
             display: flex; justify-content: space-around; align-items: center;
-            background-color: var(--secondary-bg); border-top: 1px solid var(--card-bg);
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.2); z-index: 100;
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 95%; max-width: 420px; z-index: 100; padding: 5px;
+            background-color: rgba(0, 0, 0, 0.1); border-radius: var(--border-radius-lg);
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: var(--text-muted); cursor: pointer; flex-grow: 1; padding: 5px 0;
-            transition: color 0.2s ease, transform 0.2s ease;
+        .control-button {
+            background-color: var(--game-button-bg); border-radius: var(--border-radius-circle);
+            width: 55px; height: 55px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2), inset 0 -2px 2px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+            border: 3px solid transparent; position: relative;
         }
-        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
-        .nav-item.active { color: var(--teal); transform: scale(1.1); }
-        .nav-item:hover { color: var(--lime); }
-        .nav-item span { font-size: 0.75em; }
+        .control-button svg { width: 28px; height: 28px; fill: var(--game-button-icon); transition: fill 0.2s ease;}
+        .control-button .nav-text {
+             font-size: 0.6em; font-family: var(--font-family-body);
+             color: var(--game-button-icon); margin-top: 2px; font-weight: 600;
+        }
+        .control-button:hover { transform: scale(1.1) translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.3), inset 0 -2px 2px rgba(0,0,0,0.1);}
+        .control-button.active {
+            border-color: var(--game-button-active-border); transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15), inset 0 1px 1px var(--game-button-active-border);
+        }
+        .control-button.active svg { fill: var(--game-title-blue); }
+        .control-button.active .nav-text { color: var(--game-title-blue); }
 
-        h2 { font-size: 1.8em; margin-bottom: 20px; color: var(--teal); text-align: center; }
-        h3 { font-size: 1.3em; margin-bottom: 15px; color: var(--lime); }
-        .card {
-            background-color: var(--card-bg); padding: 20px;
-            border-radius: var(--border-radius-md); margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: background-color 0.3s ease;
-        }
-        .button {
-            display: inline-block; padding: 12px 25px; background: var(--gradient-alt);
-            color: var(--primary-bg); font-weight: 600; border: none;
-            border-radius: var(--border-radius-lg); cursor: pointer; text-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
-            font-size: 1em;
-        }
-        .button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
-        .button:active { transform: translateY(0px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .button.purple { background: var(--gradient-main); color: #f0f0f0; /* Fixed color for contrast */ }
-        .button:disabled {
-            background: var(--secondary-bg); color: var(--text-muted);
-            cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none;
-        }
-
-        input[type="text"], input[type="number"] {
-            width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--secondary-bg);
-            border-radius: var(--border-radius-sm); background-color: var(--primary-bg);
-            color: var(--text-light); font-size: 1em;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-        input[type="text"]:focus, input[type="number"]:focus {
-            outline: none; border-color: var(--teal); box-shadow: 0 0 5px var(--teal);
-        }
-        label { display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-muted); }
-
-        .shortlink-container { text-align: center; }
-        .shortlink-container h3 { font-size: 1.5em; color: var(--teal); }
-        .shortlink-progress { font-size: 1.1em; margin: 10px 0 20px 0; color: var(--text-muted); }
-        .shortlink-progress strong { color: var(--lime); }
-        .shortlink-actions .button { margin: 10px 5px; width: calc(50% - 10px); min-width: 150px;}
-
-        /* Ad Viewing Page Styles */
-        #ad-viewing-page {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--primary-bg); /* Solid background as per implied requirement */
-            display: none; flex-direction: column; /* Main axis is column */
-            align-items: center; /* Center items horizontally */
-            z-index: 200; padding: 15px; text-align: center;
-            overflow-y: auto; /* Allow scrolling if content overflows */
-        }
-        #ad-viewing-page #ad-viewing-title {
-            color: var(--lime);
-            margin-bottom: 15px;
-            font-size: 1.4em;
-            width: 100%;
-        }
-        #ad-top-controls, #ad-bottom-controls {
-            width: 100%;
-            text-align: center;
-            margin: 10px 0; /* Add some margin around control areas */
-            min-height: 50px; /* Ensure space even if button is not there */
-        }
-         #ad-top-controls .button, #ad-bottom-controls .button {
-            width: 80%;
-            max-width: 300px;
-         }
-        /* Banners are now individual items, not in a flex container */
-        .mock-banner {
-            width: 100%;
-            max-width: 350px; /* Max width for banners */
-            height: 45px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--text-muted);
-            border-radius: var(--border-radius-sm);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-muted);
-            font-size: 0.8em;
-            margin: 8px auto; /* Centering banners */
-        }
-        #ad-timer-display {
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--teal);
-            text-align: center;
-            margin: 15px 0;
-            padding: 10px;
-            background-color: rgba(0,0,0,0.2);
-            border-radius: var(--border-radius-sm);
-            min-width: 120px;
-        }
-
-
-        /* Styles for details/summary dropdowns */
-        .details-dropdown {
-            background-color: var(--card-bg);
-            padding: 0;
-            border-radius: var(--border-radius-md);
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: background-color 0.3s ease;
-        }
-        .details-dropdown summary {
-            padding: 15px 20px;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--text-light);
-            list-style: none; /* Remove default marker */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: var(--border-radius-md);
-        }
-        .details-dropdown summary:hover {
-            background-color: var(--secondary-bg);
-        }
-        .details-dropdown summary::-webkit-details-marker {
-            display: none;
-        }
-        .details-dropdown summary::after {
-            content: '▼';
-            font-size: 0.8em;
-            margin-left: 10px;
-            transition: transform 0.2s ease-in-out;
-        }
-        .details-dropdown[open] summary::after {
-            transform: rotate(180deg);
-        }
-        .details-dropdown .details-content,
-        .details-dropdown .more-options-list,
-        .details-dropdown .rules-list,
-        .details-dropdown #withdrawal-history-list,
-        .details-dropdown .withdraw-form-content { /* Added class for withdraw details content */
-            padding: 15px 20px 15px 20px; /* Uniform padding for content */
-            color: var(--text-muted);
-        }
-         /* Styling for list items within the Settings dropdown */
-        .details-dropdown .more-options-list {
-            list-style: none;
-            padding-left: 0;
-            margin-top: 0; /* Adjusted from 10px for consistency with no extra top padding */
-            background-color: transparent !important;
-            box-shadow: none !important;
-        }
-        .details-dropdown .more-options-list li {
-            background-color: var(--secondary-bg);
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: var(--border-radius-sm);
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            font-weight: 500;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-         body.light-mode .details-dropdown .more-options-list li {
-             background-color: var(--secondary-bg);
-         }
-
-        .details-dropdown .more-options-list li:hover {
-            background-color: var(--purple);
-        }
-
-        .details-dropdown .rules-list { list-style: disc; padding-left: 20px; margin-top: 0; } /* Adjusted padding */
-        .details-dropdown .rules-list ul { list-style: circle; margin-top: 5px; padding-left: 20px; }
-        .details-dropdown #withdrawal-history-list { padding-top: 0; } /* Adjusted padding */
-        .details-dropdown #withdrawal-history-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--secondary-bg);
-            font-size: 0.9em;
-            line-height: 1.5;
-        }
-        .details-dropdown #withdrawal-history-list li:last-child { border-bottom: none; }
-        .details-dropdown #withdrawal-history-list li strong { color: var(--lime); }
-
-
-        /* Wallet Section Specific */
-        .wallet-info-container {
-            text-align: center;
+        .game-title-super {
+            font-family: var(--font-family-title); font-size: 2.2em; text-align: center;
+            color: var(--game-primary-text);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.25), 0 0 8px var(--game-title-yellow); /* Enhanced shadow */
             margin-bottom: 20px;
         }
-        .wallet-info-container h3 {
-            color: var(--teal);
-            margin-bottom: 10px;
-            font-size: 1.5em;
+        .game-header { text-align: center; margin-top: 5px; margin-bottom: 15px;}
+        .game-logo {
+            font-family: var(--font-family-title); font-size: 2.5em; display: inline-block;
+            padding: 8px 15px; background-color: rgba(0,0,0,0.2);
+            border-radius: var(--border-radius-md); border: 2px solid var(--game-primary-text);
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.15); /* Slightly softer shadow */
+            margin-bottom: 10px; position: relative;
         }
-        .wallet-balance-display {
-            font-size: 1.8em;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 5px;
+        .logo-part1 { color: var(--game-title-blue); }
+        .logo-vs { color: var(--game-primary-text); margin: 0 3px; font-size: 0.8em;}
+        .logo-part2 { color: var(--game-title-red); }
+        .logo-wing-left, .logo-wing-right {
+            font-size: 0.7em; position: absolute; top: 50%; transform: translateY(-50%);
+            color: var(--game-title-yellow); text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
         }
-        .wallet-balance-display span, .wallet-usd-display span {
-            font-weight: bold;
+        .logo-wing-left { left: -25px; transform: translateY(-50%) rotate(-15deg); }
+        .logo-wing-right { right: -25px; transform: translateY(-50%) rotate(15deg); }
+
+        .highscore-display {
+            font-family: var(--font-family-title); font-size: 1.4em; color: var(--game-primary-text);
+            background-color: rgba(0,0,0,0.25); padding: 6px 18px;
+            border-radius: var(--border-radius-lg); display: inline-block;
+            border: 2px solid var(--game-title-yellow); box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .wallet-usd-display {
-            font-size: 1em;
-            color: var(--text-muted);
+        #game-highscore { font-weight: bold; }
+
+        .shortlink-level-display {
+            font-family: var(--font-family-title); background-color: var(--game-title-yellow);
+            color: var(--game-text-darker); /* Ensure dark text on yellow */
+            padding: 8px 25px; border-radius: var(--border-radius-lg); font-size: 1.3em;
+            display: inline-block; margin-bottom: 20px; border: 3px solid var(--game-primary-text);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15); text-align: center;
         }
 
-        /* This class is now inside details-dropdown */
-        /* .withdraw-form-container select.input-style { ... } */
+        h3 {
+            font-family: var(--font-family-title); font-size: 1.5em; margin-bottom: 15px;
+            color: var(--game-accent-green); text-shadow: 1px 1px 0px rgba(0,0,0,0.15);
+        }
+        .card {
+            background-color: var(--game-panel-bg); padding: 20px;
+            border-radius: var(--border-radius-md); margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            border: 1px solid var(--game-panel-border);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .platform-stats-container p, .final-amount-display, .rules-list li, .details-content p {
+             color: var(--text-muted-dark-theme); /* Improved muted color for dark theme */
+        }
+        .platform-stats-container p strong, .final-amount-display span {
+            color: var(--game-accent-green); /* Keep accent green for dynamic values */
+        }
+
+
+        .button {
+            font-family: var(--font-family-body); font-weight: 600; display: inline-block;
+            padding: 12px 25px; background: linear-gradient(135deg, var(--game-accent-orange), var(--game-title-yellow));
+            color: var(--game-text-darker); border: none; border-radius: var(--border-radius-lg);
+            cursor: pointer; text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            font-size: 1em; text-shadow: 1px 1px 1px rgba(255,255,255,0.3);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+        .button:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 12px rgba(0,0,0,0.25); }
+        .button:active { transform: translateY(0px) scale(0.98); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .button.purple {
+            background: linear-gradient(135deg, var(--game-title-blue), var(--game-accent-green));
+            color: var(--game-primary-text); text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+        .button.pink {
+             background: linear-gradient(135deg, var(--pink), var(--game-accent-orange));
+             color: var(--game-primary-text);
+        }
+         .button:disabled {
+            background: rgba(0,0,0,0.2); color: rgba(255,255,255,0.5);
+            cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; text-shadow: none;
+        }
+
+        input[type="text"], input[type="number"],
         .details-dropdown .withdraw-form-content select.input-style {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid var(--secondary-bg);
-            border-radius: var(--border-radius-sm);
-            background-color: var(--primary-bg);
-            color: var(--text-light);
-            font-size: 1em;
+            font-family: var(--font-family-body); width: 100%; padding: 12px; margin-bottom: 15px;
+            border: 2px solid var(--game-panel-border); border-radius: var(--border-radius-sm);
+            background-color: rgba(0,0,0,0.1); color: var(--game-primary-text); font-size: 1em;
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a0a0c0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 12px;
-            padding-right: 30px;
         }
-        body.light-mode .details-dropdown .withdraw-form-content select.input-style {
-            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236c757d%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
-        }
+        input[type="text"]:focus, input[type="number"]:focus,
         .details-dropdown .withdraw-form-content select.input-style:focus {
-            outline: none;
-            border-color: var(--teal);
-            box-shadow: 0 0 5px var(--teal);
+            outline: none; border-color: var(--game-title-yellow);
+            box-shadow: 0 0 8px var(--game-title-yellow); background-color: rgba(0,0,0,0.2);
+        }
+        label { display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-muted-dark-theme); font-family: var(--font-family-body); }
+
+        .shortlink-container { text-align: center; padding-top: 10px; }
+        .shortlink-container h3 { font-size: 1.6em; color: var(--game-primary-text); text-shadow: 1px 1px 0 var(--game-title-blue); }
+
+        #earn-shortlink-button {
+            width: 150px; height: 150px; border-radius: var(--border-radius-circle);
+            font-size: 1.8em; font-family: var(--font-family-title); padding: 0;
+            display: flex; justify-content: center; align-items: center; margin: 20px auto;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3), inset 0 -5px 5px rgba(0,0,0,0.2);
+            border: 4px solid var(--game-primary-text);
+        }
+        #earn-shortlink-button:hover { transform: scale(1.05) translateY(-3px); }
+        #claim-shortlink-reward-button { font-size: 1.2em; padding: 15px 30px; }
+        #shortlink-message { margin-top:15px; color: var(--game-title-yellow); font-weight: bold; font-family: var(--font-family-body); }
+
+        #ad-viewing-page {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, var(--game-bg-start) 0%, var(--game-bg-end) 100%);
+            display: none; flex-direction: column; z-index: 200; padding: 15px;
+            text-align: center; overflow-y: auto; box-sizing: border-box;
+            justify-content: space-between; /* Helps space out elements */
+        }
+        #ad-viewing-page #ad-viewing-title {
+            font-family: var(--font-family-title); color: var(--game-primary-text);
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.2); margin-bottom: 10px; /* Reduced margin */
+            font-size: 1.8em; width: 100%;
+        }
+         #ad-top-controls, #ad-bottom-controls {
+            width: 100%; text-align: center; margin: 5px auto; /* Reduced margin */
+            min-height: 50px; /* Adjusted min-height */
+            max-width: 320px;
+            display: flex; /* Added for centering button */
+            justify-content: center; /* Added for centering button */
+            align-items: center; /* Added for centering button */
+         }
+         #ad-top-controls .button, #ad-bottom-controls .button {
+            width: 100%; max-width: 280px; font-size: 1.1em; /* Slightly smaller font */
+            padding: 12px; font-family: var(--font-family-body); /* Adjusted padding */
+         }
+        .timer-and-flanking-banners {
+            display: flex; /* Arrange timer and side ads */
+            align-items: center;
+            justify-content: center; /* Center items if space allows */
+            gap: 10px; /* Space between timer and side ads */
+            margin: 10px auto; /* Reduced margin */
+        }
+        #ad-timer-display {
+            font-family: var(--font-family-title); font-size: 2.5em; font-weight: bold; /* Slightly smaller font */
+            color: var(--game-title-yellow); text-align: center; padding: 8px 15px; /* Adjusted padding */
+            background-color: rgba(0,0,0,0.3); border-radius: var(--border-radius-md);
+            min-width: 120px; margin: 0; /* Remove margin, handled by parent */
+            border: 2px solid var(--game-primary-text);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+        /* Ad slots styling (make sure they don't overflow) */
+        #ad-viewing-page script + div, #ad-viewing-page div[id*="container-"] {
+            margin: 5px auto !important; /* Override inline styles if necessary */
+            max-width: 100%;
         }
 
-        .final-amount-display {
-            margin-top: 10px;
-            margin-bottom: 15px;
-            color: var(--text-muted);
-            font-size: 0.9em;
-            line-height: 1.6;
-        }
-        .final-amount-display span {
-            color: var(--lime);
-            font-weight: 600;
-        }
 
-        .success-animation {
-            text-align: center; padding: 20px; margin-top: 15px;
-            background-color: var(--lime); color: var(--primary-bg);
-            border-radius: var(--border-radius-md); font-weight: 600;
-            display: none; animation: fadeInScaleUp 0.5s forwards;
+        .details-dropdown { background-color: transparent; border: none; box-shadow: none;}
+        .details-dropdown summary {
+            padding: 15px 20px; cursor: pointer; font-family: var(--font-family-title);
+            font-size: 1.2em; color: var(--game-primary-text); list-style: none;
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: var(--border-radius-md); background-color: rgba(0,0,0,0.1);
+            transition: background-color 0.2s ease;
         }
-        @keyframes fadeInScaleUp { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+        .details-dropdown summary:hover { background-color: rgba(0,0,0,0.2); }
+        .details-dropdown summary::after { content: '▼'; font-size: 0.8em; margin-left: 10px; transition: transform 0.2s ease-in-out; }
+        .details-dropdown[open] summary::after { transform: rotate(180deg); }
+        .details-dropdown .details-content,
+        .details-dropdown .more-options-list,
+        .details-dropdown #withdrawal-history-list,
+        .details-dropdown .withdraw-form-content {
+            padding: 15px 20px; color: var(--text-muted-dark-theme);
+            font-family: var(--font-family-body); background-color: rgba(0,0,0,0.05);
+            border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+        }
+        .details-dropdown .rules-list { /* Specific styling for rules list container */
+            padding: 15px 20px;
+            font-family: var(--font-family-body);
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+        }
+         .rules-list li {
+            color: var(--text-muted-dark-theme); /* Explicitly color list items */
+            margin-bottom: 5px;
+         }
+         .rules-list ul {
+            margin-left: 20px;
+            margin-top: 5px;
+         }
+
+
+        .wallet-info-container h3 { text-align: center; font-size: 1.8em; color: var(--game-primary-text); }
+        .wallet-balance-display {
+            font-family: var(--font-family-title); font-size: 2em; text-align: center;
+            color: var(--game-title-yellow); margin-bottom: 5px;
+        }
+        .wallet-usd-display { font-size: 1.1em; color: var(--text-muted-dark-theme); text-align: center; font-family: var(--font-family-body);}
 
         .profile-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; }
         .profile-picture {
             width: 100px; height: 100px; border-radius: 50%;
-            background-color: var(--secondary-bg); margin-bottom: 15px;
-            border: 3px solid var(--teal); display: flex; justify-content: center; align-items: center;
-            font-size: 2em;
+            background-color: rgba(0,0,0,0.2); margin-bottom: 15px;
+            border: 4px solid var(--game-title-yellow);
+            display: flex; justify-content: center; align-items: center;
         }
-        .profile-username { font-size: 1.5em; font-weight: 600; color: var(--lime); }
+        .profile-picture svg { width: 60px; height: 60px; fill: var(--game-primary-text); }
+        .profile-username {
+            font-family: var(--font-family-title); font-size: 1.8em; color: var(--game-primary-text);
+            text-shadow: 1px 1px 0 var(--game-title-blue);
+        }
         .profile-stats .stat-item {
-            display: flex; justify-content: space-between; padding: 10px 0;
-            border-bottom: 1px solid var(--secondary-bg);
+            display: flex; justify-content: space-between; margin-bottom: 8px;
+            font-family: var(--font-family-body);
         }
-        .profile-stats .stat-item:last-child { border-bottom: none; }
-        .stat-item span:first-child { color: var(--text-muted); }
-        .stat-item span:last-child { font-weight: 600; color: var(--teal); }
+        .profile-stats .stat-item span:first-child { color: var(--text-muted-dark-theme); }
+        .profile-stats .stat-item span:last-child { font-weight: 600; color: var(--game-accent-green); }
 
-        .referral-link-container { margin-top: 20px; text-align: center; }
-        #referral-link {
-            background-color: var(--secondary-bg); padding: 10px; border-radius: var(--border-radius-sm);
-            word-break: break-all; margin-bottom: 10px; color: var(--text-muted);
+        #leaderboard-icon-container {
+            position: fixed; top: 15px; left: 15px; z-index: 150; cursor: pointer;
+            background-color: var(--game-button-bg); padding: 0;
+            width: 45px; height: 45px; border-radius: 50%;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--game-button-active-border);
         }
-        .referred-users-container { margin-top: 20px; }
-        .referred-users-container h3 { color: var(--lime); margin-bottom: 10px; }
-        #referred-users-list {
-            max-height: 150px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
+        #leaderboard-icon-container:hover { transform: scale(1.1); background-color: var(--game-title-yellow); }
+        #leaderboard-icon-container img { width: 24px; height: 24px; object-fit: contain; }
 
         #server-time-display {
-            background-color: var(--card-bg); padding: 15px; margin-top: 20px;
-            border-radius: var(--border-radius-sm); text-align: center;
-            font-weight: 500; color: var(--lime);
+            font-family: var(--font-family-body); background-color: var(--game-panel-bg);
+            border: 1px solid var(--game-panel-border);
+            color: var(--game-accent-green); text-align: center;
         }
-
-        /* Toggle Switch CSS */
-        .toggle-switch { display: flex; align-items: center; }
-        .toggle-switch-label { margin-right: 10px; font-size: 0.9em; color: var(--text-muted); }
-        .switch {
-            position: relative; display: inline-block;
-            width: 50px; height: 24px;
-        }
-        .switch input { display: none; }
+        /* Generic Toggle Switch Styles */
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
-            position: absolute; cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--secondary-bg);
-            transition: .4s; border-radius: 24px;
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.2); /* Dark mode off state */
+            transition: .4s; border-radius: 28px;
         }
         .slider:before {
-            position: absolute; content: "";
-            height: 18px; width: 18px;
-            left: 3px; bottom: 3px;
-            background-color: var(--text-light);
+            position: absolute; content: ""; height: 20px; width: 20px;
+            left: 4px; bottom: 4px;
+            background-color: var(--game-primary-text); /* Dark mode handle */
             transition: .4s; border-radius: 50%;
         }
-        body.light-mode .slider:before { background-color: #fff; }
-
-        input:checked + .slider { background-color: var(--lime); }
-        body.light-mode input:checked + .slider { background-color: var(--lime); }
-        input:checked + .slider:before { transform: translateX(26px); }
-
-        /* Social Media Icons */
-        .social-icons-container {
-            display: flex; justify-content: space-around; align-items: center;
-            background-color: var(--card-bg); padding: 15px;
-            margin-top: 20px; border-radius: var(--border-radius-sm);
-        }
-        .social-icon {
-            /* font-size: 1.8em; No longer needed as image dictates size */
-            color: var(--text-muted); cursor: pointer;
-            transition: transform 0.2s ease; /* Color transition won't affect img */
-            display: flex; /* To center image if needed */
-            align-items: center;
-            justify-content: center;
-        }
-        .social-icon img {
-            width: 28px; /* Adjust as needed */
-            height: 28px; /* Adjust as needed */
-            object-fit: contain;
-        }
-        .social-icon:hover { transform: scale(1.1); }
-        /* .social-icon:hover img { filter: brightness(1.2); } Example hover effect for images */
+        body.light-mode .slider { background-color: #ccc; } /* Light mode off state */
+        body.light-mode .slider:before { background-color: white; } /* Light mode handle */
+        input:checked + .slider { background-color: var(--game-accent-green); }
+        input:checked + .slider:before { transform: translateX(22px); }
 
 
+        /* Modals (Generic) */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center;
@@ -514,76 +462,55 @@
         }
         .modal-overlay.show { opacity: 1; visibility: visible; transition-delay: 0s; }
         .modal-content {
-            background: var(--gradient-main); padding: 30px; border-radius: var(--border-radius-lg);
+            background: linear-gradient(135deg, var(--game-title-blue), var(--game-accent-green));
+            font-family: var(--font-family-body); padding: 30px; border-radius: var(--border-radius-lg);
             text-align: center; width: 85%; max-width: 400px;
             transform: scale(0.8); transition: transform 0.3s ease;
         }
         .modal-overlay.show .modal-content { transform: scale(1); }
-        .modal-content h3 { color: #f0f0f0; font-size: 1.8em; margin-bottom: 10px; }
+        .modal-content h3 { font-family: var(--font-family-title); color: #f0f0f0; font-size: 1.8em; margin-bottom: 10px; }
         .modal-content p { color: #f0f0f0; margin-bottom: 20px; font-size: 1.1em; }
         .modal-icon { font-size: 4em; margin-bottom: 20px; animation: prizePulse 1.5s infinite; }
         @keyframes prizePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .modal-content .button { background: var(--lime); color: var(--primary-bg); font-weight: bold; }
 
-        .earn-instructions {
-            font-size: 0.9em; color: var(--text-muted); margin-top: 20px;
-            text-align: center; line-height: 1.6;
-        }
-
-        #leaderboard-icon-container {
-            position: fixed; top: 70px; left: 20px; z-index: 150; cursor: pointer;
-            background-color: var(--secondary-bg); padding: 10px;
-            border-radius: 50%; box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            display: flex; /* For aligning the image */
-            align-items: center;
-            justify-content: center;
-        }
-        #leaderboard-icon-container:hover { transform: scale(1.1); background-color: var(--purple); }
-        #leaderboard-icon-container img { /* Style for the leaderboard image */
-            display: block;
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
-        }
-
-
-        .leaderboard-list-style { list-style: none; padding: 0; }
-        .leaderboard-list-style li {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 5px; border-bottom: 1px solid var(--secondary-bg); font-size: 1em;
-        }
-        .leaderboard-list-style li:last-child { border-bottom: none; }
-        .leaderboard-list-style li .rank { color: var(--text-muted); font-weight: 600; margin-right: 15px; min-width: 30px; text-align: right; }
-        .leaderboard-list-style li .username { font-weight: 500; color: var(--text-light); flex-grow: 1; }
-        .leaderboard-list-style li .coins, .leaderboard-list-style li .referrals-count { font-weight: 600; color: var(--lime); }
-
-        .leaderboard-tabs { display: flex; margin-bottom: 20px; border-bottom: 2px solid var(--secondary-bg); }
+        #leaderboard-section .card { background-color: var(--game-panel-bg);}
+        #leaderboard-section .game-title-super { margin-top: 0;}
+        .leaderboard-tabs { display: flex; border-bottom: 2px solid var(--game-panel-border); margin-bottom: 15px; }
         .leaderboard-tab {
-            flex-grow: 1; padding: 10px; text-align: center;
-            cursor: pointer; color: var(--text-muted); font-weight: 500;
-            border-bottom: 3px solid transparent;
-            transition: color 0.2s ease, border-bottom-color 0.2s ease;
+            font-family: var(--font-family-title); font-size: 1.1em;
+            color: var(--text-muted-dark-theme); /* Use improved muted color */
+            padding: 10px 15px; cursor: pointer; flex-grow: 1; text-align: center;
+            border-bottom: 3px solid transparent; transition: color 0.2s, border-bottom-color 0.2s;
         }
-        .leaderboard-tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+        .leaderboard-tab.active { color: var(--game-title-yellow); border-bottom-color: var(--game-title-yellow); }
         .leaderboard-tab-content { display: none; }
         .leaderboard-tab-content.active { display: block; }
-        #leaderboard-section .button.close-leaderboard { margin-top: 20px; background: var(--pink); color: var(--text-light); }
+        .leaderboard-list-style { list-style: none; padding: 0; }
+        .leaderboard-list-style li {
+            font-family: var(--font-family-body); padding: 10px 5px;
+            border-bottom: 1px solid var(--game-panel-border);
+            color: var(--game-primary-text); /* Ensure list item text is visible */
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .leaderboard-list-style li:last-child { border-bottom: none; }
+        .leaderboard-list-style li .rank { font-weight: bold; margin-right: 10px; color: var(--game-title-yellow); min-width: 25px; text-align: right;}
+        .leaderboard-list-style li .username { color: var(--game-primary-text); flex-grow: 1; }
+        .leaderboard-list-style li .coins, .leaderboard-list-style li .referrals-count { color: var(--game-accent-green); font-weight: bold; }
 
-        #social-media-modal .modal-content { background: var(--secondary-bg); }
-        #social-media-modal .modal-content h3 { color: var(--teal); }
-        #social-media-modal .modal-content p { color: var(--text-light); }
-        #social-media-modal-icon { font-size: 3em; margin-bottom: 15px; color: var(--lime); }
+
+        body:not(.app-loaded) #app-container { display: none;}
 
     </style>
 </head>
 <body>
     <audio id="tap-sound" src="uitapping.mp3" preload="auto"></audio>
+    <audio id="claim-sound" src="claim.mp3" preload="auto"></audio>
+    <audio id="level-up-sound" src="levelup.mp3" preload="auto"></audio>
 
     <div id="loading-screen">
-        <img src="loading_screen.png" alt="Loading Background" class="loading-screen-bg-image">
         <div class="logo-animation"></div>
-        <p>Loading your rewards journey...</p>
+        <p>Loading Short2Crypto...</p>
     </div>
 
     <div id="app-container">
@@ -593,36 +520,46 @@
 
         <div class="content-area">
             <div id="earn-section" class="section">
-                <h2>Earn Rewards</h2>
-                <div class="card shortlink-container">
-                    <h3>Shortlink Ad Views</h3>
-                    <p class="shortlink-progress">
-                        Completed: <strong id="shortlinks-completed-count">0</strong> / <span id="shortlink-limit">100</span>
-                    </p>
-                    <div class="shortlink-actions">
-                        <button id="earn-shortlink-button" class="button purple clickable-sound">Start Earning</button>
-                        <button id="claim-shortlink-reward-button" class="button clickable-sound" disabled>Claim 1 Coin</button>
+                <div class="game-header">
+                    <div class="game-logo">
+                        <span class="logo-wing-left">💸</span>
+                        <span class="logo-part1">SHORT</span><span class="logo-vs">2</span><span class="logo-part2">CRYPTO</span>
+                        <span class="logo-wing-right">💸</span>
                     </div>
-                    <p id="shortlink-message" style="margin-top:15px; color: var(--lime);"></p>
+                    <div class="highscore-display">
+                        COINS: <span id="game-highscore">0</span>
+                    </div>
                 </div>
-                 <div class="earn-instructions">
-                    1 Shortlink (6 Ads) = 1 Coin<br>
-                    1 Coin = $0.005<br>
-                    Shortlinks reset daily at 00:00 (Server Time).
+
+                <div class="card shortlink-container">
+                    <div class="shortlink-level-display">
+                        STAGE: <span id="current-stage-display">1</span> / <span id="shortlink-limit-display">100</span>
+                    </div>
+                    <button id="earn-shortlink-button" class="button purple clickable-sound">PLAY!</button>
+                    <button id="claim-shortlink-reward-button" class="button clickable-sound" disabled>Claim 1 Coin</button>
+                    <p id="shortlink-message" style="margin-top:15px; color: var(--game-title-yellow);"></p>
+                     <div class="earn-instructions" style="font-family: var(--font-family-body); color: var(--text-muted-dark-theme); margin-top:15px;">
+                        1 Shortlink (6 Ads) = 1 Coin<br>
+                        1 Coin = $0.005<br>
+                        Shortlinks reset daily at 00:00 (Server Time).
+                    </div>
                 </div>
             </div>
 
             <div id="withdraw-section" class="section">
-                <div class="card" style="margin-bottom: 20px; text-align: center;">
-                    <h3>Platform Stats</h3>
-                    <p>Today's Withdrawal Quota: <strong id="today-withdrawal-quota" style="color: var(--lime);">15000 Coins</strong></p>
-                    <p>Yesterday's Revenue: <strong id="yesterday-revenue" style="color: var(--lime);">$75.20</strong></p>
+                <h1 class="game-title-super">Your Wallet</h1>
+                 <div class="card platform-stats-container" style="margin-bottom: 20px; text-align: center;">
+                    <h3 style="color: var(--game-title-blue)">Platform Stats</h3>
+                    <p>Today's Withdrawal Quota: <strong id="today-withdrawal-quota">15000 Coins</strong></p>
+                    <p>Yesterday's Revenue: <strong id="yesterday-revenue">$75.20</strong></p>
+                    <p>Today's Total Shortlinks: <strong id="platform-today-shortlinks">0</strong></p>
+                    <p>All-Time Total Shortlinks: <strong id="platform-alltime-shortlinks">0</strong></p>
+                    <p>All-Time Revenue Generated: <strong id="platform-alltime-revenue">$0.00</strong></p>
+                    <p>All-Time Coins Withdrawn: <strong id="platform-alltime-withdrawals">0 Coins</strong></p>
                 </div>
 
-                <h2>Withdraw Your Earnings</h2>
-
                 <div class="card wallet-info-container">
-                    <h3>Your Wallet</h3>
+                    <h3>Your Balance</h3>
                     <div class="wallet-balance-display">
                         Coins: <span id="wallet-coins-display">0</span>
                     </div>
@@ -633,24 +570,26 @@
 
                 <details class="card details-dropdown">
                     <summary class="clickable-sound">Withdrawal Rules</summary>
-                    <div class="rules-list">
-                        <li>Minimum 5 referrals are needed for withdrawal.</li>
-                        <li>For TON use TON Open Network.</li>
-                        <li>For SOL use BEP20 address of SOL.</li>
-                        <li>For INR use UPI ID.</li>
-                        <li>Minimum withdrawal amounts & fees:
-                            <ul>
-                                <li>INR: 120 coins (20 coin fee)</li>
-                                <li>TON: 200 coins (30 coin fee)</li>
-                                <li>SOL: 250 coins (35 coin fee)</li>
-                            </ul>
-                        </li>
+                    <div class="rules-list details-content">
+                        <ul>
+                            <li>Minimum 5 referrals are needed for withdrawal.</li>
+                            <li>For TON use TON Open Network.</li>
+                            <li>For SOL use BEP20 address of SOL.</li>
+                            <li>For INR use UPI ID.</li>
+                            <li>Minimum withdrawal amounts & fees:
+                                <ul>
+                                    <li>INR: 120 coins (20 coin fee)</li>
+                                    <li>TON: 200 coins (30 coin fee)</li>
+                                    <li>SOL: 250 coins (35 coin fee)</li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 </details>
 
                 <details class="card details-dropdown">
                     <summary class="clickable-sound">Withdrawal Details</summary>
-                    <div class="withdraw-form-content">
+                    <div class="withdraw-form-content details-content">
                         <label for="withdraw-method-select">Select Method:</label>
                         <select id="withdraw-method-select" class="input-style clickable-sound">
                             <option value="INR">INR (India Bank/UPI)</option>
@@ -659,12 +598,12 @@
                         </select>
 
                         <label for="withdraw-address" id="withdraw-address-label">UPI ID / Bank Details:</label>
-                        <input type="text" id="withdraw-address" placeholder="Enter details...">
+                        <input type="text" id="withdraw-address" class="input-style" placeholder="Enter details...">
 
                         <label for="withdraw-amount-coins">Amount (Coins):</label>
-                        <input type="number" id="withdraw-amount-coins" placeholder="Enter coin amount">
+                        <input type="number" id="withdraw-amount-coins" class="input-style" placeholder="Enter coin amount">
 
-                        <div class="final-amount-display">
+                        <div class="final-amount-display" style="font-family: var(--font-family-body); margin-bottom: 15px;">
                             Network Fee: <span id="network-fee-display">0</span> Coins<br>
                             You will receive: <span id="final-amount-receive-display">0</span> Coins
                         </div>
@@ -674,56 +613,55 @@
 
                 <details class="card details-dropdown">
                     <summary class="clickable-sound">Withdrawal History</summary>
-                    <ul id="withdrawal-history-list">
+                    <ul id="withdrawal-history-list" class="details-content">
                         <li>No withdrawal history yet.</li>
                     </ul>
                 </details>
-
                 <div id="withdraw-success-message" class="success-animation"></div>
             </div>
 
             <div id="profile-section" class="section">
-                 <h2>Your Profile</h2>
+                 <h1 class="game-title-super">Your Profile</h1>
                 <div class="card">
                     <div class="profile-header">
                         <div class="profile-picture">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="var(--text-muted)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                         </div>
                         <span class="profile-username" id="profile-username-display">@telegram_user</span>
                     </div>
                     <div class="profile-stats">
                         <div class="stat-item"><span>Total Coins Earned:</span><span id="profile-total-coins">0</span></div>
-                        <div class="stat-item"><span>Shortlinks Completed (Session):</span><span id="profile-shortlinks-completed">0</span></div>
+                        <div class="stat-item"><span>Stage Reached (Session):</span><span id="profile-shortlinks-completed">0</span></div>
                         <div class="stat-item"><span>Referrals:</span><span id="profile-referrals">0</span></div>
                         <div class="stat-item"><span>Earnings from Referrals:</span><span id="profile-referral-earnings">0 Coins</span></div>
                     </div>
-                    <div class="referral-link-container">
-                        <h3>Your Referral Link:</h3>
-                        <div id="referral-link">https://yourapp.t.me/bot?start=ref_USERID</div>
+                    <div class="referral-link-container" style="text-align:center; margin-top: 20px;">
+                        <h3 style="color: var(--game-primary-text); text-align:center;">Your Referral Link:</h3>
+                        <div id="referral-link" style="font-family:var(--font-family-body); background-color:rgba(0,0,0,0.2); padding:10px; border-radius:var(--border-radius-sm); margin-bottom:10px; word-break: break-all;">https://yourapp.t.me/bot?start=ref_USERID</div>
                         <button class="button clickable-sound" onclick="copyReferralLink()">Copy Link</button>
-                        <p id="copy-status" style="font-size:0.9em; margin-top:10px; color: var(--lime);"></p>
+                        <p id="copy-status" style="font-size:0.9em; margin-top:10px; color: var(--game-title-yellow);"></p>
                     </div>
-                    <div class="referred-users-container card" style="margin-top: 20px; background-color: var(--secondary-bg);">
-                        <h3>Your Referred Users</h3>
-                        <ul id="referred-users-list" class="profile-stats"></ul>
+                    <div class="referred-users-container card" style="margin-top: 20px; background-color: rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--game-primary-text); text-align:center;">Your Referred Users</h3>
+                        <ul id="referred-users-list" class="profile-stats" style="padding: 0 10px;"></ul>
                     </div>
                 </div>
             </div>
 
             <div id="more-section" class="section">
-                <h2>More Options</h2>
+                <h1 class="game-title-super">More Options</h1>
                  <details class="card details-dropdown">
                     <summary class="clickable-sound">Settings</summary>
-                    <ul class="more-options-list">
-                        <li class="clickable-sound">
-                            <span>☀️/🌙 Light/Dark Mode</span>
+                    <ul class="more-options-list details-content">
+                        <li class="clickable-sound" style="background-color:transparent; padding: 10px 0; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);">☀️/🌙 Light/Dark Mode</span>
                             <label class="switch">
                                 <input type="checkbox" id="theme-toggle">
                                 <span class="slider"></span>
                             </label>
                         </li>
-                        <li class="clickable-sound">
-                            <span>🔊 Sound On/Off</span>
+                        <li class="clickable-sound" style="background-color:transparent; padding: 10px 0; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);">🔊 Sound On/Off</span>
                             <label class="switch">
                                 <input type="checkbox" id="sound-toggle" checked>
                                 <span class="slider"></span>
@@ -734,55 +672,29 @@
 
                 <details class="card details-dropdown">
                     <summary class="clickable-sound">❓ Help & Support</summary>
-                    <div class="details-content">
-                        <p>For assistance, please reach out to our support team. (Mock content)</p>
+                    <div class="details-content" style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);">
+                     <p>Welcome to Short2Crypto Support! We're here to help you make the most of your earning experience.</p>
+<h4>Frequently Asked Questions (FAQ):</h4> <!-- ... content ... -->
                         <button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Opening Help Center...')">Open Help Center</button>
                     </div>
                 </details>
+                <details class="card details-dropdown"><summary class="clickable-sound">📜 Terms & Conditions</summary><div class="details-content" style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);"><p>Please read our terms carefully...</p><button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Opening Terms & Conditions...')">View Terms</button></div></details>
+                <details class="card details-dropdown"><summary class="clickable-sound">🛡️ Privacy Policy</summary><div class="details-content" style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);"><p>Your privacy is important to us...</p><button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Opening Privacy Policy...')">View Policy</button></div></details>
+                <details class="card details-dropdown"><summary class="clickable-sound">🚪 Logout </summary><div class="details-content" style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);"><p>Are you sure you want to log out? </p><button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Logging out...')">Logout</button></div></details>
 
-                <details class="card details-dropdown">
-                    <summary class="clickable-sound">📜 Terms & Conditions</summary>
-                    <div class="details-content">
-                        <p>Please review our Terms & Conditions. (Mock content)</p>
-                        <button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Opening Terms & Conditions...')">View Terms</button>
-                    </div>
-                </details>
 
-                <details class="card details-dropdown">
-                    <summary class="clickable-sound">🛡️ Privacy Policy</summary>
-                    <div class="details-content">
-                        <p>Read our Privacy Policy to understand how we handle your data. (Mock content)</p>
-                        <button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Opening Privacy Policy...')">View Policy</button>
-                    </div>
-                </details>
-
-                 <details class="card details-dropdown">
-                    <summary class="clickable-sound">🚪 Logout (Mock)</summary>
-                    <div class="details-content">
-                        <p>Are you sure you want to log out? (This is a mock action)</p>
-                        <button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Logging out...')">Logout</button>
-                    </div>
-                </details>
-
-                <div id="server-time-display">
+                <div id="server-time-display" class="card" style="padding: 10px 15px;">
                     Server Time (IST): <span id="current-server-time">--:--:--</span>
-                </div>
-                <div class="social-icons-container">
-                    <span class="social-icon clickable-sound" data-platform="Telegram" title="Telegram"><img src="telegram.png" alt="Telegram"></span>
-                    <span class="social-icon clickable-sound" data-platform="Instagram" title="Instagram"><img src="instagram.png" alt="Instagram"></span>
-                    <span class="social-icon clickable-sound" data-platform="Facebook" title="Facebook"><img src="facebook.png" alt="Facebook"></span>
-                    <span class="social-icon clickable-sound" data-platform="YouTube" title="YouTube"><img src="youtube.png" alt="YouTube"></span>
-                    <span class="social-icon clickable-sound" data-platform="X" title="X (Twitter)"><img src="x.png" alt="X"></span>
                 </div>
             </div>
 
             <div id="leaderboard-section" class="section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h2>Leaderboard</h2>
-                    <button class="button close-leaderboard clickable-sound" id="close-leaderboard-button">Close</button>
-                </div>
-                <div class="card">
-                    <div class="leaderboard-tabs">
+                    <h1 class="game-title-super" style="margin-bottom:0;">Leaderboard</h1>
+                    <button class="button pink clickable-sound" id="close-leaderboard-button" style="padding:10px 20px; font-size:0.9em;">Close</button>
+              </div>
+                <div class="card" style="padding-bottom: 10px;">
+                <div class="leaderboard-tabs">
                         <div class="leaderboard-tab active clickable-sound" data-tab="points">Points</div>
                         <div class="leaderboard-tab clickable-sound" data-tab="referrals">Referrals</div>
                     </div>
@@ -793,63 +705,111 @@
                         <ul id="referral-leaderboard-list" class="leaderboard-list-style"></ul>
                     </div>
                 </div>
-            </div>
         </div>
 
-        <nav class="bottom-nav">
-            <div class="nav-item active clickable-sound" data-section="earn-section">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3.5-9h2V7.5c0-.28.22-.5.5-.5s.5.22.5.5V11h2c.28 0 .5.22.5.5s-.22.5-.5.5h-2v3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5V12h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/></svg>
-                <span>Earn</span>
+        </div> <!-- End .content-area -->
+
+        <nav class="game-controls">
+            <div class="control-button active clickable-sound" data-section="earn-section" title="Earn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4z"/></svg>
+                <span class="nav-text">Earn</span>
             </div>
-            <div class="nav-item clickable-sound" data-section="withdraw-section">
+            <div class="control-button clickable-sound" data-section="withdraw-section" title="Wallet">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-                <span>Withdraw</span>
+                <span class="nav-text">Wallet</span>
             </div>
-            <div class="nav-item clickable-sound" data-section="profile-section">
+            <div class="control-button clickable-sound" data-section="profile-section" title="Profile">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                <span>Profile</span>
+                <span class="nav-text">Profile</span>
             </div>
-            <div class="nav-item clickable-sound" data-section="more-section">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-                <span>More</span>
+            <div class="control-button clickable-sound" data-section="more-section" title="More">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                <span class="nav-text">More</span>
             </div>
         </nav>
-    </div>
+    </div> <!-- End #app-container -->
 
     <div id="ad-viewing-page">
         <h3 id="ad-viewing-title">Complete Ad Views</h3>
-        <div class="mock-banner" id="ad-banner-1">Banner 1</div>
+        <!-- Top Ad Slot Area -->
+        <script type="text/javascript">atOptions = {'key' : 'a8c08c61cf393d2cc487f3204c0d3094','format' : 'iframe','height' : 50,'width' : 320,'params' : {}}; </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/a8c08c61cf393d2cc487f3204c0d3094/invoke.js"></script>
+
         <div id="ad-top-controls">
-            <!-- Top button will be managed by JS: "Start Ad X" -->
+            <!-- "Watch Ad" button will be dynamically inserted here -->
         </div>
-        <div class="mock-banner" id="ad-banner-2">Banner 2</div>
-        <div class="mock-banner" id="ad-banner-3">Banner 3</div>
-        <div class="mock-banner" id="ad-banner-4">Banner 4</div>
-        <div id="ad-timer-display">00:15</div>
-        <div class="mock-banner" id="ad-banner-5">Banner 5</div>
-        <div class="mock-banner" id="ad-banner-6">Banner 6</div>
-        <div class="mock-banner" id="ad-banner-7">Banner 7</div>
-        <div class="mock-banner" id="ad-banner-8">Banner 8</div>
-        <div class="mock-banner" id="ad-banner-9">Banner 9</div>
+        <!-- Second Ad Slot Area (optional, can be part of banner group) -->
+        <script type="text/javascript">atOptions = {'key' : 'a8c08c61cf393d2cc487f3204c0d3094','format' : 'iframe','height' : 50,'width' : 320,'params' : {}}; </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/a8c08c61cf393d2cc487f3204c0d3094/invoke.js"></script>
+
+        <div class="timer-and-flanking-banners">
+            <!-- Left Flanking Banner (Optional) -->
+            <script async="async" data-cfasync="false" src="//pl26708574.profitableratecpm.com/76976aa2b4eda8c924bca85369451701/invoke.js"></script>
+            <div id="container-76976aa2b4eda8c924bca85369451701" style="max-width:160px; max-height:600px; margin: auto;"></div>
+
+            <div id="ad-timer-display">00:15</div>
+
+            <!-- Right Flanking Banner (Optional, can be same as left or different) -->
+            <script type="text/javascript">atOptions = {'key' : 'dd9e97c4e4a6da56502d55bbc6208a18','format' : 'iframe','height' : 300,'width' : 160,'params' : {}}; </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/dd9e97c4e4a6da56502d55bbc6208a18/invoke.js"></script>
+        </div>
+        <!-- Main Content Ad Slot -->
+        <script type="text/javascript">atOptions = {'key' : 'e05e5ac613452fc855a5eb1798572051','format' : 'iframe','height' : 250,'width' : 300,'params' : {}}; </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/e05e5ac613452fc855a5eb1798572051/invoke.js"></script>
+        
         <div id="ad-bottom-controls">
-            <!-- Bottom button will be managed by JS: "Next Ad" / "Finish & Claim" -->
+            <!-- "Proceed" / "Claim" button will be dynamically inserted here -->
         </div>
-        <div class="mock-banner" id="ad-banner-10">Banner 10</div>
-        <!-- Removed ad-cancel-button -->
+
     </div>
-
-
-    <div id="social-media-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div id="social-media-modal-icon">📱</div>
-            <h3 id="social-media-modal-title">Follow Us!</h3>
-            <p id="social-media-modal-text">Stay connected with us on [Platform] for the latest updates and news!</p>
-            <button class="button purple clickable-sound" id="close-social-media-modal-button">Close</button>
-        </div>
-    </div>
-
 
     <script>
+        // --- Main JavaScript Logic ---
+        console.log("Main script block started. (Log 1)");
+
+        if (typeof window.Telegram === 'undefined' || typeof window.Telegram.WebApp === 'undefined') {
+            window.Telegram = {
+                WebApp: {
+                    initDataUnsafe: {
+                        user: {
+                            id: Math.floor(Math.random() * 100000000) + 10000000,
+                            first_name: "MockFirst",
+                            last_name: "MockLast",
+                            username: "MockTGUser" + (Math.floor(Math.random() * 900) + 100),
+                            language_code: "en"
+                        },
+                        start_param: null
+                    },
+                    ready: () => console.log("Mock Telegram WebApp is ready."),
+                    expand: () => console.log("Mock Telegram WebApp expand called."),
+                    close: () => console.log("Mock Telegram WebApp close called."),
+                }
+            };
+            console.log("Mock Telegram object created. (Log 2)");
+        }
+
+
+        let currentUser;
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+            const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+            currentUser = {
+                id: tgUser.id.toString(),
+                username: tgUser.username || `${tgUser.first_name}${tgUser.last_name || ''}`,
+                referrals: 0,
+                referredBy: null
+            };
+            const startParam = window.Telegram.WebApp.initDataUnsafe.start_param;
+            if (startParam && startParam.startsWith('ref_')) {
+                currentUser.referredBy = startParam.substring(4);
+                console.log(`User was referred by: ${currentUser.referredBy}`);
+            }
+        } else {
+            currentUser = { username: 'VibeUser_Fallback', id: 'fallback001', referrals: 0, referredBy: null };
+            console.warn("Telegram data not found, using fallback currentUser. (Log 2.1)");
+        }
+        console.log("CurrentUser initialized:", currentUser, "(Log 3)");
+
+
         const COIN_VALUE_USD = 0.005;
         const SHORTLINK_LIMIT = 100;
         const ADS_PER_SHORTLINK = 6;
@@ -862,22 +822,21 @@
             SOL: { min: 250, fee: 35, label: "Solana (BEP20) Address:", placeholder: "Your SOL (BEP20) Wallet Address" },
             TON: { min: 200, fee: 30, label: "TON Wallet Address:", placeholder: "Your TON Wallet Address" }
         };
-        let withdrawalHistory = [];
-
-        const currentUser = { username: 'VibeUser_Test', id: 'tester0001', referrals: 0 };
-
-        const mockReferredUsers = [
-            { username: '@ReferralOne', referredBy: 'tester0001', date: '2023-10-01' },
-            { username: '@FriendBob', referredBy: 'tester0001', date: '2023-10-03' },
-            { username: '@AnotherUser', referredBy: 'other_referrer', date: '2023-10-02' },
-            { username: '@CoolCat99', referredBy: 'tester0001', date: '2023-10-05' },
+        let withdrawalHistory = [
+             { id: 'wd001', date: '2023-10-25', method: 'INR', amount: 150, status: 'Completed', address: 'user@upi' },
+             { id: 'wd002', date: '2023-11-05', method: 'TON', amount: 200, status: 'Pending', address: 'UQ...Xyz' }
         ];
-        currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length;
-
-
+        const mockReferredUsers = [
+            { username: '@ReferralOne', referredBy: currentUser.id, date: '2023-10-01' },
+            { username: '@FriendBob',   referredBy: currentUser.id, date: '2023-10-03' },
+            { username: '@AnotherUser', referredBy: 'other_referrer_id', date: '2023-10-02' },
+            { username: '@CoolCat99',   referredBy: currentUser.id, date: '2023-10-05' },
+        ];
+        console.log("mockReferredUsers initialized. (Log 4)");
         let mockLeaderboardData = [
             { rank: 1, username: '@ProGamerX', coins: 25000, referrals: 15 },
             { rank: 2, username: '@CoinMaster', coins: 22500, referrals: 12 },
+            { rank: 3, username: currentUser.username, coins: 0, referrals: 0 },
             { rank: 4, username: '@EarlyBird', coins: 18000, referrals: 8 },
             { rank: 5, username: '@NewbieNick', coins: 1500, referrals: 2 },
             { rank: 6, username: '@PlayerOne', coins: 1200, referrals: 1},
@@ -887,630 +846,459 @@
 
         let totalCoins = 0;
         let shortlinksCompletedThisSession = 0;
-        let currentAdStep = 0; // Will be 1-based for display, 0-based for array-like logic if needed
-        let shortlinkProcessActive = false; // True when user starts earning shortlink ads until reward is claimed
+        let currentAdStep = 0;
+        let shortlinkProcessActive = false;
         let serverTimeInterval;
         let isSoundEnabled = true;
         const tapSound = document.getElementById('tap-sound');
+        const claimSound = document.getElementById('claim-sound');
+        const levelUpSound = document.getElementById('level-up-sound');
         let adTimerInterval = null;
+        let platformStats = {
+            todayShortlinks: 0,
+            allTimeShortlinks: 12500,
+            allTimeRevenue: 0,
+            allTimeWithdrawals: 30000,
+            todayWithdrawalQuota: 15000,
+            yesterdayRevenue: 75.20
+        };
+        platformStats.allTimeRevenue = platformStats.allTimeShortlinks * COIN_VALUE_USD;
+        let lastResetDate = new Date().toDateString();
+        console.log("Global vars and platformStats initialized. (Log 5)");
 
         let loadingScreen, appContainer, navItems, sections;
-        let earnShortlinkButton, claimShortlinkRewardButton, shortlinksCompletedCountEl, shortlinkLimitEl, shortlinkMessageEl;
-        
+        let earnShortlinkButton, claimShortlinkRewardButton, shortlinkMessageEl;
+        let gameHighscoreEl, currentStageDisplayEl, shortlinkLimitDisplayEl;
         let adViewingPage, adTopControls, adViewingTitle, adTimerDisplay, adBottomControls;
-
-        let profileUsernameDisplay, referralLinkDisplay, referredUsersListEl;
+        let profileUsernameDisplay, profileTotalCoinsEl, profileShortlinksCompletedEl, profileReferralsEl, profileReferralEarningsEl;
+        let referralLinkDisplay, referredUsersListEl;
         let serverTimeDisplayEl;
         let leaderboardIconContainer, leaderboardSection, leaderboardListEl, referralLeaderboardListEl;
         let themeToggle, soundToggle;
-        let socialMediaModal, socialMediaModalTitle, socialMediaModalText, socialMediaModalIconEl, closeSocialMediaModalButton;
         let closeLeaderboardButton;
         let leaderboardTabs, leaderboardTabContents;
-
         let walletCoinsDisplayEl, walletUsdValueDisplayEl;
         let withdrawMethodSelectEl, withdrawAddressLabelEl, withdrawAddressInputEl, withdrawAmountCoinsInputEl;
         let networkFeeDisplayEl, finalAmountReceiveDisplayEl, initiateWithdrawButtonEl, withdrawalHistoryListEl;
+        let platformTodayShortlinksEl, platformAllTimeShortlinksEl, platformAllTimeRevenueEl, platformAllTimeWithdrawalsEl;
+        let platformTodayQuotaEl, platformYesterdayRevenueEl;
 
+        let currentActiveSectionId = 'earn-section';
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadingScreen = document.getElementById('loading-screen');
-            appContainer = document.getElementById('app-container');
-            navItems = document.querySelectorAll('.nav-item');
-            sections = document.querySelectorAll('.section');
-            earnShortlinkButton = document.getElementById('earn-shortlink-button');
-            claimShortlinkRewardButton = document.getElementById('claim-shortlink-reward-button');
-            shortlinksCompletedCountEl = document.getElementById('shortlinks-completed-count');
-            shortlinkLimitEl = document.getElementById('shortlink-limit');
-            shortlinkMessageEl = document.getElementById('shortlink-message');
-            
-            adViewingPage = document.getElementById('ad-viewing-page');
-            adTopControls = document.getElementById('ad-top-controls');
-            adViewingTitle = document.getElementById('ad-viewing-title');
-            adTimerDisplay = document.getElementById('ad-timer-display');
-            adBottomControls = document.getElementById('ad-bottom-controls');
+            try {
+                console.log("DOMContentLoaded event fired. (Log 6)");
+                document.body.classList.remove('app-loaded');
 
-            profileUsernameDisplay = document.getElementById('profile-username-display');
-            referralLinkDisplay = document.getElementById('referral-link');
-            referredUsersListEl = document.getElementById('referred-users-list');
-            serverTimeDisplayEl = document.getElementById('current-server-time');
-            leaderboardIconContainer = document.getElementById('leaderboard-icon-container');
-            leaderboardSection = document.getElementById('leaderboard-section');
-            leaderboardListEl = document.getElementById('leaderboard-list');
-            referralLeaderboardListEl = document.getElementById('referral-leaderboard-list');
-            themeToggle = document.getElementById('theme-toggle');
-            soundToggle = document.getElementById('sound-toggle');
-            socialMediaModal = document.getElementById('social-media-modal');
-            socialMediaModalTitle = document.getElementById('social-media-modal-title');
-            socialMediaModalText = document.getElementById('social-media-modal-text');
-            socialMediaModalIconEl = document.getElementById('social-media-modal-icon');
-            closeSocialMediaModalButton = document.getElementById('close-social-media-modal-button');
-            closeLeaderboardButton = document.getElementById('close-leaderboard-button');
-            leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
-            leaderboardTabContents = document.querySelectorAll('.leaderboard-tab-content');
+                loadingScreen = document.getElementById('loading-screen');
+                appContainer = document.getElementById('app-container');
+                navItems = document.querySelectorAll('.control-button');
+                sections = document.querySelectorAll('.section');
+                earnShortlinkButton = document.getElementById('earn-shortlink-button');
+                claimShortlinkRewardButton = document.getElementById('claim-shortlink-reward-button');
+                shortlinkMessageEl = document.getElementById('shortlink-message');
+                gameHighscoreEl = document.getElementById('game-highscore');
+                currentStageDisplayEl = document.getElementById('current-stage-display');
+                shortlinkLimitDisplayEl = document.getElementById('shortlink-limit-display');
+                adViewingPage = document.getElementById('ad-viewing-page');
+                adTopControls = document.getElementById('ad-top-controls');
+                adViewingTitle = document.getElementById('ad-viewing-title');
+                adTimerDisplay = document.getElementById('ad-timer-display');
+                adBottomControls = document.getElementById('ad-bottom-controls');
+                profileUsernameDisplay = document.getElementById('profile-username-display');
+                profileTotalCoinsEl = document.getElementById('profile-total-coins');
+                profileShortlinksCompletedEl = document.getElementById('profile-shortlinks-completed');
+                profileReferralsEl = document.getElementById('profile-referrals');
+                profileReferralEarningsEl = document.getElementById('profile-referral-earnings');
+                referralLinkDisplay = document.getElementById('referral-link');
+                referredUsersListEl = document.getElementById('referred-users-list');
+                serverTimeDisplayEl = document.getElementById('current-server-time');
+                leaderboardIconContainer = document.getElementById('leaderboard-icon-container');
+                leaderboardSection = document.getElementById('leaderboard-section');
+                leaderboardListEl = document.getElementById('leaderboard-list');
+                referralLeaderboardListEl = document.getElementById('referral-leaderboard-list');
+                themeToggle = document.getElementById('theme-toggle');
+                soundToggle = document.getElementById('sound-toggle');
+                closeLeaderboardButton = document.getElementById('close-leaderboard-button');
+                leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
+                leaderboardTabContents = document.querySelectorAll('.leaderboard-tab-content');
+                walletCoinsDisplayEl = document.getElementById('wallet-coins-display');
+                walletUsdValueDisplayEl = document.getElementById('wallet-usd-value-display');
+                withdrawMethodSelectEl = document.getElementById('withdraw-method-select');
+                withdrawAddressLabelEl = document.getElementById('withdraw-address-label');
+                withdrawAddressInputEl = document.getElementById('withdraw-address');
+                withdrawAmountCoinsInputEl = document.getElementById('withdraw-amount-coins');
+                networkFeeDisplayEl = document.getElementById('network-fee-display');
+                finalAmountReceiveDisplayEl = document.getElementById('final-amount-receive-display');
+                initiateWithdrawButtonEl = document.getElementById('initiate-withdraw-button');
+                withdrawalHistoryListEl = document.getElementById('withdrawal-history-list');
+                platformTodayQuotaEl = document.getElementById('today-withdrawal-quota');
+                platformYesterdayRevenueEl = document.getElementById('yesterday-revenue');
+                platformTodayShortlinksEl = document.getElementById('platform-today-shortlinks');
+                platformAllTimeShortlinksEl = document.getElementById('platform-alltime-shortlinks');
+                platformAllTimeRevenueEl = document.getElementById('platform-alltime-revenue');
+                platformAllTimeWithdrawalsEl = document.getElementById('platform-alltime-withdrawals');
+                console.log("All DOM elements fetched. (Log 7.1)");
 
-            walletCoinsDisplayEl = document.getElementById('wallet-coins-display');
-            walletUsdValueDisplayEl = document.getElementById('wallet-usd-value-display');
-            withdrawMethodSelectEl = document.getElementById('withdraw-method-select');
-            withdrawAddressLabelEl = document.getElementById('withdraw-address-label');
-            withdrawAddressInputEl = document.getElementById('withdraw-address');
-            withdrawAmountCoinsInputEl = document.getElementById('withdraw-amount-coins');
-            networkFeeDisplayEl = document.getElementById('network-fee-display');
-            finalAmountReceiveDisplayEl = document.getElementById('final-amount-receive-display');
-            initiateWithdrawButtonEl = document.getElementById('initiate-withdraw-button');
-            withdrawalHistoryListEl = document.getElementById('withdrawal-history-list');
-
-            if(profileUsernameDisplay) profileUsernameDisplay.textContent = `@${currentUser.username}`;
-            if(referralLinkDisplay) referralLinkDisplay.textContent = `https://yourapp.t.me/bot?start=ref_${currentUser.id}`;
-            if(shortlinkLimitEl) shortlinkLimitEl.textContent = SHORTLINK_LIMIT;
-
-            totalCoins += mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length * COINS_PER_REFERRAL;
-
-            initializeSettings();
-            updateShortlinkUI();
-            updateWalletBalance();
-            updateProfileStats();
-            updateWithdrawalFormUI();
-            populateWithdrawalHistory();
-
-            setTimeout(() => {
-                if(loadingScreen) loadingScreen.style.opacity = '0';
-                setTimeout(() => {
-                    if(loadingScreen) loadingScreen.style.display = 'none';
-                    if(appContainer) appContainer.style.display = 'flex';
-                    showSection('earn-section');
-                }, 500);
-            }, 1000);
-
-            navItems.forEach(item => item.addEventListener('click', handleNavClick));
-            if (leaderboardIconContainer) leaderboardIconContainer.addEventListener('click', handleLeaderboardIconClick);
-            if (earnShortlinkButton) earnShortlinkButton.addEventListener('click', startShortlinkProcess);
-            if (claimShortlinkRewardButton) claimShortlinkRewardButton.addEventListener('click', claimShortlinkReward);
-            
-            if (themeToggle) themeToggle.addEventListener('change', toggleTheme);
-            if (soundToggle) soundToggle.addEventListener('change', toggleSound);
-            document.querySelectorAll('.social-icon').forEach(icon => icon.addEventListener('click', handleSocialIconClick));
-            if (closeSocialMediaModalButton) closeSocialMediaModalButton.addEventListener('click', () => closeModal(socialMediaModal));
-            if (socialMediaModal) socialMediaModal.addEventListener('click', (e) => { if(e.target === socialMediaModal) closeModal(socialMediaModal); });
-            if (closeLeaderboardButton) closeLeaderboardButton.addEventListener('click', handleCloseLeaderboard);
-            leaderboardTabs.forEach(tab => tab.addEventListener('click', () => showLeaderboardTab(tab.dataset.tab)));
-
-            if (withdrawMethodSelectEl) withdrawMethodSelectEl.addEventListener('change', updateWithdrawalFormUI);
-            if (withdrawAmountCoinsInputEl) withdrawAmountCoinsInputEl.addEventListener('input', updateWithdrawalFormUI);
-            if (initiateWithdrawButtonEl) initiateWithdrawButtonEl.addEventListener('click', handleNewWithdraw);
-
-            document.body.addEventListener('click', (event) => {
-                if (event.target.closest('.clickable-sound')) {
-                    playSound();
+                currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length;
+                totalCoins += currentUser.referrals * COINS_PER_REFERRAL;
+                const userLeaderboardEntry = mockLeaderboardData.find(entry => entry.username === currentUser.username);
+                if (userLeaderboardEntry) {
+                    userLeaderboardEntry.coins = totalCoins;
+                    userLeaderboardEntry.referrals = currentUser.referrals;
+                } else {
+                    mockLeaderboardData.push({ rank: 0, username: currentUser.username, coins: totalCoins, referrals: currentUser.referrals });
                 }
-            });
-        });
 
-        function playSound() {
-            if (isSoundEnabled && tapSound) {
-                tapSound.currentTime = 0;
-                tapSound.play().catch(error => console.debug("Sound play interrupted or failed:", error));
+                if (profileUsernameDisplay) profileUsernameDisplay.textContent = `@${currentUser.username}`;
+                if (referralLinkDisplay) referralLinkDisplay.textContent = `https://yourapp.t.me/bot?start=ref_${currentUser.id}`;
+                if (shortlinkLimitDisplayEl) shortlinkLimitDisplayEl.textContent = SHORTLINK_LIMIT;
+                console.log("Initial totalCoins from referrals:", totalCoins, "(Log 7.2)");
+
+                initializeSettings();
+                updateShortlinkUI();
+                updateWalletBalance();
+                updateProfileStats();
+                updateWithdrawalFormUI();
+                populateWithdrawalHistory();
+                updatePlatformStatsDisplay();
+                populateReferredUsersList();
+                console.log("Initial UI updates done. (Log 9)");
+
+                setTimeout(() => {
+                    console.log("Loading screen timeout. (Log 10)");
+                    if (loadingScreen) loadingScreen.classList.add('hidden');
+                    if (appContainer) {
+                        appContainer.style.display = 'flex';
+                        setTimeout(() => appContainer.classList.add('visible'), 50);
+                    }
+                    document.body.classList.add('app-loaded');
+                    showSection('earn-section', true);
+                    console.log("App displayed. (Log 12)");
+                }, 1000);
+                console.log("Loading screen timeout scheduled. (Log 13)");
+
+                navItems.forEach(item => item.addEventListener('click', handleNavClick));
+                if (leaderboardIconContainer) leaderboardIconContainer.addEventListener('click', handleLeaderboardIconClick);
+                if (earnShortlinkButton) earnShortlinkButton.addEventListener('click', startShortlinkProcess);
+                if (claimShortlinkRewardButton) claimShortlinkRewardButton.addEventListener('click', claimShortlinkReward);
+                if (themeToggle) themeToggle.addEventListener('change', toggleTheme);
+                if (soundToggle) soundToggle.addEventListener('change', toggleSound);
+                if (closeLeaderboardButton) closeLeaderboardButton.addEventListener('click', handleCloseLeaderboard);
+                leaderboardTabs.forEach(tab => tab.addEventListener('click', () => showLeaderboardTab(tab.dataset.tab)));
+                if (withdrawMethodSelectEl) withdrawMethodSelectEl.addEventListener('change', updateWithdrawalFormUI);
+                if (withdrawAmountCoinsInputEl) withdrawAmountCoinsInputEl.addEventListener('input', updateWithdrawalFormUI);
+                if (initiateWithdrawButtonEl) initiateWithdrawButtonEl.addEventListener('click', handleNewWithdraw);
+                document.body.addEventListener('click', (event) => { if (event.target.closest('.clickable-sound')) { playSound('tap'); }});
+                console.log("All event listeners attached. (Log 13.1)");
+
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.ready();
+                    window.Telegram.WebApp.expand();
+                }
+
+            } catch (e) {
+                console.error("Error during DOMContentLoaded execution:", e, "(Error Log)");
+                const loadingScreenMsgEl = document.querySelector("#loading-screen p");
+                if (loadingScreenMsgEl) {
+                    loadingScreenMsgEl.innerHTML = "An error occurred. Check console.<br>" + e.toString();
+                    loadingScreenMsgEl.style.color = "red";
+                }
+                 if (loadingScreen && appContainer) {
+                    loadingScreen.classList.remove('hidden');
+                    appContainer.style.display = 'none';
+                }
+            }
+        });
+        console.log("DOMContentLoaded listener attached. (Log 14)");
+
+
+        function playSound(type = 'tap') {
+            let soundToPlay;
+            switch(type) {
+                case 'claim': soundToPlay = claimSound; break;
+                case 'levelup': soundToPlay = levelUpSound; break;
+                case 'tap': default: soundToPlay = tapSound; break;
+            }
+            if (isSoundEnabled && soundToPlay && soundToPlay.readyState >= 2) {
+                soundToPlay.currentTime = 0;
+                soundToPlay.play().catch(error => console.warn("Sound play failed or interrupted:", error));
+            } else if (!soundToPlay) {
+                console.warn("Sound element not found for type:", type);
+            } else if (soundToPlay && soundToPlay.readyState < 2) {
+                console.warn("Sound not ready to play:", type, "readyState:", soundToPlay.readyState);
             }
         }
 
         function initializeSettings() {
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                document.body.classList.add('light-mode');
-                if(themeToggle) themeToggle.checked = true;
-            } else {
-                 if(themeToggle) themeToggle.checked = false;
-            }
+            if (savedTheme === 'light') { document.body.classList.add('light-mode'); if(themeToggle) themeToggle.checked = true; }
+            else { if(themeToggle) themeToggle.checked = false; }
             const savedSound = localStorage.getItem('soundEnabled');
-            if (savedSound === 'false') {
-                isSoundEnabled = false;
-                if(soundToggle) soundToggle.checked = false;
-            } else {
-                isSoundEnabled = true;
-                if(soundToggle) soundToggle.checked = true;
-            }
+            if (savedSound === 'false') { isSoundEnabled = false; if(soundToggle) soundToggle.checked = false; }
+            else { isSoundEnabled = true; if(soundToggle) soundToggle.checked = true; }
         }
+        function toggleTheme() { document.body.classList.toggle('light-mode'); localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); }
+        function toggleSound() { isSoundEnabled = soundToggle.checked; localStorage.setItem('soundEnabled', isSoundEnabled); console.log("Sound enabled:", isSoundEnabled); }
 
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
-        }
 
-        function toggleSound() {
-            playSound(); 
-            isSoundEnabled = soundToggle.checked;
-            localStorage.setItem('soundEnabled', isSoundEnabled);
+        function showSection(newSectionId, initialLoad = false) {
+            console.log(`Showing section: ${newSectionId}, Initial: ${initialLoad}, Current: ${currentActiveSectionId}`);
+            const newSection = document.getElementById(newSectionId);
+            if (!newSection) { console.error(`Section ${newSectionId} not found.`); return; }
+
+            sections.forEach(s => {
+                if (s.id === newSectionId) {
+                    if (initialLoad) {
+                        s.style.transition = 'none'; s.classList.add('active');
+                        void s.offsetWidth; s.style.transition = '';
+                    } else { s.classList.add('active'); }
+                } else { s.classList.remove('active'); }
+            });
+
+            currentActiveSectionId = newSectionId;
+            const contentArea = document.querySelector('.content-area');
+            if (contentArea) contentArea.scrollTop = 0;
+
+            if (newSectionId === 'more-section') startServerTimeUpdates(); else stopServerTimeUpdates();
+            if (newSectionId === 'leaderboard-section') { populateLeaderboard(); populateReferralLeaderboard(); }
+            if (newSectionId === 'withdraw-section') { updateWithdrawalFormUI(); populateWithdrawalHistory(); updatePlatformStatsDisplay(); }
+            if (newSectionId === 'profile-section') { updateProfileStats(); populateReferredUsersList(); }
+            if (newSectionId === 'earn-section') { updateShortlinkUI(); }
+
+            // REMOVED: Ad call on section navigation was here.
+            // Ads are now only explicitly called within the shortlink process.
         }
 
 
         function handleNavClick(event) {
             const item = event.currentTarget;
-            if (shortlinkProcessActive) {
-                alert("Please complete the current ad viewing and claiming process first.");
-                return;
-            }
+            if (shortlinkProcessActive) { alert("Please complete the current ad viewing and claiming process first."); return; }
+            const newSectionId = item.dataset.section;
+            if (newSectionId === currentActiveSectionId) return;
             navItems.forEach(nav => nav.classList.remove('active'));
             item.classList.add('active');
-            showSection(item.dataset.section);
+            showSection(newSectionId);
         }
 
         function handleLeaderboardIconClick() {
-            if (shortlinkProcessActive) {
-                 alert("Please complete the current ad viewing and claiming process first.");
-                return;
-            }
+            if (shortlinkProcessActive) { alert("Please complete the current ad viewing and claiming process first."); return; }
             showSection('leaderboard-section');
-            showLeaderboardTab('points'); 
-            populateLeaderboard();
-            populateReferralLeaderboard();
-            navItems.forEach(nav => nav.classList.remove('active')); 
+            showLeaderboardTab('points');
         }
-        
-        function handleCloseLeaderboard() {
-            // Default to earn section or implement logic to return to last active section if needed
-            const defaultSection = 'earn-section'; 
-            showSection(defaultSection);
-            navItems.forEach(nav => {
-                nav.classList.remove('active');
-                if (nav.dataset.section === defaultSection) {
-                    nav.classList.add('active');
-                }
-            });
-        }
+        function handleCloseLeaderboard() { const defaultSection = 'earn-section'; showSection(defaultSection); navItems.forEach(nav => { nav.classList.toggle('active', nav.dataset.section === defaultSection); });}
+        function showLeaderboardTab(tabName) { leaderboardTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === tabName)); leaderboardTabContents.forEach(content => content.classList.toggle('active', content.id === `leaderboard-${tabName}-content`));}
+        function getIndianTime() { const now = new Date(); const utcOffset = now.getTimezoneOffset() * 60000; const utcTime = now.getTime() + utcOffset; const istTime = new Date(utcTime + (3600000 * 5.5)); return `${istTime.getHours().toString().padStart(2, '0')}:${istTime.getMinutes().toString().padStart(2, '0')}:${istTime.getSeconds().toString().padStart(2, '0')}`; }
+        function startServerTimeUpdates() { if (serverTimeDisplayEl && !serverTimeInterval) { const update = () => { if (serverTimeDisplayEl) serverTimeDisplayEl.textContent = getIndianTime(); const currentDate = new Date().toDateString(); if (currentDate !== lastResetDate) { console.log("Server time detected new day, resetting daily stats."); platformStats.todayShortlinks = 0; shortlinksCompletedThisSession = 0; updateShortlinkUI(); lastResetDate = currentDate; } updatePlatformStatsDisplay(); }; update(); serverTimeInterval = setInterval(update, 1000); } }
+        function stopServerTimeUpdates() { if (serverTimeInterval) { clearInterval(serverTimeInterval); serverTimeInterval = null; } }
+        function updatePlatformStatsDisplay() { if (platformTodayQuotaEl) platformTodayQuotaEl.textContent = `${platformStats.todayWithdrawalQuota} Coins`; if (platformYesterdayRevenueEl) platformYesterdayRevenueEl.textContent = `$${platformStats.yesterdayRevenue.toFixed(2)}`; if (platformTodayShortlinksEl) platformTodayShortlinksEl.textContent = platformStats.todayShortlinks; if (platformAllTimeShortlinksEl) platformAllTimeShortlinksEl.textContent = platformStats.allTimeShortlinks; platformStats.allTimeRevenue = platformStats.allTimeShortlinks * COIN_VALUE_USD; if (platformAllTimeRevenueEl) platformAllTimeRevenueEl.textContent = `$${platformStats.allTimeRevenue.toFixed(2)}`; if (platformAllTimeWithdrawalsEl) platformAllTimeWithdrawalsEl.textContent = `${platformStats.allTimeWithdrawals} Coins`;}
+        function updateShortlinkUI() { if(currentStageDisplayEl) currentStageDisplayEl.textContent = shortlinksCompletedThisSession + 1; const limitReached = shortlinksCompletedThisSession >= SHORTLINK_LIMIT; if(earnShortlinkButton) { earnShortlinkButton.disabled = limitReached || shortlinkProcessActive; earnShortlinkButton.textContent = limitReached ? "LIMIT!" : (shortlinkProcessActive ? "LOADING..." : "PLAY!"); } if(limitReached && shortlinkMessageEl && !shortlinkProcessActive) { shortlinkMessageEl.textContent = "Daily shortlink limit reached!"; } else if (!shortlinkProcessActive && shortlinkMessageEl && claimShortlinkRewardButton && !claimShortlinkRewardButton.disabled) {} else if (!shortlinkProcessActive && shortlinkMessageEl) { shortlinkMessageEl.textContent = ""; }}
 
-        function showLeaderboardTab(tabName) {
-            leaderboardTabs.forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.tab === tabName);
-            });
-            leaderboardTabContents.forEach(content => {
-                content.classList.toggle('active', content.id === `leaderboard-${tabName}-content`);
-            });
-        }
 
-        function getIndianTime() {
-            const now = new Date();
-            const utcOffset = now.getTimezoneOffset() * 60000;
-            const utcTime = now.getTime() + utcOffset;
-            const istTime = new Date(utcTime + (3600000 * 5.5)); 
-            return `${istTime.getHours().toString().padStart(2, '0')}:${istTime.getMinutes().toString().padStart(2, '0')}:${istTime.getSeconds().toString().padStart(2, '0')}`;
-        }
-
-        function startServerTimeUpdates() {
-            if (serverTimeDisplayEl && !serverTimeInterval) {
-                serverTimeDisplayEl.textContent = getIndianTime();
-                serverTimeInterval = setInterval(() => serverTimeDisplayEl.textContent = getIndianTime(), 1000);
-            }
-        }
-        function stopServerTimeUpdates() {
-            if (serverTimeInterval) {
-                clearInterval(serverTimeInterval);
-                serverTimeInterval = null;
-                if(serverTimeDisplayEl) serverTimeDisplayEl.textContent = "--:--:--";
-            }
-        }
-
-        function showSection(sectionId) {
-            sections.forEach(section => section.classList.toggle('active', section.id === sectionId));
-            const contentArea = document.querySelector('.content-area');
-            if (contentArea) contentArea.scrollTop = 0;
-
-            if (sectionId === 'more-section') startServerTimeUpdates();
-            else stopServerTimeUpdates();
-
-            if (sectionId === 'leaderboard-section') {
-                populateLeaderboard();
-                populateReferralLeaderboard();
-            }
-            if (sectionId === 'withdraw-section') {
-                updateWithdrawalFormUI();
-                populateWithdrawalHistory();
-            }
-             if (sectionId === 'profile-section') {
-                updateProfileStats();
-            }
-        }
-
-        function updateShortlinkUI() {
-            if(shortlinksCompletedCountEl) shortlinksCompletedCountEl.textContent = shortlinksCompletedThisSession;
-            const limitReached = shortlinksCompletedThisSession >= SHORTLINK_LIMIT;
-            
-            if(earnShortlinkButton) earnShortlinkButton.disabled = limitReached || shortlinkProcessActive;
-            // claimShortlinkRewardButton is managed by the ad flow itself
-            
-            if(limitReached && shortlinkMessageEl && !shortlinkProcessActive) { // Only show limit message if not in an active process
-                shortlinkMessageEl.textContent = "Daily shortlink limit reached!";
-            } else if (!shortlinkProcessActive) {
-                // shortlinkMessageEl.textContent = ''; // Clear message if not in process and not limit reached
-            }
-        }
-        
         function startShortlinkProcess() {
-            if (shortlinksCompletedThisSession >= SHORTLINK_LIMIT) {
-                alert("Daily shortlink limit reached.");
-                return;
-            }
-            if (shortlinkProcessActive) {
-                alert("A shortlink process is already active. Please complete it.");
-                return;
-            }
-
-            shortlinkProcessActive = true;
-            currentAdStep = 0; // This will be incremented to 1 for the first ad by handleAdWatchClick
-            
-            if(earnShortlinkButton) earnShortlinkButton.disabled = true;
-            if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = true; // Ensure claim is disabled at start
+            console.log("startShortlinkProcess called");
+            if (shortlinksCompletedThisSession >= SHORTLINK_LIMIT) { alert("Daily shortlink limit reached."); return; }
+            if (shortlinkProcessActive) { alert("A shortlink process is already active. Please complete it."); return; }
+            shortlinkProcessActive = true; currentAdStep = 0;
+            if(earnShortlinkButton) { earnShortlinkButton.disabled = true; earnShortlinkButton.textContent = "LOADING...";}
+            if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = true;
             if(shortlinkMessageEl) shortlinkMessageEl.textContent = "Ad viewing in progress...";
-            
-            if(adViewingPage) adViewingPage.style.display = 'flex';
+            if(adViewingPage) { adViewingPage.style.display = 'flex'; console.log("adViewingPage display set to flex"); }
+            else { console.error("adViewingPage is null in startShortlinkProcess"); shortlinkProcessActive = false; updateShortlinkUI(); return; }
             if(leaderboardIconContainer) leaderboardIconContainer.style.display = 'none';
-            document.querySelector('.content-area').style.display = 'none';
-            document.querySelector('.bottom-nav').style.display = 'none';
-
+            const contentArea = document.querySelector('.content-area'); if (contentArea) contentArea.style.display = 'none';
+            const gameControlsNav = document.querySelector('.game-controls'); if (gameControlsNav) gameControlsNav.style.display = 'none';
             setupAdPageForNextAd();
         }
 
         function setupAdPageForNextAd() {
-            clearAdTimer();
-            adTimerDisplay.textContent = `${String(AD_TIMER_DURATION_SECONDS).padStart(2, '0')}:00`;
-            adViewingTitle.textContent = `Ready for Ad ${currentAdStep + 1} of ${ADS_PER_SHORTLINK}`;
-            
-            adTopControls.innerHTML = ''; 
-            const watchButton = document.createElement('button');
-            watchButton.id = 'ad-watch-current-button';
-            watchButton.classList.add('button', 'purple', 'clickable-sound');
-            watchButton.textContent = `Start Watching Ad ${currentAdStep + 1}`;
-            watchButton.onclick = handleAdWatchClick;
-            adTopControls.appendChild(watchButton);
-
-            adBottomControls.innerHTML = ''; // Clear bottom controls, will be populated after ad watch
-        }
-
-        function handleAdWatchClick() {
-            currentAdStep++; // Increment for the current ad being watched (1 to ADS_PER_SHORTLINK)
-            const watchButton = document.getElementById('ad-watch-current-button');
-            if(watchButton) {
-                watchButton.disabled = true;
-                watchButton.textContent = `Viewing Ad ${currentAdStep}...`;
+            console.log(`Setting up ad page for step: ${currentAdStep + 1} / ${ADS_PER_SHORTLINK}`);
+            if (!adViewingPage || !adTopControls || !adViewingTitle || !adTimerDisplay || !adBottomControls) {
+                console.error("Ad viewing page elements not found in setupAdPageForNextAd.");
+                shortlinkProcessActive = false;
+                if(adViewingPage) adViewingPage.style.display = 'none';
+                if(leaderboardIconContainer) leaderboardIconContainer.style.display = 'flex';
+                const contentArea = document.querySelector('.content-area'); if (contentArea) contentArea.style.display = 'block';
+                const gameControlsNav = document.querySelector('.game-controls'); if (gameControlsNav) gameControlsNav.style.display = 'flex';
+                updateShortlinkUI(); return;
             }
-            adViewingTitle.textContent = `Watching Ad ${currentAdStep} of ${ADS_PER_SHORTLINK}`;
-            startAdTimerCountdown();
-        }
-
-        function startAdTimerCountdown() {
-            let timeLeft = AD_TIMER_DURATION_SECONDS;
-            adTimerDisplay.textContent = `${String(timeLeft).padStart(2, '0')}:00`;
-
-            adTimerInterval = setInterval(() => {
-                timeLeft--;
-                adTimerDisplay.textContent = `${String(timeLeft).padStart(2, '0')}:00`;
-                if (timeLeft <= 0) {
-                    clearAdTimer();
-                    adTimerDisplay.textContent = "Ad Complete!";
-                    adViewingTitle.textContent = `Ad ${currentAdStep} Completed!`;
-                    const watchButton = document.getElementById('ad-watch-current-button');
-                    if(watchButton) watchButton.textContent = `Ad ${currentAdStep} Watched`;
-                    showBottomProceedButton();
-                }
-            }, 1000);
-        }
-        
-        function showBottomProceedButton() {
-            adBottomControls.innerHTML = '';
+            adViewingTitle.textContent = `Viewing Ad ${currentAdStep + 1} of ${ADS_PER_SHORTLINK}`;
+            adTimerDisplay.textContent = `00:${AD_TIMER_DURATION_SECONDS.toString().padStart(2, '0')}`;
+            adTopControls.innerHTML = ''; adBottomControls.innerHTML = '';
+            const watchAdButton = document.createElement('button');
+            watchAdButton.textContent = "Watch Ad & Start Timer";
+            watchAdButton.classList.add('button', 'purple', 'clickable-sound');
+            watchAdButton.id = 'watch-ad-button-dynamic';
+            watchAdButton.addEventListener('click', handleAdWatchClick);
+            adTopControls.appendChild(watchAdButton);
             const proceedButton = document.createElement('button');
-            proceedButton.classList.add('button', 'clickable-sound');
-
-            if (currentAdStep < ADS_PER_SHORTLINK) {
-                proceedButton.textContent = `Next Ad (${currentAdStep}/${ADS_PER_SHORTLINK})`;
-                proceedButton.classList.add('purple'); // Make "Next Ad" purple
-                proceedButton.onclick = setupAdPageForNextAd; 
+            proceedButton.classList.add('button', 'purple', 'clickable-sound');
+            proceedButton.id = 'proceed-ad-button-dynamic';
+            proceedButton.disabled = true;
+            if (currentAdStep < ADS_PER_SHORTLINK - 1) {
+                proceedButton.textContent = "Proceed to Next Ad";
+                proceedButton.addEventListener('click', () => {
+                    if (typeof show_9365298 === 'function') {
+                        console.log("Attempting to show Rewarded Interstitial ad before next step (shortlink sequence).");
+                        // Using the same ad ID as the "Watch Ad" button
+                        show_9365298().then(() => {
+                            console.log("Rewarded Interstitial ad (for next step) viewed or closed by user.");
+                            // alert('Ad viewed for next step!'); // Optional: for testing
+                            currentAdStep++;
+                            setupAdPageForNextAd();
+                        }).catch(e => {
+                            console.error("Rewarded Interstitial SDK error (for next step) or ad not shown:", e);
+                            alert("Ad could not be shown. Proceeding to next step.");
+                            currentAdStep++;
+                            setupAdPageForNextAd();
+                        });
+                    } else {
+                        console.warn("show_9365298 SDK function not available for Rewarded Interstitial (for next step).");
+                        currentAdStep++;
+                        setupAdPageForNextAd();
+                    }
+                });
             } else {
-                proceedButton.textContent = `Finish & Claim Shortlink`;
-                // Default button style (greenish gradient)
-                proceedButton.onclick = completeAdViewingSequence;
+                proceedButton.textContent = "Claim Reward";
+                proceedButton.addEventListener('click', completeAdViewingSequence);
             }
             adBottomControls.appendChild(proceedButton);
         }
 
-        function clearAdTimer() {
-            if (adTimerInterval) {
-                clearInterval(adTimerInterval);
-                adTimerInterval = null;
+
+        function handleAdWatchClick() {
+            console.log("Watch Ad button clicked.");
+            const watchAdBtn = document.getElementById('watch-ad-button-dynamic');
+            if (watchAdBtn) {
+                watchAdBtn.disabled = true;
+                watchAdBtn.textContent = "Loading Ad...";
+            }
+
+            if (typeof show_9365298 === 'function') {
+                console.log("Attempting to show Rewarded Interstitial ad.");
+                show_9365298().then(() => { // This is the "smart ad id" / Rewarded Interstitial
+                    console.log("Rewarded Interstitial ad viewed!");
+                    // alert('You have seen an ad!');
+                    if (watchAdBtn) {
+                        watchAdBtn.textContent = "Timer Running...";
+                    }
+                    startAdTimerCountdown();
+                }).catch(e => {
+                    console.error("Rewarded Interstitial SDK error or ad not shown:", e);
+                    alert('Ad could not be shown. Please try again.');
+                    if (watchAdBtn) {
+                        watchAdBtn.disabled = false;
+                        watchAdBtn.textContent = "Watch Ad & Start Timer";
+                    }
+                });
+            } else {
+                console.warn("show_9365298 SDK function not available. Starting timer directly.");
+                if (watchAdBtn) {
+                    watchAdBtn.textContent = "Timer Running...";
+                }
+                startAdTimerCountdown();
             }
         }
-        
-        function completeAdViewingSequence() { // Called when "Finish & Claim Shortlink" is clicked
+
+        function startAdTimerCountdown() {
             clearAdTimer();
-            if(adViewingPage) adViewingPage.style.display = 'none';
-            if(leaderboardIconContainer) leaderboardIconContainer.style.display = 'flex'; // Show icon again
-            document.querySelector('.content-area').style.display = 'block';
-            document.querySelector('.bottom-nav').style.display = 'flex';
-            
-            // shortlinkProcessActive remains true here. It will be set to false only after claiming.
-            if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = false;
-            if(earnShortlinkButton) earnShortlinkButton.disabled = true; // Keep disabled until claimed or limit reached
-            if(shortlinkMessageEl) shortlinkMessageEl.textContent = "Shortlink process complete. Ready to claim reward!";
-            showSection('earn-section'); // Ensure earn section is active
-            navItems.forEach(nav => nav.classList.toggle('active', nav.dataset.section === 'earn-section'));
+            let timeLeft = AD_TIMER_DURATION_SECONDS;
+            if(adTimerDisplay) adTimerDisplay.textContent = `00:${timeLeft.toString().padStart(2, '0')}`;
+            adTimerInterval = setInterval(() => {
+                timeLeft--;
+                if(adTimerDisplay) adTimerDisplay.textContent = `00:${timeLeft.toString().padStart(2, '0')}`;
+                if (timeLeft <= 0) { clearAdTimer(); showBottomProceedButton(); }
+            }, 1000);
         }
+
+        function showBottomProceedButton() {
+            console.log("Timer finished, showing proceed button.");
+            const proceedBtn = document.getElementById('proceed-ad-button-dynamic');
+            if (proceedBtn) { proceedBtn.disabled = false; }
+            const watchAdBtn = document.getElementById('watch-ad-button-dynamic');
+            if (watchAdBtn) { watchAdBtn.textContent = "Timer Finished!"; }
+        }
+
+        function clearAdTimer() { if (adTimerInterval) { clearInterval(adTimerInterval); adTimerInterval = null; } }
+
+        function completeAdViewingSequence() {
+            console.log("Ad viewing sequence completed.");
+            shortlinkProcessActive = false;
+            if(adViewingPage) adViewingPage.style.display = 'none';
+            if(leaderboardIconContainer) leaderboardIconContainer.style.display = 'flex';
+            const contentArea = document.querySelector('.content-area'); if (contentArea) contentArea.style.display = 'block';
+            const gameControlsNav = document.querySelector('.game-controls'); if (gameControlsNav) gameControlsNav.style.display = 'flex';
+            if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = false;
+            if(shortlinkMessageEl) shortlinkMessageEl.textContent = "Ads viewed! Click Claim.";
+            updateShortlinkUI();
+        }
+
 
         function claimShortlinkReward() {
-            if (!shortlinkProcessActive) { // Should not happen if UI logic is correct
-                if (shortlinkMessageEl) shortlinkMessageEl.textContent = "Error: No active shortlink process to claim.";
-                return;
-            }
-            if (shortlinksCompletedThisSession < SHORTLINK_LIMIT) {
-                totalCoins += 1;
-                shortlinksCompletedThisSession += 1;
-                
-                updateWalletBalance(); 
-                updateProfileStats(); 
-                
-                if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = true;
-                shortlinkProcessActive = false; // Process is now fully complete including claim
-                updateShortlinkUI(); // This will re-evaluate earnShortlinkButton based on limit and new shortlinkProcessActive state
-
-                if(shortlinkMessageEl) shortlinkMessageEl.textContent = "Reward Claimed! " + (shortlinksCompletedThisSession >= SHORTLINK_LIMIT ? "Daily limit reached." : "Earn again.");
-            } else if (shortlinkMessageEl) {
-                shortlinkMessageEl.textContent = "Error: Limit already reached."; // Should be caught earlier
-                shortlinkProcessActive = false; // Reset if somehow stuck
-                updateShortlinkUI();
-            }
+            playSound('claim');
+            if (shortlinkProcessActive) { alert("Please complete the ad viewing process first."); return; }
+            if (claimShortlinkRewardButton && claimShortlinkRewardButton.disabled) { alert("Button is disabled. Did you complete the ads?"); return; }
+            totalCoins += 1; shortlinksCompletedThisSession++; platformStats.todayShortlinks++; platformStats.allTimeShortlinks++;
+            if(gameHighscoreEl) gameHighscoreEl.textContent = totalCoins;
+            updateShortlinkUI(); updateWalletBalance(); updateProfileStats(); updatePlatformStatsDisplay();
+            if(shortlinkMessageEl) shortlinkMessageEl.textContent = "1 Coin Claimed!";
+            if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = true;
+            if (shortlinksCompletedThisSession % 10 === 0 && shortlinksCompletedThisSession > 0) { playSound('levelup'); if(shortlinkMessageEl) shortlinkMessageEl.textContent += " Stage Up!"; }
+            currentAdStep = 0;
+            console.log(`Claimed. Total coins: ${totalCoins}, Shortlinks this session: ${shortlinksCompletedThisSession}`);
         }
 
-        function updateWalletBalance() {
-            if (walletCoinsDisplayEl) walletCoinsDisplayEl.textContent = totalCoins;
-            if (walletUsdValueDisplayEl) walletUsdValueDisplayEl.textContent = (totalCoins * COIN_VALUE_USD).toFixed(3);
-        }
 
-        function populateReferredUsersList() {
-            if (!referredUsersListEl) return;
-            referredUsersListEl.innerHTML = '';
-            const userReferrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id);
-            if (userReferrals.length === 0) {
-                const li = document.createElement('li');
-                li.classList.add('stat-item');
-                li.style.justifyContent = 'center';
-                li.textContent = 'No referrals yet.';
-                referredUsersListEl.appendChild(li);
-                return;
-            }
-            userReferrals.forEach(referral => {
-                const li = document.createElement('li');
-                li.classList.add('stat-item');
-                const nameSpan = document.createElement('span'); nameSpan.textContent = referral.username;
-                const coinsSpan = document.createElement('span'); coinsSpan.textContent = `+${COINS_PER_REFERRAL} Coins`; coinsSpan.style.color = 'var(--lime)';
-                li.append(nameSpan, coinsSpan);
-                referredUsersListEl.appendChild(li);
-            });
-        }
+        function updateWalletBalance() { if (walletCoinsDisplayEl) walletCoinsDisplayEl.textContent = totalCoins; if (walletUsdValueDisplayEl) walletUsdValueDisplayEl.textContent = (totalCoins * COIN_VALUE_USD).toFixed(3); }
+        function populateReferredUsersList() { if (!referredUsersListEl) return; referredUsersListEl.innerHTML = ''; const usersReferredByCurrentUser = mockReferredUsers.filter(user => user.referredBy === currentUser.id); if (usersReferredByCurrentUser.length === 0) { const li = document.createElement('li'); li.textContent = "You haven't referred anyone yet."; li.style.textAlign = 'center'; li.style.color = 'var(--text-muted-dark-theme)'; referredUsersListEl.appendChild(li); return; } usersReferredByCurrentUser.forEach(user => { const li = document.createElement('li'); li.classList.add('stat-item'); const usernameSpan = document.createElement('span'); usernameSpan.textContent = user.username; const dateSpan = document.createElement('span'); dateSpan.textContent = `Joined: ${user.date}`; dateSpan.style.color = 'var(--text-muted-dark-theme)'; dateSpan.style.fontSize = '0.9em'; li.appendChild(usernameSpan); li.appendChild(dateSpan); referredUsersListEl.appendChild(li); }); }
+        function updateProfileStats() { if (profileTotalCoinsEl) profileTotalCoinsEl.textContent = totalCoins; if (profileShortlinksCompletedEl) profileShortlinksCompletedEl.textContent = shortlinksCompletedThisSession; currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length; if (profileReferralsEl) profileReferralsEl.textContent = currentUser.referrals; if (profileReferralEarningsEl) profileReferralEarningsEl.textContent = `${currentUser.referrals * COINS_PER_REFERRAL} Coins`; }
+        function populateLeaderboard() { if (!leaderboardListEl) return; leaderboardListEl.innerHTML = ''; const sortedLeaderboard = [...mockLeaderboardData].sort((a, b) => { if (b.coins === a.coins) { return b.referrals - a.referrals; } return b.coins - a.coins; }); sortedLeaderboard.forEach((player, index) => player.rank = index + 1); if (sortedLeaderboard.length === 0) { leaderboardListEl.innerHTML = '<li>Leaderboard is empty.</li>'; return; } sortedLeaderboard.forEach(player => { const li = document.createElement('li'); li.innerHTML = `<span class="rank">#${player.rank}</span><span class="username">${player.username === currentUser.username ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="coins">${player.coins} Coins</span>`; if (player.username === currentUser.username) { li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)'; } leaderboardListEl.appendChild(li); }); }
+        function populateReferralLeaderboard() { if (!referralLeaderboardListEl) return; referralLeaderboardListEl.innerHTML = ''; const sortedReferralBoard = [...mockLeaderboardData].sort((a, b) => { if (b.referrals === a.referrals) { return b.coins - a.coins; } return b.referrals - a.referrals; }); sortedReferralBoard.forEach((player, index) => player.referralRank = index + 1); if (sortedReferralBoard.length === 0) { referralLeaderboardListEl.innerHTML = '<li>Leaderboard is empty.</li>'; return; } sortedReferralBoard.forEach(player => { const li = document.createElement('li'); li.innerHTML = `<span class="rank">#${player.referralRank}</span><span class="username">${player.username === currentUser.username ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="referrals-count">${player.referrals} Refs</span>`; if (player.username === currentUser.username) { li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)'; } referralLeaderboardListEl.appendChild(li); }); }
 
-        function updateProfileStats() {
-            const profTotalCoins = document.getElementById('profile-total-coins');
-            const profShortlinks = document.getElementById('profile-shortlinks-completed');
-            const profReferrals = document.getElementById('profile-referrals');
-            const profRefEarnings = document.getElementById('profile-referral-earnings');
-
-            if(profTotalCoins) profTotalCoins.textContent = totalCoins;
-            if(profShortlinks) profShortlinks.textContent = shortlinksCompletedThisSession;
-
-            currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length;
-            const earningsFromReferrals = currentUser.referrals * COINS_PER_REFERRAL;
-
-            if(profReferrals) profReferrals.textContent = currentUser.referrals;
-            if(profRefEarnings) profRefEarnings.textContent = `${earningsFromReferrals} Coins`;
-            populateReferredUsersList();
-        }
-
-        function populateLeaderboard() {
-            if (!leaderboardListEl) return;
-            leaderboardListEl.innerHTML = ''; 
-            let leaderboardToDisplay = JSON.parse(JSON.stringify(mockLeaderboardData)); 
-            let currentUserEntry = leaderboardToDisplay.find(entry => entry.username === `@${currentUser.username}`);
-            if (currentUserEntry) {
-                currentUserEntry.coins = totalCoins;
-            } else {
-                leaderboardToDisplay.push({ username: `@${currentUser.username}`, coins: totalCoins, referrals: currentUser.referrals, rank: 0 });
-            }
-            leaderboardToDisplay.sort((a, b) => b.coins - a.coins); 
-            leaderboardToDisplay.forEach((entry, index) => entry.rank = index + 1); 
-
-            leaderboardToDisplay.forEach(entry => {
-                const li = document.createElement('li');
-                const rankSpan = document.createElement('span'); rankSpan.className = 'rank'; rankSpan.textContent = `${entry.rank}.`;
-                const usernameSpan = document.createElement('span'); usernameSpan.className = 'username'; usernameSpan.textContent = entry.username;
-                if (entry.username === `@${currentUser.username}`) usernameSpan.style.color = 'var(--gold)'; 
-                const coinsSpan = document.createElement('span'); coinsSpan.className = 'coins'; coinsSpan.textContent = `${entry.coins} Coins`;
-                li.append(rankSpan, usernameSpan, coinsSpan);
-                leaderboardListEl.appendChild(li);
-            });
-        }
-
-        function populateReferralLeaderboard() {
-            if (!referralLeaderboardListEl) return;
-            referralLeaderboardListEl.innerHTML = ''; 
-            let leaderboardToDisplay = JSON.parse(JSON.stringify(mockLeaderboardData)); 
-            let currentUserEntry = leaderboardToDisplay.find(entry => entry.username === `@${currentUser.username}`);
-            if (currentUserEntry) {
-                currentUserEntry.referrals = currentUser.referrals;
-            } else {
-                leaderboardToDisplay.push({ username: `@${currentUser.username}`, coins: totalCoins, referrals: currentUser.referrals, rank: 0 });
-            }
-            leaderboardToDisplay.sort((a, b) => b.referrals - a.referrals); 
-            leaderboardToDisplay.forEach((entry, index) => entry.rank = index + 1); 
-
-            leaderboardToDisplay.forEach(entry => {
-                const li = document.createElement('li');
-                const rankSpan = document.createElement('span'); rankSpan.className = 'rank'; rankSpan.textContent = `${entry.rank}.`;
-                const usernameSpan = document.createElement('span'); usernameSpan.className = 'username'; usernameSpan.textContent = entry.username;
-                if (entry.username === `@${currentUser.username}`) usernameSpan.style.color = 'var(--gold)'; 
-                const referralsSpan = document.createElement('span'); referralsSpan.className = 'referrals-count'; referralsSpan.textContent = `${entry.referrals} Referrals`;
-                li.append(rankSpan, usernameSpan, referralsSpan);
-                referralLeaderboardListEl.appendChild(li);
-            });
-        }
-
-        function openModal(modalElement) {
-            if(modalElement) modalElement.classList.add('show');
-        }
-        function closeModal(modalElement) {
-            if(modalElement) modalElement.classList.remove('show');
-        }
-
-        function handleSocialIconClick(event) {
-            const platform = event.currentTarget.dataset.platform;
-            if(socialMediaModalTitle) socialMediaModalTitle.textContent = `Follow Us on ${platform}!`;
-            if(socialMediaModalText) socialMediaModalText.textContent = `Stay connected with us on ${platform} for the latest updates, news, and exclusive content. Tap the link in our bio!`;
-            if(socialMediaModalIconEl) socialMediaModalIconEl.textContent = getPlatformEmoji(platform); 
-            openModal(socialMediaModal);
-        }
-
-        function getPlatformEmoji(platform) { 
-            switch(platform.toLowerCase()) {
-                case 'telegram': return '✈️';
-                case 'instagram': return '📸';
-                case 'facebook': return '👍';
-                case 'youtube': return '▶️';
-                case 'x': return '✖️'; 
-                default: return '📱';
-            }
-        }
 
         function updateWithdrawalFormUI() {
-            if (!withdrawMethodSelectEl || !withdrawAddressLabelEl || !withdrawAddressInputEl || !withdrawAmountCoinsInputEl || !networkFeeDisplayEl || !finalAmountReceiveDisplayEl) return;
-
-            const selectedMethod = withdrawMethodSelectEl.value;
-            const config = WITHDRAWAL_CONFIG[selectedMethod];
-
-            withdrawAddressLabelEl.textContent = config.label;
-            withdrawAddressInputEl.placeholder = config.placeholder;
-            networkFeeDisplayEl.textContent = config.fee;
-
-            const amount = parseInt(withdrawAmountCoinsInputEl.value) || 0;
-            let finalAmount = 0;
-            if (amount > 0) {
-                finalAmount = Math.max(0, amount - config.fee);
-            }
-            finalAmountReceiveDisplayEl.textContent = finalAmount;
+            if (!withdrawMethodSelectEl || !withdrawAmountCoinsInputEl || !networkFeeDisplayEl || !finalAmountReceiveDisplayEl || !initiateWithdrawButtonEl || !withdrawAddressLabelEl || !withdrawAddressInputEl) { console.warn("Withdrawal UI elements not fully available for update."); return; }
+            const selectedMethod = withdrawMethodSelectEl.value; const config = WITHDRAWAL_CONFIG[selectedMethod];
+            if (config) {
+                withdrawAddressLabelEl.textContent = config.label; withdrawAddressInputEl.placeholder = config.placeholder;
+                let amountCoins = parseInt(withdrawAmountCoinsInputEl.value) || 0; let fee = config.fee; let netAmount = 0;
+                if (amountCoins > 0) { netAmount = amountCoins - fee; if (netAmount < 0) netAmount = 0; }
+                networkFeeDisplayEl.textContent = `${fee} Coins`; finalAmountReceiveDisplayEl.textContent = `${netAmount} Coins`;
+                const minWithdrawal = config.min; const hasEnoughReferrals = currentUser.referrals >= MIN_REFERRALS_FOR_WITHDRAWAL;
+                if (amountCoins >= minWithdrawal && hasEnoughReferrals && totalCoins >= amountCoins && amountCoins > 0) { initiateWithdrawButtonEl.disabled = false; initiateWithdrawButtonEl.textContent = "Withdraw"; }
+                else {
+                    initiateWithdrawButtonEl.disabled = true;
+                    if (!hasEnoughReferrals) { initiateWithdrawButtonEl.textContent = `Need ${MIN_REFERRALS_FOR_WITHDRAWAL} Referrals`; }
+                    else if (amountCoins > 0 && totalCoins < amountCoins) { initiateWithdrawButtonEl.textContent = "Insufficient Balance"; }
+                    else if (amountCoins > 0 && amountCoins < minWithdrawal) { initiateWithdrawButtonEl.textContent = `Min ${minWithdrawal} Coins`; }
+                    else if (amountCoins === 0 && initiateWithdrawButtonEl.textContent !== `Need ${MIN_REFERRALS_FOR_WITHDRAWAL} Referrals`) { initiateWithdrawButtonEl.textContent = "Enter Amount"; }
+                    else { initiateWithdrawButtonEl.textContent = "Withdraw"; }
+                }
+            } else { networkFeeDisplayEl.textContent = `0 Coins`; finalAmountReceiveDisplayEl.textContent = `0 Coins`; initiateWithdrawButtonEl.disabled = true; initiateWithdrawButtonEl.textContent = "Select Method"; }
         }
+
 
         function handleNewWithdraw() {
-            if (currentUser.referrals < MIN_REFERRALS_FOR_WITHDRAWAL) {
-                alert(`You need at least ${MIN_REFERRALS_FOR_WITHDRAWAL} referrals to make a withdrawal. You currently have ${currentUser.referrals}.`);
-                return;
-            }
-
-            const successMsg = document.getElementById('withdraw-success-message');
-            if(!withdrawMethodSelectEl || !withdrawAddressInputEl || !withdrawAmountCoinsInputEl || !successMsg) return;
-
-            const selectedMethod = withdrawMethodSelectEl.value;
-            const config = WITHDRAWAL_CONFIG[selectedMethod];
-            const amount = parseInt(withdrawAmountCoinsInputEl.value);
-            const address = withdrawAddressInputEl.value.trim();
-
-            if (!address) {
-                alert(`Please enter your ${config.label.replace(":", "")}.`);
-                return;
-            }
-            if (isNaN(amount) || amount <= 0) {
-                alert('Invalid amount entered.');
-                return;
-            }
-            if (amount < config.min) {
-                alert(`Minimum withdrawal for ${selectedMethod} is ${config.min} coins.`);
-                return;
-            }
-            if (amount > totalCoins) {
-                alert('Insufficient balance for this withdrawal amount.');
-                return;
-            }
-
-            const finalAmountReceived = amount - config.fee;
-            if (finalAmountReceived <= 0) {
-                alert('Amount after fee is zero or less. Please withdraw a higher amount.');
-                return;
-            }
-
-            totalCoins -= amount;
-            updateWalletBalance();
-            updateProfileStats();
-
-            const historyEntry = {
-                date: new Date().toLocaleString(),
-                method: selectedMethod,
-                amount: amount,
-                fee: config.fee,
-                received: finalAmountReceived,
-                address: address.length > 15 ? address.substring(0, 10) + "..." + address.substring(address.length - 5) : address 
-            };
-            withdrawalHistory.unshift(historyEntry); 
-            populateWithdrawalHistory();
-
-            withdrawAmountCoinsInputEl.value = ''; 
-            successMsg.textContent = `Withdrawal of ${amount} coins (${finalAmountReceived} coins after fee) to ${selectedMethod} (${historyEntry.address}) submitted!`;
-            successMsg.style.display = 'block';
-            setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
+            const selectedMethod = withdrawMethodSelectEl.value; const amountCoins = parseInt(withdrawAmountCoinsInputEl.value); const address = withdrawAddressInputEl.value.trim(); const config = WITHDRAWAL_CONFIG[selectedMethod];
+            if (!config) { alert("Invalid withdrawal method selected."); return; } if (!address) { alert(`Please enter your ${config.label.toLowerCase().replace(":", "")}.`); return; } if (isNaN(amountCoins) || amountCoins <= 0) { alert("Please enter a valid amount of coins."); return; } if (currentUser.referrals < MIN_REFERRALS_FOR_WITHDRAWAL) { alert(`You need at least ${MIN_REFERRALS_FOR_WITHDRAWAL} referrals to withdraw.`); return; } if (amountCoins < config.min) { alert(`Minimum withdrawal for ${selectedMethod} is ${config.min} coins.`); return; } if (totalCoins < amountCoins) { alert("You do not have enough coins for this withdrawal."); return; }
+            const netAmount = amountCoins - config.fee; if (netAmount <= 0) { alert("Amount after fee is too low to process."); return; }
+            console.log(`Withdrawal initiated: ${amountCoins} Coins via ${selectedMethod} to ${address}. Fee: ${config.fee}. Net: ${netAmount}`);
+            totalCoins -= amountCoins; platformStats.allTimeWithdrawals += amountCoins;
+            const newWithdrawal = { id: 'wd' + Date.now().toString().slice(-5), date: new Date().toISOString().split('T')[0], method: selectedMethod, amount: amountCoins, status: 'Pending', address: address };
+            withdrawalHistory.unshift(newWithdrawal);
+            updateWalletBalance(); updateProfileStats(); updatePlatformStatsDisplay(); populateWithdrawalHistory(); updateWithdrawalFormUI();
+            withdrawAmountCoinsInputEl.value = ''; withdrawAddressInputEl.value = '';
+            alert(`Withdrawal request for ${amountCoins} coins submitted! You will receive ${netAmount} (after ${config.fee} coin fee).`);
+            const successMsgEl = document.getElementById('withdraw-success-message');
+            if (successMsgEl) { successMsgEl.textContent = "Withdrawal request sent!"; successMsgEl.style.display = 'block'; setTimeout(() => { successMsgEl.style.display = 'none'; }, 3000); }
         }
 
-        function populateWithdrawalHistory() {
-            if (!withdrawalHistoryListEl) return;
-            withdrawalHistoryListEl.innerHTML = ''; 
+        function populateWithdrawalHistory() { if (!withdrawalHistoryListEl) return; withdrawalHistoryListEl.innerHTML = ''; if (withdrawalHistory.length === 0) { withdrawalHistoryListEl.innerHTML = '<li>No withdrawal history yet.</li>'; return; } withdrawalHistory.forEach(item => { const li = document.createElement('li'); li.style.display = 'flex'; li.style.justifyContent = 'space-between'; li.style.padding = '8px 0'; li.style.borderBottom = '1px solid var(--game-panel-border)'; li.innerHTML = `<span style="flex-basis: 25%; font-size:0.9em;">${item.date}</span><span style="flex-basis: 15%;">${item.method}</span><span style="flex-basis: 20%; text-align:right;">${item.amount} C</span><span style="flex-basis: 30%; text-align:right; color: ${item.status === 'Completed' ? 'var(--game-accent-green)' : 'var(--game-title-yellow)'};">${item.status}</span>`; withdrawalHistoryListEl.appendChild(li); }); }
+        function copyReferralLink() { const referralLink = referralLinkDisplay.textContent; navigator.clipboard.writeText(referralLink).then(() => { const copyStatusEl = document.getElementById('copy-status'); if (copyStatusEl) { copyStatusEl.textContent = 'Link Copied!'; setTimeout(() => { copyStatusEl.textContent = ''; }, 2000); } }).catch(err => { console.error('Failed to copy referral link: ', err); const copyStatusEl = document.getElementById('copy-status'); if (copyStatusEl) copyStatusEl.textContent = 'Failed to copy!'; }); }
 
-            if (withdrawalHistory.length === 0) {
-                withdrawalHistoryListEl.innerHTML = '<li>No withdrawal history yet.</li>';
-                return;
-            }
 
-            withdrawalHistory.forEach(entry => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <strong>${entry.date}</strong><br>
-                    Method: ${entry.method}, Amount: ${entry.amount} (Fee: ${entry.fee}, Received: ${entry.received})<br>
-                    To: ${entry.address}
-                `;
-                withdrawalHistoryListEl.appendChild(li);
-            });
-        }
-
-        function copyReferralLink() {
-            const linkEl = document.getElementById('referral-link');
-            const statusEl = document.getElementById('copy-status');
-            if(!linkEl || !statusEl) return;
-            navigator.clipboard.writeText(linkEl.textContent).then(() => {
-                statusEl.textContent = 'Copied!';
-                setTimeout(() => { statusEl.textContent = ''; }, 2000);
-            }).catch(err => {
-                statusEl.textContent = 'Failed to copy.'; console.error('Failed to copy: ', err);
-                setTimeout(() => { statusEl.textContent = ''; }, 2000);
-            });
-        }
-
+        console.log("All functions defined. Script fully parsed. (Log 15)");
     </script>
-    <!--
-    Suggested Ad Banner Sizes:
-    - 320x50 pixels (Mobile Leaderboard): Good fit for current layout.
-    - 300x50 pixels (Mobile Banner): Alternative slim banner.
-    - 320x100 pixels (Large Mobile Banner): If more ad height is desired.
-    - 300x250 pixels (Medium Rectangle): For more prominent, larger ad placements.
-    Your current setup (max-width: 350px, height: 45px) is also effective for mobile.
-    -->
+
 </body>
 </html>
