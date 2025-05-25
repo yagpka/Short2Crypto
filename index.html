@@ -1,0 +1,1981 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Short2Crypto - Earn Rewards!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src='//libtl.com/sdk.js' data-zone='9365298' data-sdk='show_9365298'></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
+
+        :root {
+            /* Game Theme Colors */
+            --game-bg-start: #45caff; /* Light Sky Blue */
+            --game-bg-end: #00a2c7;   /* Deeper Sky Blue */
+            --game-primary-text: #ffffff;
+            --game-title-blue: #29b6f6; /* Bright Blue */
+            --game-title-red: #ef5350;   /* Bright Red */
+            --game-title-yellow: #ffeb3b; /* Bright Yellow */
+            --game-accent-green: #66bb6a; /* Bright Green */
+            --game-accent-orange: #ffa726; /* Bright Orange */
+            --pink: #ec407a; /* Added pink for button */
+
+
+            --game-button-bg: #ffffff;
+            --game-button-icon: #00796b; /* Dark Teal for icons */
+            --game-button-active-border: var(--game-title-yellow);
+
+            --game-panel-bg: rgba(255, 255, 255, 0.15);
+            --game-panel-border: rgba(255, 255, 255, 0.3);
+            --game-text-darker: #2c3e50; /* Darker text for light backgrounds - Improved contrast */
+            --text-muted-dark-theme: #c0d6e4; /* Lighter muted for dark theme - Improved contrast */
+            --text-muted-light-theme: #527080; /* Darker muted for light theme - Improved contrast */
+
+
+            --border-radius-sm: 8px;
+            --border-radius-md: 15px; /* More rounded */
+            --border-radius-lg: 25px; /* More rounded */
+            --border-radius-circle: 50%;
+
+            --font-family-title: 'Luckiest Guy', cursive;
+            --font-family-body: 'Poppins', sans-serif;
+        }
+
+        /* Light Mode Variables */
+        body.light-mode {
+            --game-bg-start: #e0f7fa; /* Lighter sky blue for light mode */
+            --game-bg-end: #b2ebf2;   /* Slightly deeper light sky blue */
+            --game-primary-text: var(--game-text-darker);
+            --game-panel-bg: rgba(0, 0, 0, 0.03); /* Very subtle dark panel */
+            --game-panel-border: rgba(0, 0, 0, 0.08);
+            --game-button-icon: var(--game-title-blue);
+            --text-muted-dark-theme: var(--text-muted-light-theme); /* Use light theme's muted color */
+            --teal: #17a2b8;
+            --lime: #28a745;
+        }
+        body.light-mode .game-logo .logo-part1,
+        body.light-mode .game-logo .logo-vs,
+        body.light-mode .game-logo .logo-part2,
+        body.light-mode .highscore-display,
+        body.light-mode .shortlink-level-display,
+        body.light-mode .game-title-super {
+             color: var(--game-text-darker);
+             text-shadow: 1px 1px 0px rgba(255,255,255,0.3); /* Light shadow for dark text */
+        }
+        body.light-mode .game-logo {
+            background-color: rgba(255,255,255,0.5); /* Lighter panel for logo */
+            border-color: var(--game-text-darker);
+        }
+         body.light-mode .highscore-display { background-color: rgba(255,255,255,0.6); }
+         body.light-mode .shortlink-level-display {
+            background-color: var(--game-title-yellow);
+            color: var(--game-text-darker); /* Ensure dark text on yellow */
+            border-color: var(--game-text-darker);
+         }
+        body.light-mode .card { background-color: rgba(255,255,255,0.85); color: var(--game-text-darker);}
+        body.light-mode .card h3 { color: var(--game-title-blue); }
+        body.light-mode .details-dropdown summary {color: var(--game-text-darker);}
+        body.light-mode .details-dropdown .details-content {color: var(--text-muted-light-theme);}
+        body.light-mode input[type="text"], body.light-mode input[type="number"],
+        body.light-mode .details-dropdown .withdraw-form-content select.input-style {
+            background-color: rgba(255,255,255,0.8);
+            color: var(--game-text-darker);
+            border-color: rgba(0,0,0,0.2);
+        }
+        body.light-mode input[type="text"]:focus, body.light-mode input[type="number"]:focus,
+        body.light-mode .details-dropdown .withdraw-form-content select.input-style:focus {
+            border-color: var(--game-title-blue);
+            box-shadow: 0 0 8px var(--game-title-blue);
+        }
+        body.light-mode .profile-picture svg { fill: var(--game-text-darker); }
+        body.light-mode label { color: var(--text-muted-light-theme); }
+        body.light-mode .final-amount-display, body.light-mode .platform-stats-container p {
+            color: var(--text-muted-light-theme);
+        }
+        body.light-mode .final-amount-display span, body.light-mode .platform-stats-container p strong {
+            color: var(--game-accent-green); /* Keep accent green for values */
+        }
+        body.light-mode #server-time-display { color: var(--game-accent-green); }
+
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-family-body);
+            background: linear-gradient(180deg, var(--game-bg-start) 0%, var(--game-bg-end) 100%);
+            color: var(--game-primary-text);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        body::before, body::after {
+            content: ''; position: absolute; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1); opacity: 0.6; z-index: -1;
+        }
+        body::before { width: 300px; height: 300px; top: 10%; left: -100px; animation: floatCloud 25s infinite linear;}
+        body::after { width: 200px; height: 200px; bottom: 5%; right: -80px; animation: floatCloud 35s infinite linear reverse;}
+        @keyframes floatCloud {
+            0% { transform: translateX(0px) translateY(0px); } 25% { transform: translateX(20px) translateY(-15px); }
+            50% { transform: translateX(0px) translateY(-30px); } 75% { transform: translateX(-20px) translateY(-15px); }
+            100% { transform: translateX(0px) translateY(0px); }
+        }
+
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, var(--game-bg-start) 0%, var(--game-bg-end) 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 1; visibility: visible;
+            transition: opacity 0.5s ease-out, visibility 0s linear 0.5s;
+        }
+        #loading-screen.hidden { opacity: 0; visibility: hidden; transition-delay: 0s;}
+        .logo-animation {
+            width: 80px; height: 80px; border-radius: 50%;
+            border: 5px solid var(--game-accent-green); border-top-color: var(--game-title-blue);
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #loading-screen p {
+            font-family: var(--font-family-title); font-size: 1.5em;
+            color: var(--game-primary-text); text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        #app-container {
+            display: flex; flex-direction: column; height: 100%; width: 100%;
+            overflow: hidden; position: relative; z-index: 1;
+            opacity: 0; transition: opacity 0.5s ease-in 0.5s;
+        }
+        #app-container.visible { opacity: 1;}
+
+        .content-area {
+            flex-grow: 1; overflow-y: auto; overflow-x: hidden;
+            padding: 20px; padding-top: 70px; padding-bottom: 100px; position: relative;
+        }
+
+        .section {
+            width: 100%; position: absolute; top: 0; left: 0;
+            padding: inherit; padding-top: 0; padding-bottom: 0;
+            opacity: 0; transform: translateX(100%);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Slightly faster */
+            pointer-events: none; z-index: 1;
+        }
+        .section.active {
+            opacity: 1; transform: translateX(0); pointer-events: auto;
+            z-index: 2; position: relative;
+        }
+
+        .game-controls {
+            display: flex; justify-content: space-around; align-items: center;
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 95%; max-width: 420px; z-index: 100; padding: 5px;
+            background-color: rgba(0, 0, 0, 0.1); border-radius: var(--border-radius-lg);
+        }
+        .control-button {
+            background-color: var(--game-button-bg); border-radius: var(--border-radius-circle);
+            width: 55px; height: 55px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2), inset 0 -2px 2px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+            border: 3px solid transparent; position: relative;
+        }
+        .control-button svg { width: 28px; height: 28px; fill: var(--game-button-icon); transition: fill 0.2s ease;}
+        .control-button .nav-text {
+             font-size: 0.6em; font-family: var(--font-family-body);
+             color: var(--game-button-icon); margin-top: 2px; font-weight: 600;
+        }
+        .control-button:hover { transform: scale(1.1) translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.3), inset 0 -2px 2px rgba(0,0,0,0.1);}
+        .control-button.active {
+            border-color: var(--game-button-active-border); transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15), inset 0 1px 1px var(--game-button-active-border);
+        }
+        .control-button.active svg { fill: var(--game-title-blue); }
+        .control-button.active .nav-text { color: var(--game-title-blue); }
+
+        .game-title-super {
+            font-family: var(--font-family-title); font-size: 2.2em; text-align: center;
+            color: var(--game-primary-text);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.25), 0 0 8px var(--game-title-yellow); /* Enhanced shadow */
+            margin-bottom: 20px;
+        }
+        .game-header { text-align: center; margin-top: 5px; margin-bottom: 15px;}
+        .game-logo {
+            font-family: var(--font-family-title); font-size: 2.5em; display: inline-block;
+            padding: 8px 15px; background-color: rgba(0,0,0,0.2);
+            border-radius: var(--border-radius-md); border: 2px solid var(--game-primary-text);
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.15); /* Slightly softer shadow */
+            margin-bottom: 10px; position: relative;
+        }
+        .logo-part1 { color: var(--game-title-blue); }
+        .logo-vs { color: var(--game-primary-text); margin: 0 3px; font-size: 0.8em;}
+        .logo-part2 { color: var(--game-title-red); }
+        .logo-wing-left, .logo-wing-right {
+            font-size: 0.7em; position: absolute; top: 50%; transform: translateY(-50%);
+            color: var(--game-title-yellow); text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+        }
+        .logo-wing-left { left: -25px; transform: translateY(-50%) rotate(-15deg); }
+        .logo-wing-right { right: -25px; transform: translateY(-50%) rotate(15deg); }
+
+        .highscore-display {
+            font-family: var(--font-family-title); font-size: 1.4em; color: var(--game-primary-text);
+            background-color: rgba(0,0,0,0.25); padding: 6px 18px;
+            border-radius: var(--border-radius-lg); display: inline-block;
+            border: 2px solid var(--game-title-yellow); box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        #game-highscore { font-weight: bold; }
+
+        .shortlink-level-display {
+            font-family: var(--font-family-title); background-color: var(--game-title-yellow);
+            color: var(--game-text-darker); /* Ensure dark text on yellow */
+            padding: 8px 25px; border-radius: var(--border-radius-lg); font-size: 1.3em;
+            display: inline-block; margin-bottom: 20px; border: 3px solid var(--game-primary-text);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15); text-align: center;
+        }
+
+        h3 {
+            font-family: var(--font-family-title); font-size: 1.5em; margin-bottom: 15px;
+            color: var(--game-accent-green); text-shadow: 1px 1px 0px rgba(0,0,0,0.15);
+        }
+        .card {
+            background-color: var(--game-panel-bg); padding: 20px;
+            border-radius: var(--border-radius-md); margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            border: 1px solid var(--game-panel-border);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .platform-stats-container p, .final-amount-display, .rules-list li, .details-content p {
+             color: var(--text-muted-dark-theme); /* Improved muted color for dark theme */
+        }
+        .platform-stats-container p strong, .final-amount-display span {
+            color: var(--game-accent-green); /* Keep accent green for dynamic values */
+        }
+
+
+        .button {
+            font-family: var(--font-family-body); font-weight: 600; display: inline-block;
+            padding: 12px 25px; background: linear-gradient(135deg, var(--game-accent-orange), var(--game-title-yellow));
+            color: var(--game-text-darker); border: none; border-radius: var(--border-radius-lg);
+            cursor: pointer; text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            font-size: 1em; text-shadow: 1px 1px 1px rgba(255,255,255,0.3);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+        .button:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 12px rgba(0,0,0,0.25); }
+        .button:active { transform: translateY(0px) scale(0.98); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .button.purple {
+            background: linear-gradient(135deg, var(--game-title-blue), var(--game-accent-green));
+            color: var(--game-primary-text); text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+        .button.pink {
+             background: linear-gradient(135deg, var(--pink), var(--game-accent-orange));
+             color: var(--game-primary-text);
+        }
+         .button:disabled {
+            background: rgba(0,0,0,0.2); color: rgba(255,255,255,0.5);
+            cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; text-shadow: none;
+        }
+
+        input[type="text"], input[type="number"],
+        .details-dropdown .withdraw-form-content select.input-style {
+            font-family: var(--font-family-body); width: 100%; padding: 12px; margin-bottom: 15px;
+            border: 2px solid var(--game-panel-border); border-radius: var(--border-radius-sm);
+            background-color: rgba(0,0,0,0.1); color: var(--game-primary-text); font-size: 1em;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        input[type="text"]:focus, input[type="number"]:focus,
+        .details-dropdown .withdraw-form-content select.input-style:focus {
+            outline: none; border-color: var(--game-title-yellow);
+            box-shadow: 0 0 8px var(--game-title-yellow); background-color: rgba(0,0,0,0.2);
+        }
+        label { display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-muted-dark-theme); font-family: var(--font-family-body); }
+
+        .shortlink-container, .watch-ad-container { text-align: center; padding-top: 10px; }
+        .shortlink-container h3, .watch-ad-container h3 { font-size: 1.6em; color: var(--game-primary-text); text-shadow: 1px 1px 0 var(--game-title-blue); }
+
+        #earn-shortlink-button {
+            width: 150px; height: 150px; border-radius: var(--border-radius-circle);
+            font-size: 1.8em; font-family: var(--font-family-title); padding: 0;
+            display: flex; justify-content: center; align-items: center; margin: 20px auto;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3), inset 0 -5px 5px rgba(0,0,0,0.2);
+            border: 4px solid var(--game-primary-text);
+        }
+        #earn-shortlink-button:hover { transform: scale(1.05) translateY(-3px); }
+        #claim-shortlink-reward-button { font-size: 1.2em; padding: 15px 30px; }
+        #shortlink-message, #watch-ad-message { margin-top:15px; color: var(--game-title-yellow); font-weight: bold; font-family: var(--font-family-body); min-height: 1.2em; }
+
+        #watch-ad-play-button {
+            width: 130px; height: 130px; border-radius: var(--border-radius-circle);
+            font-size: 1.6em; font-family: var(--font-family-title); padding: 0;
+            display: flex; justify-content: center; align-items: center; margin: 15px auto;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.25), inset 0 -4px 4px rgba(0,0,0,0.15);
+            border: 3px solid var(--game-primary-text);
+        }
+
+        #ad-viewing-page {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, var(--game-bg-start) 0%, var(--game-bg-end) 100%);
+            display: none; flex-direction: column; z-index: 200; padding: 15px;
+            text-align: center; overflow-y: auto; box-sizing: border-box;
+            justify-content: space-between; /* Helps space out elements */
+        }
+        #ad-viewing-page #ad-viewing-title {
+            font-family: var(--font-family-title); color: var(--game-primary-text);
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.2); margin-bottom: 10px; /* Reduced margin */
+            font-size: 1.8em; width: 100%;
+        }
+         #ad-top-controls, #ad-bottom-controls {
+            width: 100%; text-align: center; margin: 5px auto; /* Reduced margin */
+            min-height: 50px; /* Adjusted min-height */
+            max-width: 320px;
+            display: flex; /* Added for centering button */
+            justify-content: center; /* Added for centering button */
+            align-items: center; /* Added for centering button */
+         }
+         #ad-top-controls .button, #ad-bottom-controls .button {
+            width: 100%; max-width: 280px; font-size: 1.1em; /* Slightly smaller font */
+            padding: 12px; font-family: var(--font-family-body); /* Adjusted padding */
+         }
+        .timer-and-flanking-banners {
+            display: flex; /* Arrange timer and side ads */
+            align-items: center;
+            justify-content: center; /* Center items if space allows */
+            gap: 10px; /* Space between timer and side ads */
+            margin: 10px auto; /* Reduced margin */
+        }
+        #ad-timer-display {
+            font-family: var(--font-family-title); font-size: 2.5em; font-weight: bold; /* Slightly smaller font */
+            color: var(--game-title-yellow); text-align: center; padding: 8px 15px; /* Adjusted padding */
+            background-color: rgba(0,0,0,0.3); border-radius: var(--border-radius-md);
+            min-width: 120px; margin: 0; /* Remove margin, handled by parent */
+            border: 2px solid var(--game-primary-text);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+        #ad-viewing-page script + div, #ad-viewing-page div[id*="container-"] {
+            margin: 5px auto !important; /* Override inline styles if necessary */
+            max-width: 100%;
+        }
+
+
+        .details-dropdown { background-color: transparent; border: none; box-shadow: none;}
+        .details-dropdown summary {
+            padding: 15px 20px; cursor: pointer; font-family: var(--font-family-title);
+            font-size: 1.2em; color: var(--game-primary-text); list-style: none;
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: var(--border-radius-md); background-color: rgba(0,0,0,0.1);
+            transition: background-color 0.2s ease;
+        }
+        .details-dropdown summary:hover { background-color: rgba(0,0,0,0.2); }
+        .details-dropdown summary::after { content: '▼'; font-size: 0.8em; margin-left: 10px; transition: transform 0.2s ease-in-out; }
+        .details-dropdown[open] summary::after { transform: rotate(180deg); }
+        .details-dropdown .details-content,
+        .details-dropdown .more-options-list,
+        .details-dropdown #withdrawal-history-list,
+        .details-dropdown .withdraw-form-content {
+            padding: 15px 20px; color: var(--text-muted-dark-theme);
+            font-family: var(--font-family-body); background-color: rgba(0,0,0,0.05);
+            border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+        }
+        .details-dropdown .rules-list { /* Specific styling for rules list container */
+            padding: 15px 20px;
+            font-family: var(--font-family-body);
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+        }
+         .rules-list li {
+            color: var(--text-muted-dark-theme); /* Explicitly color list items */
+            margin-bottom: 5px;
+         }
+         .rules-list ul {
+            margin-left: 20px;
+            margin-top: 5px;
+         }
+
+
+        .wallet-info-container h3 { text-align: center; font-size: 1.8em; color: var(--game-primary-text); }
+        .wallet-balance-display {
+            font-family: var(--font-family-title); font-size: 2em; text-align: center;
+            color: var(--game-title-yellow); margin-bottom: 5px;
+        }
+        .wallet-usd-display { font-size: 1.1em; color: var(--text-muted-dark-theme); text-align: center; font-family: var(--font-family-body);}
+
+        .profile-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; }
+        .profile-picture {
+            width: 100px; height: 100px; border-radius: 50%;
+            background-color: rgba(0,0,0,0.2); margin-bottom: 15px;
+            border: 4px solid var(--game-title-yellow);
+            display: flex; justify-content: center; align-items: center;
+        }
+        .profile-picture svg { width: 60px; height: 60px; fill: var(--game-primary-text); }
+        .profile-username {
+            font-family: var(--font-family-title); font-size: 1.8em; color: var(--game-primary-text);
+            text-shadow: 1px 1px 0 var(--game-title-blue);
+        }
+        .profile-stats .stat-item {
+            display: flex; justify-content: space-between; margin-bottom: 8px;
+            font-family: var(--font-family-body);
+        }
+        .profile-stats .stat-item span:first-child { color: var(--text-muted-dark-theme); }
+        .profile-stats .stat-item span:last-child { font-weight: 600; color: var(--game-accent-green); }
+
+        #leaderboard-icon-container, #watchad-icon-container {
+            position: fixed; top: 15px; z-index: 150; cursor: pointer;
+            background-color: var(--game-button-bg); padding: 0;
+            width: 45px; height: 45px; border-radius: 50%;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--game-button-active-border);
+        }
+        #leaderboard-icon-container { left: 15px; }
+        #watchad-icon-container { right: 15px; }
+
+        #leaderboard-icon-container:hover, #watchad-icon-container:hover {
+            transform: scale(1.1);
+            background-color: var(--game-title-yellow);
+        }
+        #leaderboard-icon-container img, #watchad-icon-container img {
+            width: 24px; height: 24px; object-fit: contain;
+        }
+        body.light-mode #leaderboard-icon-container,
+        body.light-mode #watchad-icon-container {
+            background-color: var(--game-button-bg);
+            border-color: var(--game-title-blue);
+        }
+        body.light-mode #leaderboard-icon-container:hover,
+        body.light-mode #watchad-icon-container:hover {
+            background-color: var(--game-title-blue);
+        }
+        body.light-mode #leaderboard-icon-container img,
+        body.light-mode #watchad-icon-container img {
+            /* Adjust if icon needs different color in light mode, e.g., using filter */
+        }
+
+
+        #server-time-display {
+            font-family: var(--font-family-body); background-color: var(--game-panel-bg);
+            border: 1px solid var(--game-panel-border);
+            color: var(--game-accent-green); text-align: center;
+        }
+        /* Generic Toggle Switch Styles */
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.2); /* Dark mode off state */
+            transition: .4s; border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px;
+            left: 4px; bottom: 4px;
+            background-color: var(--game-primary-text); /* Dark mode handle */
+            transition: .4s; border-radius: 50%;
+        }
+        body.light-mode .slider { background-color: #ccc; } /* Light mode off state */
+        body.light-mode .slider:before { background-color: white; } /* Light mode handle */
+        input:checked + .slider { background-color: var(--game-accent-green); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+
+        /* Modals (Generic) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7); display: none; /* Initially hidden */
+            justify-content: center; align-items: center;
+            z-index: 1001; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+        }
+        .modal-overlay.show { display:flex; opacity: 1; visibility: visible; transition-delay: 0s; }
+        .modal-content {
+            background: linear-gradient(135deg, var(--game-title-blue), var(--game-accent-green));
+            font-family: var(--font-family-body); padding: 30px; border-radius: var(--border-radius-lg);
+            text-align: center; width: 85%; max-width: 400px;
+            transform: scale(0.8); transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-content h3 { font-family: var(--font-family-title); color: #f0f0f0; font-size: 1.8em; margin-bottom: 10px; }
+        .modal-content p { color: #f0f0f0; margin-bottom: 20px; font-size: 1.1em; }
+        .modal-icon { font-size: 4em; margin-bottom: 20px; animation: prizePulse 1.5s infinite; }
+        @keyframes prizePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .modal-content .button { background: var(--lime); color: var(--primary-bg); font-weight: bold; }
+
+        #leaderboard-section .card, #watchad-page-section .card {
+             background-color: var(--game-panel-bg);
+        }
+        #leaderboard-section .game-title-super, #watchad-page-section .game-title-super {
+             margin-top: 0;
+        }
+        .leaderboard-tabs { display: flex; border-bottom: 2px solid var(--game-panel-border); margin-bottom: 15px; }
+        .leaderboard-tab {
+            font-family: var(--font-family-title); font-size: 1.1em;
+            color: var(--text-muted-dark-theme); /* Use improved muted color */
+            padding: 10px 15px; cursor: pointer; flex-grow: 1; text-align: center;
+            border-bottom: 3px solid transparent; transition: color 0.2s, border-bottom-color 0.2s;
+        }
+        .leaderboard-tab.active { color: var(--game-title-yellow); border-bottom-color: var(--game-title-yellow); }
+        .leaderboard-tab-content { display: none; }
+        .leaderboard-tab-content.active { display: block; }
+        .leaderboard-list-style { list-style: none; padding: 0; }
+        .leaderboard-list-style li {
+            font-family: var(--font-family-body); padding: 10px 5px;
+            border-bottom: 1px solid var(--game-panel-border);
+            color: var(--game-primary-text); /* Ensure list item text is visible */
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .leaderboard-list-style li:last-child { border-bottom: none; }
+        .leaderboard-list-style li .rank { font-weight: bold; margin-right: 10px; color: var(--game-title-yellow); min-width: 25px; text-align: right;}
+        .leaderboard-list-style li .username { color: var(--game-primary-text); flex-grow: 1; }
+        .leaderboard-list-style li .coins, .leaderboard-list-style li .referrals-count { color: var(--game-accent-green); font-weight: bold; }
+
+
+        body:not(.app-loaded) #app-container { display: none;}
+
+        /* Mini Game Specific Styles */
+        .falling-object {
+            position: absolute;
+            cursor: pointer;
+            font-size: 20px; /* Adjusted for visibility */
+            font-weight: bold;
+            padding: 6px 10px; /* Adjusted padding */
+            border-radius: 8px; /* More rounded */
+            user-select: none;
+            transition: transform 0.05s ease-out, opacity 0.2s ease-out;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+            min-width: 30px; /* Ensure clickable area */
+            text-align: center;
+            z-index: 210; /* Above game area background */
+        }
+        .falling-object:active {
+            transform: scale(0.95) translateY(-2px); /* Click feedback */
+        }
+        .falling-object.letter {
+            background: linear-gradient(135deg, var(--game-accent-green), #81c784); /* Lighter green gradient */
+            color: white;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .falling-object.bomb {
+            background: linear-gradient(135deg, var(--game-title-red), #e57373); /* Lighter red gradient */
+            color: white;
+            border: 1px solid rgba(255,255,255,0.5);
+            font-size: 22px; /* Make bomb emoji slightly larger if used */
+        }
+         #mini-game-page { /* Ensure it's flex for justify-content */
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            justify-content: space-between;
+         }
+
+    </style>
+<script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="333531"></script>
+<script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="333535"></script>
+<script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="333573"></script>
+</head>
+<body>
+    <audio id="tap-sound" src="uitapping.mp3" preload="auto"></audio>
+    <audio id="claim-sound" src="claim.mp3" preload="auto"></audio>
+    <audio id="level-up-sound" src="levelup.mp3" preload="auto"></audio>
+    <audio id="bomb-sound" src="bomb.mp3" preload="auto"></audio>
+    <audio id="game-over-sound" src="gameover.mp3" preload="auto"></audio>
+
+
+    <div id="loading-screen">
+        <div class="logo-animation"></div>
+        <p>Loading Short2Crypto...</p>
+    </div>
+
+    <div id="app-container">
+        <div id="leaderboard-icon-container" title="View Leaderboard" class="clickable-sound">
+            <img src="leaderboard.png" alt="Leaderboard">
+        </div>
+        <div id="watchad-icon-container" title="Watch Ads" class="clickable-sound">
+            <img src="watch_ad.png" alt="Watch Ad">
+        </div>
+
+        <div class="content-area">
+            <div id="earn-section" class="section">
+                <div class="game-header">
+                    <div class="game-logo">
+                        <span class="logo-wing-left">💸</span>
+                        <span class="logo-part1">SHORT</span><span class="logo-vs">2</span><span class="logo-part2">CRYPTO</span>
+                        <span class="logo-wing-right">💸</span>
+                    </div>
+                    <div class="highscore-display">
+                        COINS: <span id="game-highscore">0.00</span>
+                    </div>
+                </div>
+
+                <div class="card shortlink-container">
+                    <div class="shortlink-level-display">
+                        STAGE: <span id="current-stage-display">1</span> / <span id="shortlink-limit-display">100</span>
+                    </div>
+                    <button id="earn-shortlink-button" class="button purple clickable-sound">PLAY!</button>
+                    <button id="claim-shortlink-reward-button" class="button clickable-sound" disabled>Claim 1.00 Coin</button>
+                    <p id="shortlink-message" style="margin-top:15px; color: var(--game-title-yellow);"></p>
+                     <div class="earn-instructions" style="font-family: var(--font-family-body); color: var(--text-muted-dark-theme); margin-top:15px;">
+                        1 Shortlink (6 Ads) = 1.00 Coin<br>
+                        1 Coin = $0.005<br>
+                        Shortlinks reset daily at 00:00 (Server Time).
+                    </div>
+                </div>
+
+                <!-- Mini Game Card -->
+                <div class="card" id="mini-game-main-card" style="text-align: center;">
+                    <h3 style="color: var(--game-title-blue);">Mini Game Challenge</h3>
+                    <div id="mini-game-lives-display-earn" style="font-family: var(--font-family-title); font-size: 1.5em; margin-bottom: 5px; color: var(--game-primary-text);">
+                        ❤️ <span id="current-mini-game-lives">5</span>/<span id="max-mini-game-lives">5</span>
+                    </div>
+                    <div id="next-life-regen-time-display" style="font-size: 0.9em; color: var(--text-muted-dark-theme); margin-bottom: 15px; min-height: 1.2em;"></div>
+                    <button id="play-mini-game-button" class="button purple clickable-sound" style="font-size: 1.2em; padding: 12px 25px;">Play (1 ❤️)</button>
+                    <div style="margin-top: 15px; font-size: 0.9em; color: var(--text-muted-dark-theme);">
+                        <p>Score points to earn Coins (1 Point = 0.001 Coins, ad watch required).</p>
+                        <p>Tap falling letters! Avoid tapping bombs (resets score).</p>
+                        <p>1 Life regenerates every 5 minutes.</p>
+                        <button id="get-life-with-coins-button" class="button pink clickable-sound" style="font-size:0.8em; padding: 8px 12px; margin-top:10px;">Buy Life (0.05 Coins)</button>
+                        <button id="get-life-with-ad-button" class="button pink clickable-sound" style="font-size:0.8em; padding: 8px 12px; margin-top:10px;">Ad for Life (1 ❤️)</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="watchad-page-section" class="section">
+                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h1 class="game-title-super" style="margin-bottom:0;">Watch Ads</h1>
+                    <button class="button pink clickable-sound" id="close-watchad-page-button" style="padding:10px 20px; font-size:0.9em;">Close</button>
+                </div>
+                <div class="card watch-ad-container">
+                    <h3>Watch Ads & Earn</h3>
+                    <button id="watch-ad-play-button" class="button purple clickable-sound">PLAY!</button>
+                    <p id="watch-ad-message"></p>
+                    <div class="earn-instructions" style="font-family: var(--font-family-body); color: var(--text-muted-dark-theme); margin-top:15px;">
+                        1 Ad = 0.10 Coins
+                    </div>
+
+                </div>
+                         <strong>Hint:</strong> To complete faster, start the ad and click on it. Make sure it opens in a different tab (not within Telegram). Come back to Telegram after clicking on the ad. This way, you might not have to wait the full 15 seconds. (This works sometimes).
+            </div>
+
+
+            <div id="withdraw-section" class="section">
+                <h1 class="game-title-super">Your Wallet</h1>
+                 <div class="card platform-stats-container" style="margin-bottom: 20px; text-align: center;">
+                    <h3 style="color: var(--game-title-blue)">Platform Stats</h3>
+                    <p>Today's Withdrawal Quota: <strong id="today-withdrawal-quota">15000 Coins</strong></p>
+                    <p>Yesterday's Revenue: <strong id="yesterday-revenue">$75.20</strong></p>
+                    <p>Today's Total Shortlinks: <strong id="platform-today-shortlinks">0</strong></p>
+                    <p>All-Time Total Shortlinks: <strong id="platform-alltime-shortlinks">0</strong></p>
+                </div>
+
+                <div class="card wallet-info-container">
+                    <h3>Your Balance</h3>
+                    <div class="wallet-balance-display">
+                        Coins: <span id="wallet-coins-display">0.00</span>
+                    </div>
+                    <div class="wallet-usd-display">
+                        USD Value: $<span id="wallet-usd-value-display">0.000</span>
+                    </div>
+                </div>
+
+                <details class="card details-dropdown">
+                    <summary class="clickable-sound">Withdrawal Rules</summary>
+                    <div class="rules-list details-content">
+                        <ul>
+                            <li>Minimum 5 referrals are needed for withdrawal.</li>
+                            <li>For TON use TON Open Network.</li>
+                            <li>For SOL use BEP20 address of SOL.</li>
+                            <li>For INR use UPI ID.</li>
+                            <li>Minimum withdrawal amounts & fees:
+                                <ul>
+                                    <li>INR: 120 coins (20 coin fee)</li>
+                                    <li>TON: 200 coins (30 coin fee)</li>
+                                    <li>SOL: 250 coins (35 coin fee)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="card details-dropdown">
+                    <summary class="clickable-sound">Withdrawal Details</summary>
+                    <div class="withdraw-form-content details-content">
+                        <label for="withdraw-method-select">Select Method:</label>
+                        <select id="withdraw-method-select" class="input-style clickable-sound">
+                            <option value="INR">INR (India Bank/UPI)</option>
+                            <option value="SOL">SOL (Solana Wallet - BEP20)</option>
+                            <option value="TON">TON (Telegram Wallet)</option>
+                        </select>
+
+                        <label for="withdraw-address" id="withdraw-address-label">UPI ID / Bank Details:</label>
+                        <input type="text" id="withdraw-address" class="input-style" placeholder="Enter details...">
+
+                        <label for="withdraw-amount-coins">Amount (Coins):</label>
+                        <input type="number" id="withdraw-amount-coins" class="input-style" placeholder="Enter coin amount">
+
+                        <div class="final-amount-display" style="font-family: var(--font-family-body); margin-bottom: 15px;">
+                            Network Fee: <span id="network-fee-display">0</span> Coins<br>
+                            You will receive: <span id="final-amount-receive-display">0</span> Coins
+                        </div>
+                        <button id="initiate-withdraw-button" class="button purple clickable-sound">Withdraw</button>
+                    </div>
+                </details>
+
+                <details class="card details-dropdown">
+                    <summary class="clickable-sound">Withdrawal History</summary>
+                    <ul id="withdrawal-history-list" class="details-content">
+                        <li>No withdrawal history yet.</li>
+                    </ul>
+                </details>
+                <div id="withdraw-success-message" class="success-animation"></div>
+            </div>
+
+            <div id="profile-section" class="section">
+                 <h1 class="game-title-super">Your Profile</h1>
+                <div class="card">
+                    <div class="profile-header">
+                        <div class="profile-picture">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                        <span class="profile-username" id="profile-username-display">@telegram_user</span>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item"><span>Total Coins Earned:</span><span id="profile-total-coins">0.00</span></div>
+                        <div class="stat-item"><span>Stage Reached (Session):</span><span id="profile-shortlinks-completed">0</span></div>
+                        <div class="stat-item"><span>Referrals:</span><span id="profile-referrals">0</span></div>
+                        <div class="stat-item"><span>Earnings from Referrals:</span><span id="profile-referral-earnings">0.00 Coins</span></div>
+                    </div>
+                    <div class="referral-link-container" style="text-align:center; margin-top: 20px;">
+                        <h3 style="color: var(--game-primary-text); text-align:center;">Your Referral Link:</h3>
+                        <div id="referral-link" style="font-family:var(--font-family-body); background-color:rgba(0,0,0,0.2); padding:10px; border-radius:var(--border-radius-sm); margin-bottom:10px; word-break: break-all;">https://yourapp.t.me/bot?start=ref_USERID</div>
+                        <button class="button clickable-sound" onclick="copyReferralLink()">Copy Link</button>
+                        <p id="copy-status" style="font-size:0.9em; margin-top:10px; color: var(--game-title-yellow);"></p>
+                    </div>
+                    <div class="referred-users-container card" style="margin-top: 20px; background-color: rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--game-primary-text); text-align:center;">Your Referred Users</h3>
+                        <ul id="referred-users-list" class="profile-stats" style="padding: 0 10px;"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="more-section" class="section">
+                <h1 class="game-title-super">More Options</h1>
+                 <details class="card details-dropdown">
+                    <summary class="clickable-sound">Settings</summary>
+                    <ul class="more-options-list details-content">
+                        <li class="clickable-sound" style="background-color:transparent; padding: 10px 0; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);">☀️/🌙 Light/Dark Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" id="theme-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </li>
+                        <li class="clickable-sound" style="background-color:transparent; padding: 10px 0; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);">🔊 Sound On/Off</span>
+                            <label class="switch">
+                                <input type="checkbox" id="sound-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </li>
+                    </ul>
+                </details>
+
+                <details class="card details-dropdown">
+                    <summary class="clickable-sound">❓ Help & Support</summary>
+                    <div class="details-content" style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);">
+                     <p>Welcome to Short2Crypto Support! We're here to help you make the most of your earning experience.</p>
+<h4>Frequently Asked Questions (FAQ):</h4> <!-- ... content ... -->
+                        <button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Opening Help Center...')">Open Help Center</button>
+                    </div>
+                </details>
+                <details class="card details-dropdown"><summary class="clickable-sound">📜 Terms & Conditions</summary><div class="details-content" style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);"><p>Please read our terms carefully...</p><button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Opening Terms & Conditions...')">View Terms</button></div></details>
+                <details class="card details-dropdown"><summary class="clickable-sound">🛡️ Privacy Policy</summary><div class="details-content" style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);"><p>Your privacy is important to us...</p><button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Opening Privacy Policy...')">View Policy</button></div></details>
+                <details class="card details-dropdown"><summary class="clickable-sound">🚪 Logout </summary><div class="details-content" style="font-family:var(--font-family-body); color: var(--text-muted-dark-theme);"><p>Are you sure you want to log out? </p><button class="button purple clickable-sound" style="margin-top:10px;" onclick="alert('Logging out...')">Logout</button></div></details>
+
+
+                <div id="server-time-display" class="card" style="padding: 10px 15px;">
+                    Server Time (IST): <span id="current-server-time">--:--:--</span>
+                </div>
+            </div>
+
+            <div id="leaderboard-section" class="section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h1 class="game-title-super" style="margin-bottom:0;">Leaderboard</h1>
+                    <button class="button pink clickable-sound" id="close-leaderboard-button" style="padding:10px 20px; font-size:0.9em;">Close</button>
+              </div>
+                <div class="card" style="padding-bottom: 10px;">
+                <div class="leaderboard-tabs">
+                        <div class="leaderboard-tab active clickable-sound" data-tab="points">Points</div>
+                        <div class="leaderboard-tab clickable-sound" data-tab="referrals">Referrals</div>
+                    </div>
+                    <div id="leaderboard-points-content" class="leaderboard-tab-content active">
+                        <ul id="leaderboard-list" class="leaderboard-list-style"></ul>
+                    </div>
+                    <div id="leaderboard-referrals-content" class="leaderboard-tab-content">
+                        <ul id="referral-leaderboard-list" class="leaderboard-list-style"></ul>
+                    </div>
+                </div>
+        </div>
+
+        </div> <!-- End .content-area -->
+
+        <nav class="game-controls">
+            <div class="control-button active clickable-sound" data-section="earn-section" title="Earn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4z"/></svg>
+                <span class="nav-text">Earn</span>
+            </div>
+            <div class="control-button clickable-sound" data-section="withdraw-section" title="Wallet">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                <span class="nav-text">Wallet</span>
+            </div>
+            <div class="control-button clickable-sound" data-section="profile-section" title="Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <span class="nav-text">Profile</span>
+            </div>
+            <div class="control-button clickable-sound" data-section="more-section" title="More">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                <span class="nav-text">More</span>
+            </div>
+        </nav>
+    </div> <!-- End #app-container -->
+
+    <div id="ad-viewing-page">
+<script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="333567"></script>
+<div data-banner-id="6076244"></div>
+
+        <h3 id="ad-viewing-title">Complete Ad Views</h3>
+        <p class="ad-hint" style="font-family: var(--font-family-body); color: var(--game-title-yellow); font-size: 0.9em; margin: 5px 10px 10px; text-align: left; background-color: rgba(0,0,0,0.1); padding: 8px; border-radius: var(--border-radius-sm);">
+            <strong>Hint:</strong> To complete the shortlink faster, start the ad and click on it. Make sure it opens in a different tab (not within Telegram). Come back to Telegram after clicking on the ad. This way, you might not have to wait the full 15 seconds. (This works sometimes).
+        </p>
+<script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="333559"></script>
+<div data-banner-id="6076239"></div>
+
+        <div id="ad-top-controls">
+            <!-- "Watch Ad" button will be dynamically inserted here -->
+        </div>
+<script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="333563"></script>
+<div data-banner-id="6076242"></div>
+        <div class="timer-and-flanking-banners">
+            <div id="ad-timer-display">00:15</div>
+        </div>
+<script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="333565"></script>
+<div data-banner-id="6076243"></div>
+        <div id="ad-bottom-controls">
+            <!-- "Proceed" / "Claim" button will be dynamically inserted here -->
+        </div>
+
+<script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="333561"></script>
+<div data-banner-id="6076240"></div>
+    </div>
+
+    <!-- Mini Game Page -->
+    <div id="mini-game-page" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, var(--game-bg-start) 0%, var(--game-bg-end) 100%); z-index: 250; flex-direction: column; padding: 15px; box-sizing: border-box; text-align: center;">
+        <div id="mini-game-stats-bar" style="display: flex; justify-content: space-around; align-items: center; background-color: rgba(0,0,0,0.25); padding: 10px 15px; border-radius: var(--border-radius-md); margin-bottom: 15px; color: var(--game-primary-text); font-family: var(--font-family-title); font-size: 1.1em;">
+            <span>Score: <span id="mini-game-score-value">0</span></span>
+            <span>Time: <span id="mini-game-time-value">60</span>s</span>
+            <span>Lives: ❤️<span id="mini-game-lives-value-ingame">5</span></span>
+        </div>
+        <div id="mini-game-area" style="flex-grow: 1; background-color: rgba(0,0,0,0.15); border-radius: var(--border-radius-md); position: relative; overflow: hidden; border: 2px solid var(--game-panel-border); box-shadow: inset 0 0 10px rgba(0,0,0,0.2);">
+            <!-- Falling objects appear here -->
+        </div>
+        <button id="exit-current-mini-game-button" class="button pink clickable-sound" style="margin-top: 15px; width: 100%; max-width: 320px; padding: 12px;">Exit Game</button>
+    </div>
+
+    <!-- Mini Game Over Modal -->
+    <div id="mini-game-over-modal" class="modal-overlay">
+        <div class="modal-content" style="background: linear-gradient(135deg, var(--game-title-red), var(--game-accent-orange));">
+            <h3 id="mini-game-over-title" style="color:white; font-size: 2em;">Game Over!</h3>
+            <p style="color:white; font-size: 1.2em;">Your Score: <span id="mini-game-over-score">0</span></p>
+            <p id="mini-game-reward-message" style="color:white; font-weight:bold; min-height: 1.2em;"></p>
+            <button id="watch-ad-for-game-reward-button" class="button purple clickable-sound" style="display:none; margin-top:10px; background: var(--game-accent-green); color:white;">Watch Ad for Coins</button>
+            <button id="close-game-over-modal-button" class="button clickable-sound" style="margin-top:15px; background: rgba(255,255,255,0.3); color:white;">Close</button>
+        </div>
+    </div>
+
+    <!-- Buy Life Confirmation Modal -->
+    <div id="buy-life-confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="color:white;">Confirm Purchase</h3>
+            <p style="color:white;">Buy 1 Mini Game Life for <span id="buy-life-cost-display">0.05</span> Coins?</p>
+            <button id="confirm-buy-life-button" class="button purple clickable-sound" style="margin-right: 10px; background: var(--game-accent-green); color:white;">Confirm</button>
+            <button id="decline-buy-life-button" class="button clickable-sound" style="background: rgba(255,255,255,0.3); color:white;">Decline</button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Main JavaScript Logic ---
+        console.log("Main script block started. (Log 1)");
+
+        if (typeof window.Telegram === 'undefined' || typeof window.Telegram.WebApp === 'undefined') {
+            window.Telegram = {
+                WebApp: {
+                    initDataUnsafe: {
+                        user: {
+                            id: Math.floor(Math.random() * 100000000) + 10000000,
+                            first_name: "MockFirst",
+                            last_name: "MockLast",
+                            username: "MockTGUser" + (Math.floor(Math.random() * 900) + 100),
+                            language_code: "en"
+                        },
+                        start_param: null
+                    },
+                    ready: () => console.log("Mock Telegram WebApp is ready."),
+                    expand: () => console.log("Mock Telegram WebApp expand called."),
+                    close: () => console.log("Mock Telegram WebApp close called."),
+                }
+            };
+            console.log("Mock Telegram object created. (Log 2)");
+        }
+
+
+        let currentUser;
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+            const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+            currentUser = {
+                id: tgUser.id.toString(),
+                username: tgUser.username || `${tgUser.first_name}${tgUser.last_name || ''}`,
+                referrals: 0,
+                referredBy: null
+            };
+            const startParam = window.Telegram.WebApp.initDataUnsafe.start_param;
+            if (startParam && startParam.startsWith('ref_')) {
+                currentUser.referredBy = startParam.substring(4);
+                console.log(`User was referred by: ${currentUser.referredBy}`);
+            }
+        } else {
+            currentUser = { username: 'VibeUser_Fallback', id: 'fallback001', referrals: 0, referredBy: null };
+            console.warn("Telegram data not found, using fallback currentUser. (Log 2.1)");
+        }
+        console.log("CurrentUser initialized:", currentUser, "(Log 3)");
+
+
+        const COIN_VALUE_USD = 0.005;
+        const SHORTLINK_LIMIT = 100;
+        const ADS_PER_SHORTLINK = 6;
+        const AD_TIMER_DURATION_SECONDS = 15;
+        const COINS_PER_REFERRAL = 3;
+        const MIN_REFERRALS_FOR_WITHDRAWAL = 5;
+
+        // Watch Ad Feature constants (Simplified)
+        const COINS_PER_WATCH_AD = 0.1;
+
+        const WITHDRAWAL_CONFIG = {
+            INR: { min: 120, fee: 20, label: "UPI ID / Bank Details:", placeholder: "yourname@upi or Account Number" },
+            SOL: { min: 250, fee: 35, label: "Solana (BEP20) Address:", placeholder: "Your SOL (BEP20) Wallet Address" },
+            TON: { min: 200, fee: 30, label: "TON Wallet Address:", placeholder: "Your TON Wallet Address" }
+        };
+        let withdrawalHistory = [
+             { id: 'wd001', date: '2023-10-25', method: 'INR', amount: 150, status: 'Completed', address: 'user@upi' },
+             { id: 'wd002', date: '2023-11-05', method: 'TON', amount: 200, status: 'Pending', address: 'UQ...Xyz' }
+        ];
+        const mockReferredUsers = [
+            { username: '@ReferralOne', referredBy: currentUser.id, date: '2023-10-01' },
+            { username: '@FriendBob',   referredBy: currentUser.id, date: '2023-10-03' },
+            { username: '@AnotherUser', referredBy: 'other_referrer_id', date: '2023-10-02' },
+            { username: '@CoolCat99',   referredBy: currentUser.id, date: '2023-10-05' },
+        ];
+        console.log("mockReferredUsers initialized. (Log 4)");
+        let mockLeaderboardData = [
+            { rank: 1, username: '@ProGamerX', coins: 25000, referrals: 15 },
+            { rank: 2, username: '@CoinMaster', coins: 22500, referrals: 12 },
+            { rank: 3, username: currentUser.username, coins: 0, referrals: 0 },
+            { rank: 4, username: '@EarlyBird', coins: 18000, referrals: 8 },
+            { rank: 5, username: '@NewbieNick', coins: 1500, referrals: 2 },
+            { rank: 6, username: '@PlayerOne', coins: 1200, referrals: 1},
+            { rank: 7, username: '@TopEarner', coins: 30000, referrals: 20},
+        ];
+
+
+        let totalCoins = 0;
+        let shortlinksCompletedThisSession = 0;
+        let currentAdStep = 0;
+        let shortlinkProcessActive = false;
+        let serverTimeInterval;
+        let isSoundEnabled = true;
+        const tapSound = document.getElementById('tap-sound');
+        const claimSound = document.getElementById('claim-sound');
+        const levelUpSound = document.getElementById('level-up-sound');
+        const bombSound = document.getElementById('bomb-sound');
+        const gameOverSound = document.getElementById('game-over-sound');
+        let adTimerInterval = null;
+
+
+        let platformStats = {
+            todayShortlinks: 0,
+            allTimeShortlinks: 12500,
+            // allTimeRevenue: 0, // Removed
+            // allTimeWithdrawals: 30000, // Removed
+            todayWithdrawalQuota: 15000,
+            yesterdayRevenue: 75.20
+        };
+        // platformStats.allTimeRevenue = platformStats.allTimeShortlinks * COIN_VALUE_USD; // Removed
+        let lastResetDate = new Date().toDateString();
+        console.log("Global vars and platformStats initialized. (Log 5)");
+
+        // Mini Game Variables
+        const MAX_MINI_GAME_LIVES = 5;
+        const MINI_GAME_LIFE_REGEN_MS = 5 * 60 * 1000; // 5 minutes
+        const MINI_GAME_LIFE_COST_COINS = 0.05;
+        const MINI_GAME_DURATION_S = 60;
+        const SCORE_TO_COIN_CONVERSION_RATE = 0.001;
+        const MINI_GAME_LETTERS = "SHORT2CRYPTO".split('');
+        const MINI_GAME_BOMB_PROBABILITY = 0.15;
+        const MINI_GAME_OBJECT_SPAWN_RATE_MS = 1500;
+        const MINI_GAME_OBJECT_FALL_SPEED_BASE = 3;
+        const MINI_GAME_OBJECT_FALL_SPEED_VARIATION = 1;
+
+
+        let currentMiniGameLives = MAX_MINI_GAME_LIVES;
+        let miniGameLifeRegenTimers = [];
+        let globalLifeRegenInterval = null;
+
+        let isMiniGameActive = false;
+        let currentMiniGameScore = 0;
+        let currentMiniGameTimeLeft = MINI_GAME_DURATION_S;
+        let miniGameTimerInterval = null;
+        let miniGameObjectSpawnerInterval = null;
+        let activeFallingObjects = [];
+        let miniGameAnimationFrameId = null;
+        let miniGameAwaitingAdReward = false;
+
+
+        let loadingScreen, appContainer, navItems, sections;
+        let earnShortlinkButton, claimShortlinkRewardButton, shortlinkMessageEl;
+        let gameHighscoreEl, currentStageDisplayEl, shortlinkLimitDisplayEl;
+        let adViewingPage, adTopControls, adViewingTitle, adTimerDisplay, adBottomControls;
+        let profileUsernameDisplay, profileTotalCoinsEl, profileShortlinksCompletedEl, profileReferralsEl, profileReferralEarningsEl;
+        let referralLinkDisplay, referredUsersListEl;
+        let serverTimeDisplayEl;
+        let leaderboardIconContainer, leaderboardSection, leaderboardListEl, referralLeaderboardListEl;
+        let watchadIconContainer, watchadPageSection, closeWatchAdPageButton;
+        let themeToggle, soundToggle;
+        let closeLeaderboardButton;
+        let leaderboardTabs, leaderboardTabContents;
+        let walletCoinsDisplayEl, walletUsdValueDisplayEl;
+        let withdrawMethodSelectEl, withdrawAddressLabelEl, withdrawAddressInputEl, withdrawAmountCoinsInputEl;
+        let networkFeeDisplayEl, finalAmountReceiveDisplayEl, initiateWithdrawButtonEl, withdrawalHistoryListEl;
+        let platformTodayShortlinksEl, platformAllTimeShortlinksEl; // platformAllTimeRevenueEl, platformAllTimeWithdrawalsEl removed
+        let platformTodayQuotaEl, platformYesterdayRevenueEl;
+        let watchAdPlayButtonEl, watchAdMessageEl;
+
+        // Mini Game DOM Elements
+        let miniGamePageEl, miniGameStatsBarEl, miniGameScoreValueEl, miniGameTimeValueEl, miniGameLivesValueIngameEl, miniGameAreaEl, exitCurrentMiniGameButtonEl;
+        let currentMiniGameLivesDisplayEl, maxMiniGameLivesDisplayEl, nextLifeRegenTimeDisplayEl, playMiniGameButtonEl;
+        let getLifeWithCoinsButtonEl, getLifeWithAdButtonEl;
+        let miniGameOverModalEl, miniGameOverTitleEl, miniGameOverScoreEl, miniGameRewardMessageEl, watchAdForGameRewardButtonEl, closeGameOverModalButtonEl;
+        let buyLifeConfirmModalEl, confirmBuyLifeButtonEl, declineBuyLifeButtonEl, buyLifeCostDisplayEl;
+
+
+        let currentActiveSectionId = 'earn-section';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                console.log("DOMContentLoaded event fired. (Log 6)");
+                document.body.classList.remove('app-loaded');
+
+                loadingScreen = document.getElementById('loading-screen');
+                appContainer = document.getElementById('app-container');
+                navItems = document.querySelectorAll('.control-button');
+                sections = document.querySelectorAll('.section');
+                earnShortlinkButton = document.getElementById('earn-shortlink-button');
+                claimShortlinkRewardButton = document.getElementById('claim-shortlink-reward-button');
+                shortlinkMessageEl = document.getElementById('shortlink-message');
+                gameHighscoreEl = document.getElementById('game-highscore');
+                currentStageDisplayEl = document.getElementById('current-stage-display');
+                shortlinkLimitDisplayEl = document.getElementById('shortlink-limit-display');
+                adViewingPage = document.getElementById('ad-viewing-page');
+                adTopControls = document.getElementById('ad-top-controls');
+                adViewingTitle = document.getElementById('ad-viewing-title');
+                adTimerDisplay = document.getElementById('ad-timer-display');
+                adBottomControls = document.getElementById('ad-bottom-controls');
+                profileUsernameDisplay = document.getElementById('profile-username-display');
+                profileTotalCoinsEl = document.getElementById('profile-total-coins');
+                profileShortlinksCompletedEl = document.getElementById('profile-shortlinks-completed');
+                profileReferralsEl = document.getElementById('profile-referrals');
+                profileReferralEarningsEl = document.getElementById('profile-referral-earnings');
+                referralLinkDisplay = document.getElementById('referral-link');
+                referredUsersListEl = document.getElementById('referred-users-list');
+                serverTimeDisplayEl = document.getElementById('current-server-time');
+                leaderboardIconContainer = document.getElementById('leaderboard-icon-container');
+                leaderboardSection = document.getElementById('leaderboard-section');
+                leaderboardListEl = document.getElementById('leaderboard-list');
+                referralLeaderboardListEl = document.getElementById('referral-leaderboard-list');
+                themeToggle = document.getElementById('theme-toggle');
+                soundToggle = document.getElementById('sound-toggle');
+                closeLeaderboardButton = document.getElementById('close-leaderboard-button');
+                leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
+                leaderboardTabContents = document.querySelectorAll('.leaderboard-tab-content');
+                walletCoinsDisplayEl = document.getElementById('wallet-coins-display');
+                walletUsdValueDisplayEl = document.getElementById('wallet-usd-value-display');
+                withdrawMethodSelectEl = document.getElementById('withdraw-method-select');
+                withdrawAddressLabelEl = document.getElementById('withdraw-address-label');
+                withdrawAddressInputEl = document.getElementById('withdraw-address');
+                withdrawAmountCoinsInputEl = document.getElementById('withdraw-amount-coins');
+                networkFeeDisplayEl = document.getElementById('network-fee-display');
+                finalAmountReceiveDisplayEl = document.getElementById('final-amount-receive-display');
+                initiateWithdrawButtonEl = document.getElementById('initiate-withdraw-button');
+                withdrawalHistoryListEl = document.getElementById('withdrawal-history-list');
+                platformTodayQuotaEl = document.getElementById('today-withdrawal-quota');
+                platformYesterdayRevenueEl = document.getElementById('yesterday-revenue');
+                platformTodayShortlinksEl = document.getElementById('platform-today-shortlinks');
+                platformAllTimeShortlinksEl = document.getElementById('platform-alltime-shortlinks');
+                // platformAllTimeRevenueEl = document.getElementById('platform-alltime-revenue'); // Removed
+                // platformAllTimeWithdrawalsEl = document.getElementById('platform-alltime-withdrawals'); // Removed
+                watchAdPlayButtonEl = document.getElementById('watch-ad-play-button');
+                watchAdMessageEl = document.getElementById('watch-ad-message');
+                watchadIconContainer = document.getElementById('watchad-icon-container');
+                watchadPageSection = document.getElementById('watchad-page-section');
+                closeWatchAdPageButton = document.getElementById('close-watchad-page-button');
+
+                // Mini Game DOM Elements
+                miniGamePageEl = document.getElementById('mini-game-page');
+                miniGameStatsBarEl = document.getElementById('mini-game-stats-bar');
+                miniGameScoreValueEl = document.getElementById('mini-game-score-value');
+                miniGameTimeValueEl = document.getElementById('mini-game-time-value');
+                miniGameLivesValueIngameEl = document.getElementById('mini-game-lives-value-ingame');
+                miniGameAreaEl = document.getElementById('mini-game-area');
+                exitCurrentMiniGameButtonEl = document.getElementById('exit-current-mini-game-button');
+                currentMiniGameLivesDisplayEl = document.getElementById('current-mini-game-lives');
+                maxMiniGameLivesDisplayEl = document.getElementById('max-mini-game-lives');
+                nextLifeRegenTimeDisplayEl = document.getElementById('next-life-regen-time-display');
+                playMiniGameButtonEl = document.getElementById('play-mini-game-button');
+                getLifeWithCoinsButtonEl = document.getElementById('get-life-with-coins-button');
+                getLifeWithAdButtonEl = document.getElementById('get-life-with-ad-button');
+                miniGameOverModalEl = document.getElementById('mini-game-over-modal');
+                miniGameOverTitleEl = document.getElementById('mini-game-over-title');
+                miniGameOverScoreEl = document.getElementById('mini-game-over-score');
+                miniGameRewardMessageEl = document.getElementById('mini-game-reward-message');
+                watchAdForGameRewardButtonEl = document.getElementById('watch-ad-for-game-reward-button');
+                closeGameOverModalButtonEl = document.getElementById('close-game-over-modal-button');
+                buyLifeConfirmModalEl = document.getElementById('buy-life-confirm-modal');
+                confirmBuyLifeButtonEl = document.getElementById('confirm-buy-life-button');
+                declineBuyLifeButtonEl = document.getElementById('decline-buy-life-button');
+                buyLifeCostDisplayEl = document.getElementById('buy-life-cost-display');
+
+
+                console.log("All DOM elements fetched. (Log 7.1)");
+
+                currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length;
+                totalCoins += currentUser.referrals * COINS_PER_REFERRAL;
+                const userLeaderboardEntry = mockLeaderboardData.find(entry => entry.username === currentUser.username);
+                if (userLeaderboardEntry) {
+                    userLeaderboardEntry.coins = totalCoins;
+                    userLeaderboardEntry.referrals = currentUser.referrals;
+                } else {
+                    mockLeaderboardData.push({ rank: 0, username: currentUser.username, coins: totalCoins, referrals: currentUser.referrals });
+                }
+
+                if (profileUsernameDisplay) profileUsernameDisplay.textContent = `@${currentUser.username}`;
+                if (referralLinkDisplay) referralLinkDisplay.textContent = `https://yourapp.t.me/bot?start=ref_${currentUser.id}`;
+                if (shortlinkLimitDisplayEl) shortlinkLimitDisplayEl.textContent = SHORTLINK_LIMIT;
+                if (buyLifeCostDisplayEl) buyLifeCostDisplayEl.textContent = MINI_GAME_LIFE_COST_COINS.toFixed(2);
+                console.log("Initial totalCoins from referrals:", totalCoins, "(Log 7.2)");
+
+                initializeSettings();
+                updateShortlinkUI();
+                updateWatchAdUI();
+                updateWalletBalance();
+                updateProfileStats();
+                updateWithdrawalFormUI();
+                populateWithdrawalHistory();
+                updatePlatformStatsDisplay();
+                populateReferredUsersList();
+                initializeMiniGameSystem();
+                console.log("Initial UI updates done. (Log 9)");
+
+                setTimeout(() => {
+                    console.log("Loading screen timeout. (Log 10)");
+                    if (loadingScreen) loadingScreen.classList.add('hidden');
+                    if (appContainer) {
+                        appContainer.style.display = 'flex';
+                        setTimeout(() => appContainer.classList.add('visible'), 50);
+                    }
+                    document.body.classList.add('app-loaded');
+                    showSection('earn-section', true);
+                    console.log("App displayed. (Log 12)");
+                }, 1000);
+                console.log("Loading screen timeout scheduled. (Log 13)");
+
+                navItems.forEach(item => item.addEventListener('click', handleNavClick));
+                if (leaderboardIconContainer) leaderboardIconContainer.addEventListener('click', handleLeaderboardIconClick);
+                if (earnShortlinkButton) earnShortlinkButton.addEventListener('click', startShortlinkProcess);
+                if (claimShortlinkRewardButton) claimShortlinkRewardButton.addEventListener('click', claimShortlinkReward);
+                if (themeToggle) themeToggle.addEventListener('change', toggleTheme);
+                if (soundToggle) soundToggle.addEventListener('change', toggleSound);
+                if (closeLeaderboardButton) closeLeaderboardButton.addEventListener('click', handleCloseLeaderboard);
+                leaderboardTabs.forEach(tab => tab.addEventListener('click', () => showLeaderboardTab(tab.dataset.tab)));
+                if (withdrawMethodSelectEl) withdrawMethodSelectEl.addEventListener('change', updateWithdrawalFormUI);
+                if (withdrawAmountCoinsInputEl) withdrawAmountCoinsInputEl.addEventListener('input', updateWithdrawalFormUI);
+                if (initiateWithdrawButtonEl) initiateWithdrawButtonEl.addEventListener('click', handleNewWithdraw);
+                document.body.addEventListener('click', (event) => { if (event.target.closest('.clickable-sound')) { playSound('tap'); }});
+                if (watchadIconContainer) watchadIconContainer.addEventListener('click', handleWatchAdIconClick);
+                if (closeWatchAdPageButton) closeWatchAdPageButton.addEventListener('click', handleCloseWatchAdPage);
+                if (watchAdPlayButtonEl) watchAdPlayButtonEl.addEventListener('click', handleWatchAdPlay);
+
+                // Mini Game Event Listeners
+                if (playMiniGameButtonEl) playMiniGameButtonEl.addEventListener('click', tryStartMiniGame);
+                if (exitCurrentMiniGameButtonEl) exitCurrentMiniGameButtonEl.addEventListener('click', () => endMiniGame('manual_exit'));
+                if (closeGameOverModalButtonEl) closeGameOverModalButtonEl.addEventListener('click', closeMiniGameOverModal);
+                if (watchAdForGameRewardButtonEl) watchAdForGameRewardButtonEl.addEventListener('click', claimMiniGameRewardWithAd);
+                if (getLifeWithCoinsButtonEl) getLifeWithCoinsButtonEl.addEventListener('click', handleBuyLifeWithCoinsClick);
+                if (getLifeWithAdButtonEl) getLifeWithAdButtonEl.addEventListener('click', handleGetLifeWithAdClick);
+                if (confirmBuyLifeButtonEl) confirmBuyLifeButtonEl.addEventListener('click', confirmBuyLifeWithCoins);
+                if (declineBuyLifeButtonEl) declineBuyLifeButtonEl.addEventListener('click', () => buyLifeConfirmModalEl.classList.remove('show'));
+
+
+                console.log("All event listeners attached. (Log 13.1)");
+
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.ready();
+                    window.Telegram.WebApp.expand();
+                }
+
+            } catch (e) {
+                console.error("Error during DOMContentLoaded execution:", e, "(Error Log)");
+                const loadingScreenMsgEl = document.querySelector("#loading-screen p");
+                if (loadingScreenMsgEl) {
+                    loadingScreenMsgEl.innerHTML = "An error occurred. Check console.<br>" + e.toString();
+                    loadingScreenMsgEl.style.color = "red";
+                }
+                 if (loadingScreen && appContainer) {
+                    loadingScreen.classList.remove('hidden');
+                    appContainer.style.display = 'none';
+                }
+            }
+        });
+        console.log("DOMContentLoaded listener attached. (Log 14)");
+
+
+        function playSound(type = 'tap') {
+            let soundToPlay;
+            switch(type) {
+                case 'claim': soundToPlay = claimSound; break;
+                case 'levelup': soundToPlay = levelUpSound; break;
+                case 'bomb': soundToPlay = bombSound; break;
+                case 'gameover': soundToPlay = gameOverSound; break;
+                case 'tap': default: soundToPlay = tapSound; break;
+            }
+            if (isSoundEnabled && soundToPlay && soundToPlay.readyState >= 2) {
+                soundToPlay.currentTime = 0;
+                soundToPlay.play().catch(error => console.warn("Sound play failed or interrupted:", type, error));
+            } else if (!soundToPlay) {
+                console.warn("Sound element not found for type:", type);
+            } else if (soundToPlay && soundToPlay.readyState < 2) {
+                // console.warn("Sound not ready to play:", type, "readyState:", soundToPlay.readyState);
+            }
+        }
+
+        function initializeSettings() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') { document.body.classList.add('light-mode'); if(themeToggle) themeToggle.checked = true; }
+            else { if(themeToggle) themeToggle.checked = false; }
+            const savedSound = localStorage.getItem('soundEnabled');
+            if (savedSound === 'false') { isSoundEnabled = false; if(soundToggle) soundToggle.checked = false; }
+            else { isSoundEnabled = true; if(soundToggle) soundToggle.checked = true; }
+        }
+        function toggleTheme() { document.body.classList.toggle('light-mode'); localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); }
+        function toggleSound() { isSoundEnabled = soundToggle.checked; localStorage.setItem('soundEnabled', isSoundEnabled); console.log("Sound enabled:", isSoundEnabled); }
+
+
+        function showSection(newSectionId, initialLoad = false) {
+            if (isMiniGameActive || (miniGamePageEl && miniGamePageEl.style.display === 'flex')) {
+                alert("Please exit the mini-game first.");
+                return;
+            }
+            console.log(`Showing section: ${newSectionId}, Initial: ${initialLoad}, Current: ${currentActiveSectionId}`);
+            const newSection = document.getElementById(newSectionId);
+            if (!newSection) { console.error(`Section ${newSectionId} not found.`); return; }
+
+            sections.forEach(s => {
+                if (s.id === newSectionId) {
+                    if (initialLoad) {
+                        s.style.transition = 'none'; s.classList.add('active');
+                        void s.offsetWidth; s.style.transition = '';
+                    } else { s.classList.add('active'); }
+                } else { s.classList.remove('active'); }
+            });
+
+            currentActiveSectionId = newSectionId;
+            const contentArea = document.querySelector('.content-area');
+            if (contentArea) contentArea.scrollTop = 0;
+
+            if (newSectionId === 'more-section') startServerTimeUpdates(); else stopServerTimeUpdates();
+            if (newSectionId === 'leaderboard-section') { populateLeaderboard(); populateReferralLeaderboard(); }
+            if (newSectionId === 'watchad-page-section') { updateWatchAdUI(); }
+            if (newSectionId === 'withdraw-section') { updateWithdrawalFormUI(); populateWithdrawalHistory(); updatePlatformStatsDisplay(); }
+            if (newSectionId === 'profile-section') { updateProfileStats(); populateReferredUsersList(); }
+            if (newSectionId === 'earn-section') { updateShortlinkUI(); updateMiniGameLivesDisplay(); }
+        }
+
+
+        function handleNavClick(event) {
+            const item = event.currentTarget;
+            if (shortlinkProcessActive || (watchAdPlayButtonEl && watchAdPlayButtonEl.textContent === "Loading Ad...")) {
+                 alert("Please complete the current ad viewing process first."); return;
+            }
+            if (isMiniGameActive || (miniGamePageEl && miniGamePageEl.style.display === 'flex')) {
+                alert("Please exit the mini-game first.");
+                return;
+            }
+            const newSectionId = item.dataset.section;
+            if (newSectionId === currentActiveSectionId) return;
+            navItems.forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+            showSection(newSectionId);
+        }
+
+        function handleLeaderboardIconClick() {
+            if (shortlinkProcessActive || (watchAdPlayButtonEl && watchAdPlayButtonEl.textContent === "Loading Ad...")) {
+                alert("Please complete the current ad viewing process first."); return;
+            }
+            if (isMiniGameActive || (miniGamePageEl && miniGamePageEl.style.display === 'flex')) {
+                alert("Please exit the mini-game first."); return;
+            }
+            showSection('leaderboard-section');
+            showLeaderboardTab('points');
+        }
+        function handleCloseLeaderboard() { const defaultSection = 'earn-section'; showSection(defaultSection); navItems.forEach(nav => { nav.classList.toggle('active', nav.dataset.section === defaultSection); });}
+        function showLeaderboardTab(tabName) { leaderboardTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === tabName)); leaderboardTabContents.forEach(content => content.classList.toggle('active', content.id === `leaderboard-${tabName}-content`));}
+
+        function handleWatchAdIconClick() {
+            if (shortlinkProcessActive) {
+                alert("Please complete the current shortlink ad viewing process first."); return;
+            }
+            if (isMiniGameActive || (miniGamePageEl && miniGamePageEl.style.display === 'flex')) {
+                alert("Please exit the mini-game first."); return;
+            }
+            showSection('watchad-page-section');
+        }
+        function handleCloseWatchAdPage() {
+            const defaultSection = 'earn-section';
+            showSection(defaultSection);
+            navItems.forEach(nav => {
+                nav.classList.toggle('active', nav.dataset.section === defaultSection);
+            });
+        }
+
+
+        function getIndianTime() { const now = new Date(); const utcOffset = now.getTimezoneOffset() * 60000; const utcTime = now.getTime() + utcOffset; const istTime = new Date(utcTime + (3600000 * 5.5)); return `${istTime.getHours().toString().padStart(2, '0')}:${istTime.getMinutes().toString().padStart(2, '0')}:${istTime.getSeconds().toString().padStart(2, '0')}`; }
+        function startServerTimeUpdates() { if (serverTimeDisplayEl && !serverTimeInterval) { const update = () => { if (serverTimeDisplayEl) serverTimeDisplayEl.textContent = getIndianTime(); const currentDate = new Date().toDateString(); if (currentDate !== lastResetDate) { console.log("Server time detected new day, resetting daily stats."); platformStats.todayShortlinks = 0; shortlinksCompletedThisSession = 0; updateShortlinkUI(); lastResetDate = currentDate; } updatePlatformStatsDisplay(); }; update(); serverTimeInterval = setInterval(update, 1000); } }
+        function stopServerTimeUpdates() { if (serverTimeInterval) { clearInterval(serverTimeInterval); serverTimeInterval = null; } }
+
+        function updatePlatformStatsDisplay() {
+            if (platformTodayQuotaEl) platformTodayQuotaEl.textContent = `${platformStats.todayWithdrawalQuota} Coins`;
+            if (platformYesterdayRevenueEl) platformYesterdayRevenueEl.textContent = `$${platformStats.yesterdayRevenue.toFixed(2)}`;
+            if (platformTodayShortlinksEl) platformTodayShortlinksEl.textContent = platformStats.todayShortlinks;
+            if (platformAllTimeShortlinksEl) platformAllTimeShortlinksEl.textContent = platformStats.allTimeShortlinks;
+        }
+        function updateShortlinkUI() { if(currentStageDisplayEl) currentStageDisplayEl.textContent = shortlinksCompletedThisSession + 1; const limitReached = shortlinksCompletedThisSession >= SHORTLINK_LIMIT; if(earnShortlinkButton) { earnShortlinkButton.disabled = limitReached || shortlinkProcessActive || isMiniGameActive || (watchAdPlayButtonEl && watchAdPlayButtonEl.textContent === "Loading Ad..."); earnShortlinkButton.textContent = limitReached ? "LIMIT!" : (shortlinkProcessActive || isMiniGameActive ? "BUSY..." : "PLAY!"); } if(limitReached && shortlinkMessageEl && !shortlinkProcessActive) { shortlinkMessageEl.textContent = "Daily shortlink limit reached!"; } else if (!shortlinkProcessActive && shortlinkMessageEl && claimShortlinkRewardButton && !claimShortlinkRewardButton.disabled) {} else if (!shortlinkProcessActive && shortlinkMessageEl) { shortlinkMessageEl.textContent = ""; }}
+
+
+        function startShortlinkProcess() {
+            console.log("startShortlinkProcess called");
+            if (watchAdPlayButtonEl && watchAdPlayButtonEl.textContent === "Loading Ad...") {
+                alert("Please wait for the current ad process to finish."); return;
+            }
+            if (isMiniGameActive || (miniGamePageEl && miniGamePageEl.style.display === 'flex')) {
+                alert("Please exit the mini-game first."); return;
+            }
+            if (shortlinksCompletedThisSession >= SHORTLINK_LIMIT) { alert("Daily shortlink limit reached."); return; }
+            if (shortlinkProcessActive) { alert("A shortlink process is already active. Please complete it."); return; }
+            shortlinkProcessActive = true; currentAdStep = 0;
+            if(earnShortlinkButton) { earnShortlinkButton.disabled = true; earnShortlinkButton.textContent = "LOADING...";}
+            if(watchAdPlayButtonEl) watchAdPlayButtonEl.disabled = true;
+            if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = true;
+            if(playMiniGameButtonEl) playMiniGameButtonEl.disabled = true;
+            if(shortlinkMessageEl) shortlinkMessageEl.textContent = "Ad viewing in progress...";
+            if(adViewingPage) { adViewingPage.style.display = 'flex'; console.log("adViewingPage display set to flex"); }
+            else { console.error("adViewingPage is null in startShortlinkProcess"); shortlinkProcessActive = false; updateShortlinkUI(); updateWatchAdUI(); updateMiniGameLivesDisplay(); return; }
+            if(leaderboardIconContainer) leaderboardIconContainer.style.display = 'none';
+            if(watchadIconContainer) watchadIconContainer.style.display = 'none';
+            const contentArea = document.querySelector('.content-area'); if (contentArea) contentArea.style.display = 'none';
+            const gameControlsNav = document.querySelector('.game-controls'); if (gameControlsNav) gameControlsNav.style.display = 'none';
+            setupAdPageForNextAd();
+        }
+
+        function setupAdPageForNextAd() {
+            console.log(`Setting up ad page for step: ${currentAdStep + 1} / ${ADS_PER_SHORTLINK}`);
+            if (!adViewingPage || !adTopControls || !adViewingTitle || !adTimerDisplay || !adBottomControls) {
+                console.error("Ad viewing page elements not found in setupAdPageForNextAd.");
+                shortlinkProcessActive = false;
+                if(adViewingPage) adViewingPage.style.display = 'none';
+                if(leaderboardIconContainer) leaderboardIconContainer.style.display = 'flex';
+                if(watchadIconContainer) watchadIconContainer.style.display = 'flex';
+                const contentArea = document.querySelector('.content-area'); if (contentArea) contentArea.style.display = 'block';
+                const gameControlsNav = document.querySelector('.game-controls'); if (gameControlsNav) gameControlsNav.style.display = 'flex';
+                updateShortlinkUI(); updateWatchAdUI(); updateMiniGameLivesDisplay(); return;
+            }
+            adViewingTitle.textContent = `Viewing Ad ${currentAdStep + 1} of ${ADS_PER_SHORTLINK}`;
+            adTimerDisplay.textContent = `00:${AD_TIMER_DURATION_SECONDS.toString().padStart(2, '0')}`;
+            adTopControls.innerHTML = ''; adBottomControls.innerHTML = '';
+            const watchAdButton = document.createElement('button');
+            watchAdButton.textContent = "Watch Ad & Start Timer";
+            watchAdButton.classList.add('button', 'purple', 'clickable-sound');
+            watchAdButton.id = 'watch-ad-button-dynamic';
+            watchAdButton.addEventListener('click', handleAdWatchClick);
+            adTopControls.appendChild(watchAdButton);
+            const proceedButton = document.createElement('button');
+            proceedButton.classList.add('button', 'purple', 'clickable-sound');
+            proceedButton.id = 'proceed-ad-button-dynamic';
+            proceedButton.disabled = true;
+            if (currentAdStep < ADS_PER_SHORTLINK - 1) {
+                proceedButton.textContent = "Proceed to Next Ad";
+                proceedButton.addEventListener('click', () => {
+                    if (typeof show_9365298 === 'function') {
+                        console.log("Attempting to show Rewarded Interstitial ad before next step (shortlink sequence).");
+                        show_9365298().then(() => {
+                            console.log("Rewarded Interstitial ad (for next step) viewed or closed by user.");
+                            currentAdStep++;
+                            setupAdPageForNextAd();
+                        }).catch(e => {
+                            console.error("Rewarded Interstitial SDK error (for next step) or ad not shown:", e);
+                            alert("Ad could not be shown. Proceeding to next step.");
+                            currentAdStep++;
+                            setupAdPageForNextAd();
+                        });
+                    } else {
+                        console.warn("show_9365298 SDK function not available for Rewarded Interstitial (for next step).");
+                        currentAdStep++;
+                        setupAdPageForNextAd();
+                    }
+                });
+            } else {
+                proceedButton.textContent = "Claim Reward";
+                proceedButton.addEventListener('click', completeAdViewingSequence);
+            }
+            adBottomControls.appendChild(proceedButton);
+        }
+
+
+        function handleAdWatchClick() {
+            console.log("Watch Ad button clicked.");
+            const watchAdBtn = document.getElementById('watch-ad-button-dynamic');
+            if (watchAdBtn) {
+                watchAdBtn.disabled = true;
+                watchAdBtn.textContent = "Loading Ad...";
+            }
+
+            if (typeof show_9365298 === 'function') {
+                console.log("Attempting to show Rewarded Interstitial ad.");
+                show_9365298().then(() => {
+                    console.log("Rewarded Interstitial ad viewed!");
+                    if (watchAdBtn) {
+                        watchAdBtn.textContent = "Timer Running...";
+                    }
+                    startAdTimerCountdown();
+                }).catch(e => {
+                    console.error("Rewarded Interstitial SDK error or ad not shown:", e);
+                    alert('Ad could not be shown. Please try again.');
+                    if (watchAdBtn) {
+                        watchAdBtn.disabled = false;
+                        watchAdBtn.textContent = "Watch Ad & Start Timer";
+                    }
+                });
+            } else {
+                console.warn("show_9365298 SDK function not available. Starting timer directly.");
+                if (watchAdBtn) {
+                    watchAdBtn.textContent = "Timer Running...";
+                }
+                startAdTimerCountdown();
+            }
+        }
+
+        function startAdTimerCountdown() {
+            clearAdTimer();
+            let timeLeft = AD_TIMER_DURATION_SECONDS;
+            if(adTimerDisplay) adTimerDisplay.textContent = `00:${timeLeft.toString().padStart(2, '0')}`;
+            adTimerInterval = setInterval(() => {
+                timeLeft--;
+                if(adTimerDisplay) adTimerDisplay.textContent = `00:${timeLeft.toString().padStart(2, '0')}`;
+                if (timeLeft <= 0) { clearAdTimer(); showBottomProceedButton(); }
+            }, 1000);
+        }
+
+        function showBottomProceedButton() {
+            console.log("Timer finished, showing proceed button.");
+            const proceedBtn = document.getElementById('proceed-ad-button-dynamic');
+            if (proceedBtn) { proceedBtn.disabled = false; }
+            const watchAdBtn = document.getElementById('watch-ad-button-dynamic');
+            if (watchAdBtn) { watchAdBtn.textContent = "Timer Finished!"; }
+        }
+
+        function clearAdTimer() { if (adTimerInterval) { clearInterval(adTimerInterval); adTimerInterval = null; } }
+
+        function completeAdViewingSequence() {
+            console.log("Ad viewing sequence completed.");
+            shortlinkProcessActive = false;
+            if(adViewingPage) adViewingPage.style.display = 'none';
+            if(leaderboardIconContainer) leaderboardIconContainer.style.display = 'flex';
+            if(watchadIconContainer) watchadIconContainer.style.display = 'flex';
+            const contentArea = document.querySelector('.content-area'); if (contentArea) contentArea.style.display = 'block';
+            const gameControlsNav = document.querySelector('.game-controls'); if (gameControlsNav) gameControlsNav.style.display = 'flex';
+            if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = false;
+            if(shortlinkMessageEl) shortlinkMessageEl.textContent = "Ads viewed! Click Claim.";
+            updateShortlinkUI();
+            updateWatchAdUI();
+            updateMiniGameLivesDisplay();
+        }
+
+
+        function claimShortlinkReward() {
+            playSound('claim');
+            if (shortlinkProcessActive) { alert("Please complete the ad viewing process first."); return; }
+            if (claimShortlinkRewardButton && claimShortlinkRewardButton.disabled) { alert("Button is disabled. Did you complete the ads?"); return; }
+            totalCoins += 1; shortlinksCompletedThisSession++; platformStats.todayShortlinks++; platformStats.allTimeShortlinks++;
+            if(gameHighscoreEl) gameHighscoreEl.textContent = totalCoins.toFixed(2);
+            updateShortlinkUI(); updateWalletBalance(); updateProfileStats(); updatePlatformStatsDisplay();
+            if(shortlinkMessageEl) shortlinkMessageEl.textContent = "1.00 Coin Claimed!";
+            if(claimShortlinkRewardButton) claimShortlinkRewardButton.disabled = true;
+            if (shortlinksCompletedThisSession % 10 === 0 && shortlinksCompletedThisSession > 0) { playSound('levelup'); if(shortlinkMessageEl) shortlinkMessageEl.textContent += " Stage Up!"; }
+            currentAdStep = 0;
+            console.log(`Claimed. Total coins: ${totalCoins.toFixed(2)}, Shortlinks this session: ${shortlinksCompletedThisSession}`);
+        }
+
+        // --- Watch Ad Feature Functions (Simplified) ---
+        function updateWatchAdUI() {
+            if (!watchAdPlayButtonEl) return;
+            watchAdPlayButtonEl.disabled = shortlinkProcessActive || isMiniGameActive || (watchAdPlayButtonEl.textContent === "Loading Ad...");
+            if (!watchAdPlayButtonEl.disabled && watchAdPlayButtonEl.textContent === "Loading Ad...") {
+                watchAdPlayButtonEl.textContent = "PLAY!";
+            } else if (!watchAdPlayButtonEl.disabled) {
+                 watchAdPlayButtonEl.textContent = "PLAY!";
+            }
+        }
+
+        async function handleWatchAdPlay() {
+            if (shortlinkProcessActive || isMiniGameActive) {
+                alert("Please complete the current activity first (shortlink or mini-game).");
+                return;
+            }
+
+            if(watchAdPlayButtonEl) {
+                watchAdPlayButtonEl.disabled = true;
+                watchAdPlayButtonEl.textContent = "Loading Ad...";
+            }
+            if(watchAdMessageEl) watchAdMessageEl.textContent = "";
+
+            try {
+                if (typeof show_9365298 === 'function') {
+                    await show_9365298();
+                    console.log("Watch Ad: Ad viewed/closed by user.");
+                    totalCoins += COINS_PER_WATCH_AD;
+                    updateWalletBalance(); updateProfileStats(); updatePlatformStatsDisplay();
+                    if(watchAdMessageEl) watchAdMessageEl.textContent = `${COINS_PER_WATCH_AD.toFixed(2)} Coins Claimed!`;
+                    playSound('claim');
+                } else {
+                    console.warn("show_9365298 SDK function not available for Watch Ad.");
+                    if(watchAdMessageEl) watchAdMessageEl.textContent = "Ad service not available.";
+                }
+            } catch (e) {
+                console.error("Watch Ad: SDK error or ad not shown:", e);
+                if(watchAdMessageEl) watchAdMessageEl.textContent = "Ad could not be shown.";
+            } finally {
+                if (watchAdPlayButtonEl) watchAdPlayButtonEl.textContent = "PLAY!";
+                updateWatchAdUI();
+                updateShortlinkUI();
+                updateMiniGameLivesDisplay();
+            }
+        }
+        // --- End Watch Ad Feature Functions ---
+
+        // --- Mini Game Functions ---
+        function initializeMiniGameSystem() {
+            const savedLives = localStorage.getItem('miniGameLives');
+            const savedRegenTimers = localStorage.getItem('miniGameLifeRegenTimers');
+            currentMiniGameLives = savedLives ? parseInt(savedLives, 10) : MAX_MINI_GAME_LIVES;
+            miniGameLifeRegenTimers = savedRegenTimers ? JSON.parse(savedRegenTimers) : [];
+            updateMiniGameLivesDisplay();
+            if (!globalLifeRegenInterval) {
+                globalLifeRegenInterval = setInterval(checkAndRegenerateMiniGameLife, 1000);
+            }
+            checkAndRegenerateMiniGameLife();
+        }
+
+        function updateMiniGameLivesDisplay() {
+            if (currentMiniGameLivesDisplayEl) currentMiniGameLivesDisplayEl.textContent = currentMiniGameLives;
+            if (maxMiniGameLivesDisplayEl) maxMiniGameLivesDisplayEl.textContent = MAX_MINI_GAME_LIVES;
+            if (miniGameLivesValueIngameEl) miniGameLivesValueIngameEl.textContent = currentMiniGameLives;
+
+            if (playMiniGameButtonEl) {
+                playMiniGameButtonEl.disabled = currentMiniGameLives <= 0 || shortlinkProcessActive || isMiniGameActive || (watchAdPlayButtonEl && watchAdPlayButtonEl.textContent === "Loading Ad...");
+                playMiniGameButtonEl.textContent = currentMiniGameLives <= 0 ? "No Lives!" : `Play (1 ❤️)`;
+            }
+            if (getLifeWithCoinsButtonEl) {
+                getLifeWithCoinsButtonEl.disabled = !(currentMiniGameLives < MAX_MINI_GAME_LIVES && totalCoins >= MINI_GAME_LIFE_COST_COINS);
+                getLifeWithCoinsButtonEl.textContent = `Buy Life (${MINI_GAME_LIFE_COST_COINS.toFixed(2)} Coins)`;
+            }
+            if (getLifeWithAdButtonEl) {
+                getLifeWithAdButtonEl.disabled = !(currentMiniGameLives < MAX_MINI_GAME_LIVES);
+                getLifeWithAdButtonEl.textContent = `Ad for Life (1 ❤️)`;
+            }
+
+            if (currentMiniGameLives < MAX_MINI_GAME_LIVES && miniGameLifeRegenTimers.length > 0) {
+                const nextRegenTime = miniGameLifeRegenTimers[0];
+                const timeLeftMs = nextRegenTime - Date.now();
+                if (timeLeftMs > 0) {
+                    const minutes = Math.floor(timeLeftMs / 60000);
+                    const seconds = Math.floor((timeLeftMs % 60000) / 1000);
+                    if (nextLifeRegenTimeDisplayEl) nextLifeRegenTimeDisplayEl.textContent = `Next ❤️ in ${minutes}m ${seconds}s`;
+                } else {
+                    if (nextLifeRegenTimeDisplayEl) nextLifeRegenTimeDisplayEl.textContent = "Regenerating...";
+                }
+            } else if (currentMiniGameLives === MAX_MINI_GAME_LIVES) {
+                if (nextLifeRegenTimeDisplayEl) nextLifeRegenTimeDisplayEl.textContent = "Lives Full!";
+            } else {
+                if (nextLifeRegenTimeDisplayEl) nextLifeRegenTimeDisplayEl.textContent = "";
+            }
+        }
+
+        function checkAndRegenerateMiniGameLife() {
+            let regenerated = false;
+            while (miniGameLifeRegenTimers.length > 0 && Date.now() >= miniGameLifeRegenTimers[0]) {
+                if (currentMiniGameLives < MAX_MINI_GAME_LIVES) {
+                    currentMiniGameLives++;
+                    regenerated = true;
+                }
+                miniGameLifeRegenTimers.shift();
+            }
+            if (regenerated) playSound('levelup');
+            while (currentMiniGameLives + miniGameLifeRegenTimers.length < MAX_MINI_GAME_LIVES) {
+                const lastScheduledTime = miniGameLifeRegenTimers.length > 0 ? miniGameLifeRegenTimers[miniGameLifeRegenTimers.length - 1] : Date.now();
+                miniGameLifeRegenTimers.push(lastScheduledTime + MINI_GAME_LIFE_REGEN_MS);
+                miniGameLifeRegenTimers.sort((a,b) => a-b);
+            }
+            localStorage.setItem('miniGameLives', currentMiniGameLives.toString());
+            localStorage.setItem('miniGameLifeRegenTimers', JSON.stringify(miniGameLifeRegenTimers));
+            updateMiniGameLivesDisplay();
+        }
+
+        function handleBuyLifeWithCoinsClick() {
+            if (currentMiniGameLives >= MAX_MINI_GAME_LIVES) { alert("Lives are already full!"); return; }
+            if (totalCoins < MINI_GAME_LIFE_COST_COINS) { alert("Not enough coins to buy a life."); return; }
+            if (buyLifeConfirmModalEl) buyLifeConfirmModalEl.classList.add('show');
+        }
+
+        function confirmBuyLifeWithCoins() {
+            if (currentMiniGameLives < MAX_MINI_GAME_LIVES && totalCoins >= MINI_GAME_LIFE_COST_COINS) {
+                totalCoins -= MINI_GAME_LIFE_COST_COINS;
+                currentMiniGameLives++;
+                if (miniGameLifeRegenTimers.length > 0 && currentMiniGameLives <= MAX_MINI_GAME_LIVES) {
+                    miniGameLifeRegenTimers.shift();
+                }
+                updateWalletBalance();
+                updateProfileStats();
+                updateMiniGameLivesDisplay();
+                playSound('claim');
+                alert("1 Life purchased!");
+            } else {
+                alert("Could not purchase life. (Not enough coins or lives full).");
+            }
+            if (buyLifeConfirmModalEl) buyLifeConfirmModalEl.classList.remove('show');
+        }
+
+        async function handleGetLifeWithAdClick() {
+            if (currentMiniGameLives >= MAX_MINI_GAME_LIVES) { alert("Lives are already full!"); return; }
+            if (getLifeWithAdButtonEl) {
+                getLifeWithAdButtonEl.disabled = true;
+                getLifeWithAdButtonEl.textContent = "Loading Ad...";
+            }
+            try {
+                if (typeof show_9365298 === 'function') {
+                    await show_9365298();
+                    console.log("Mini Game: Ad viewed for life.");
+                    if (currentMiniGameLives < MAX_MINI_GAME_LIVES) {
+                        currentMiniGameLives++;
+                         if (miniGameLifeRegenTimers.length > 0 && currentMiniGameLives <= MAX_MINI_GAME_LIVES) {
+                            miniGameLifeRegenTimers.shift();
+                        }
+                        updateMiniGameLivesDisplay();
+                        playSound('levelup');
+                        alert("1 Life gained from ad!");
+                    }
+                } else {
+                    console.warn("show_9365298 SDK function not available for life ad.");
+                    alert("Ad service not available.");
+                }
+            } catch (e) {
+                console.error("Mini Game: Ad SDK error for life:", e);
+                alert("Ad could not be shown.");
+            } finally {
+                updateMiniGameLivesDisplay();
+            }
+        }
+
+
+        function tryStartMiniGame() {
+            if (shortlinkProcessActive || (watchAdPlayButtonEl && watchAdPlayButtonEl.textContent === "Loading Ad...")) {
+                alert("Please complete the current ad process first."); return;
+            }
+            if (currentMiniGameLives <= 0) {
+                alert("You are out of lives! Wait for regeneration or get more.");
+                return;
+            }
+            currentMiniGameLives--;
+            if (currentMiniGameLives + miniGameLifeRegenTimers.length < MAX_MINI_GAME_LIVES) {
+                 const baseTime = miniGameLifeRegenTimers.length > 0 ? miniGameLifeRegenTimers[miniGameLifeRegenTimers.length -1] : Date.now();
+                 miniGameLifeRegenTimers.push(baseTime + MINI_GAME_LIFE_REGEN_MS);
+                 miniGameLifeRegenTimers.sort((a,b) => a-b);
+            }
+            localStorage.setItem('miniGameLives', currentMiniGameLives.toString());
+            localStorage.setItem('miniGameLifeRegenTimers', JSON.stringify(miniGameLifeRegenTimers));
+            updateMiniGameLivesDisplay();
+
+            isMiniGameActive = true;
+            miniGameAwaitingAdReward = false;
+            currentMiniGameScore = 0;
+            currentMiniGameTimeLeft = MINI_GAME_DURATION_S;
+
+            if (miniGameScoreValueEl) miniGameScoreValueEl.textContent = currentMiniGameScore;
+            if (miniGameTimeValueEl) miniGameTimeValueEl.textContent = currentMiniGameTimeLeft;
+            if (miniGameLivesValueIngameEl) miniGameLivesValueIngameEl.textContent = currentMiniGameLives;
+
+            miniGamePageEl.style.display = 'flex';
+            if(leaderboardIconContainer) leaderboardIconContainer.style.display = 'none';
+            if(watchadIconContainer) watchadIconContainer.style.display = 'none';
+            const gameControlsNav = document.querySelector('.game-controls'); if (gameControlsNav) gameControlsNav.style.display = 'none';
+            if(earnShortlinkButton) earnShortlinkButton.disabled = true;
+            if(watchAdPlayButtonEl) watchAdPlayButtonEl.disabled = true;
+
+            miniGameTimerInterval = setInterval(miniGameTimerTick, 1000);
+            miniGameObjectSpawnerInterval = setInterval(spawnMiniGameObjectsBatch, MINI_GAME_OBJECT_SPAWN_RATE_MS);
+            miniGameLoop();
+        }
+
+        function miniGameTimerTick() {
+            currentMiniGameTimeLeft--;
+            if (miniGameTimeValueEl) miniGameTimeValueEl.textContent = currentMiniGameTimeLeft;
+            if (currentMiniGameTimeLeft <= 0) {
+                endMiniGame('time_up');
+            }
+        }
+
+        function spawnMiniGameObjectsBatch() {
+            if (!isMiniGameActive) return;
+            const numObjects = Math.floor(Math.random() * 4) + 2; // 2 to 5 objects
+            for (let i = 0; i < numObjects; i++) {
+                spawnFallingObject();
+            }
+        }
+
+        function spawnFallingObject() {
+            if (!isMiniGameActive || !miniGameAreaEl) return;
+            const objEl = document.createElement('div');
+            objEl.classList.add('falling-object');
+            const isBomb = Math.random() < MINI_GAME_BOMB_PROBABILITY;
+            objEl.dataset.type = isBomb ? 'bomb' : 'letter';
+            if (isBomb) {
+                objEl.classList.add('bomb');
+                objEl.textContent = '💣';
+            } else {
+                objEl.classList.add('letter');
+                objEl.textContent = MINI_GAME_LETTERS[Math.floor(Math.random() * MINI_GAME_LETTERS.length)];
+            }
+            const gameAreaWidth = miniGameAreaEl.offsetWidth;
+            const objectWidth = Math.max(30, objEl.offsetWidth || 30);
+            objEl.style.left = Math.random() * (gameAreaWidth - objectWidth) + 'px';
+            objEl.style.top = '-40px';
+            const fallSpeed = MINI_GAME_OBJECT_FALL_SPEED_BASE + (Math.random() * MINI_GAME_OBJECT_FALL_SPEED_VARIATION * 2 - MINI_GAME_OBJECT_FALL_SPEED_VARIATION);
+            const objectData = { element: objEl, y: -40, speed: Math.max(1, fallSpeed), type: objEl.dataset.type };
+            objEl.addEventListener('click', () => handleFallingObjectClick(objectData));
+            miniGameAreaEl.appendChild(objEl);
+            activeFallingObjects.push(objectData);
+        }
+
+        function handleFallingObjectClick(objectData) {
+            if (!isMiniGameActive || !objectData.element.parentNode) return;
+            if (objectData.type === 'letter') {
+                currentMiniGameScore++;
+                playSound('tap');
+                if (miniGameScoreValueEl) miniGameScoreValueEl.textContent = currentMiniGameScore;
+            } else if (objectData.type === 'bomb') {
+                currentMiniGameScore = 0; // Reset score on bomb click
+                playSound('bomb');
+                if (miniGameScoreValueEl) miniGameScoreValueEl.textContent = currentMiniGameScore;
+            }
+            objectData.element.remove();
+            activeFallingObjects = activeFallingObjects.filter(obj => obj !== objectData);
+        }
+
+        function miniGameLoop() {
+            if (!isMiniGameActive) return;
+            const gameAreaHeight = miniGameAreaEl.offsetHeight;
+            activeFallingObjects.forEach(obj => {
+                obj.y += obj.speed;
+                obj.element.style.top = obj.y + 'px';
+                if (obj.y > gameAreaHeight) {
+                    obj.element.remove();
+                    activeFallingObjects = activeFallingObjects.filter(o => o !== obj);
+                }
+            });
+            miniGameAnimationFrameId = requestAnimationFrame(miniGameLoop);
+        }
+
+        function endMiniGame(reason) {
+            if (!isMiniGameActive && reason !== 'manual_exit_from_modal') return;
+            isMiniGameActive = false;
+            playSound('gameover');
+
+            clearInterval(miniGameTimerInterval); miniGameTimerInterval = null;
+            clearInterval(miniGameObjectSpawnerInterval); miniGameObjectSpawnerInterval = null;
+            if (miniGameAnimationFrameId) cancelAnimationFrame(miniGameAnimationFrameId); miniGameAnimationFrameId = null;
+
+            activeFallingObjects.forEach(obj => obj.element.remove()); activeFallingObjects = [];
+
+            if (reason !== 'manual_exit_from_modal') {
+                miniGameAwaitingAdReward = true;
+                if (miniGameOverScoreEl) miniGameOverScoreEl.textContent = currentMiniGameScore;
+                if (watchAdForGameRewardButtonEl) watchAdForGameRewardButtonEl.disabled = false;
+
+                if (currentMiniGameScore > 0) {
+                    const potentialCoins = currentMiniGameScore * SCORE_TO_COIN_CONVERSION_RATE;
+                    if (miniGameRewardMessageEl) miniGameRewardMessageEl.textContent = `Your Score: ${currentMiniGameScore}. Watch an ad to convert your score to ${potentialCoins.toFixed(3)} Coins!`;
+                    if (watchAdForGameRewardButtonEl) {
+                        watchAdForGameRewardButtonEl.style.display = 'inline-block';
+                        watchAdForGameRewardButtonEl.textContent = `Watch Ad for ${potentialCoins.toFixed(3)} Coins`;
+                    }
+                    if (closeGameOverModalButtonEl) closeGameOverModalButtonEl.textContent = "Close (No Reward)";
+                } else { // Score is 0
+                    if (miniGameRewardMessageEl) miniGameRewardMessageEl.textContent = `Game Over! Your score: 0. Score higher next time to earn coins!`;
+                    if (watchAdForGameRewardButtonEl) watchAdForGameRewardButtonEl.style.display = 'none';
+                    if (closeGameOverModalButtonEl) closeGameOverModalButtonEl.textContent = "Close";
+                }
+                if (miniGameOverModalEl) miniGameOverModalEl.classList.add('show');
+            }
+
+
+            if (reason === 'manual_exit' || reason === 'manual_exit_from_modal') {
+                 if (miniGamePageEl) miniGamePageEl.style.display = 'none';
+                 if(leaderboardIconContainer) leaderboardIconContainer.style.display = 'flex';
+                 if(watchadIconContainer) watchadIconContainer.style.display = 'flex';
+                 const gameControlsNav = document.querySelector('.game-controls'); if (gameControlsNav) gameControlsNav.style.display = 'flex';
+                 updateShortlinkUI();
+                 updateWatchAdUI();
+                 updateMiniGameLivesDisplay();
+            }
+        }
+
+        function closeMiniGameOverModal() {
+            if (miniGameOverModalEl) miniGameOverModalEl.classList.remove('show');
+            miniGameAwaitingAdReward = false;
+            endMiniGame('manual_exit_from_modal');
+        }
+
+        async function claimMiniGameRewardWithAd() {
+            if (!miniGameAwaitingAdReward || currentMiniGameScore <= 0) return;
+
+            const coinsEarned = currentMiniGameScore * SCORE_TO_COIN_CONVERSION_RATE;
+
+            if (watchAdForGameRewardButtonEl) {
+                watchAdForGameRewardButtonEl.disabled = true;
+                watchAdForGameRewardButtonEl.textContent = "Loading Ad...";
+            }
+            try {
+                if (typeof show_9365298 === 'function') {
+                    await show_9365298();
+                    console.log("Mini Game: Ad viewed for reward.");
+                    totalCoins += coinsEarned;
+                    updateWalletBalance(); updateProfileStats();
+                    if (miniGameRewardMessageEl) miniGameRewardMessageEl.textContent = `${coinsEarned.toFixed(3)} Coins Claimed!`;
+                    playSound('claim');
+                    if (watchAdForGameRewardButtonEl) watchAdForGameRewardButtonEl.style.display = 'none';
+                    if (closeGameOverModalButtonEl) closeGameOverModalButtonEl.textContent = "Close";
+                } else {
+                    console.warn("show_9365298 SDK function not available for Mini Game reward ad.");
+                    if (miniGameRewardMessageEl) miniGameRewardMessageEl.textContent = "Ad service unavailable. Reward not claimed.";
+                     if (watchAdForGameRewardButtonEl) {
+                        watchAdForGameRewardButtonEl.disabled = false;
+                        watchAdForGameRewardButtonEl.textContent = `Watch Ad for ${coinsEarned.toFixed(3)} Coins`;
+                    }
+                }
+            } catch (e) {
+                console.error("Mini Game: Ad SDK error or ad not shown:", e);
+                if (miniGameRewardMessageEl) miniGameRewardMessageEl.textContent = "Ad could not be shown. Reward not claimed.";
+                 if (watchAdForGameRewardButtonEl) {
+                    watchAdForGameRewardButtonEl.disabled = false;
+                    watchAdForGameRewardButtonEl.textContent = `Watch Ad for ${coinsEarned.toFixed(3)} Coins`;
+                }
+            }
+        }
+
+        // --- End Mini Game Functions ---
+
+
+        function updateWalletBalance() {
+            if (walletCoinsDisplayEl) walletCoinsDisplayEl.textContent = totalCoins.toFixed(2);
+            if (walletUsdValueDisplayEl) walletUsdValueDisplayEl.textContent = (totalCoins * COIN_VALUE_USD).toFixed(3);
+            if (gameHighscoreEl) gameHighscoreEl.textContent = totalCoins.toFixed(2);
+        }
+        function populateReferredUsersList() { if (!referredUsersListEl) return; referredUsersListEl.innerHTML = ''; const usersReferredByCurrentUser = mockReferredUsers.filter(user => user.referredBy === currentUser.id); if (usersReferredByCurrentUser.length === 0) { const li = document.createElement('li'); li.textContent = "You haven't referred anyone yet."; li.style.textAlign = 'center'; li.style.color = 'var(--text-muted-dark-theme)'; referredUsersListEl.appendChild(li); return; } usersReferredByCurrentUser.forEach(user => { const li = document.createElement('li'); li.classList.add('stat-item'); const usernameSpan = document.createElement('span'); usernameSpan.textContent = user.username; const dateSpan = document.createElement('span'); dateSpan.textContent = `Joined: ${user.date}`; dateSpan.style.color = 'var(--text-muted-dark-theme)'; dateSpan.style.fontSize = '0.9em'; li.appendChild(usernameSpan); li.appendChild(dateSpan); referredUsersListEl.appendChild(li); }); }
+        function updateProfileStats() {
+            if (profileTotalCoinsEl) profileTotalCoinsEl.textContent = totalCoins.toFixed(2);
+            if (profileShortlinksCompletedEl) profileShortlinksCompletedEl.textContent = shortlinksCompletedThisSession;
+            currentUser.referrals = mockReferredUsers.filter(ref => ref.referredBy === currentUser.id).length;
+            if (profileReferralsEl) profileReferralsEl.textContent = currentUser.referrals;
+            if (profileReferralEarningsEl) profileReferralEarningsEl.textContent = `${(currentUser.referrals * COINS_PER_REFERRAL).toFixed(2)} Coins`;
+        }
+        function populateLeaderboard() {
+            if (!leaderboardListEl) return; leaderboardListEl.innerHTML = '';
+            const sortedLeaderboard = [...mockLeaderboardData].sort((a, b) => { if (b.coins === a.coins) { return b.referrals - a.referrals; } return b.coins - a.coins; });
+            sortedLeaderboard.forEach((player, index) => player.rank = index + 1);
+            if (sortedLeaderboard.length === 0) { leaderboardListEl.innerHTML = '<li>Leaderboard is empty.</li>'; return; }
+            sortedLeaderboard.forEach(player => { const li = document.createElement('li'); li.innerHTML = `<span class="rank">#${player.rank}</span><span class="username">${player.username === currentUser.username ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="coins">${player.coins.toFixed(2)} Coins</span>`; if (player.username === currentUser.username) { li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)'; } leaderboardListEl.appendChild(li); });
+        }
+        function populateReferralLeaderboard() {
+            if (!referralLeaderboardListEl) return; referralLeaderboardListEl.innerHTML = '';
+            const sortedReferralBoard = [...mockLeaderboardData].sort((a, b) => { if (b.referrals === a.referrals) { return b.coins - a.coins; } return b.referrals - a.referrals; });
+            sortedReferralBoard.forEach((player, index) => player.referralRank = index + 1);
+            if (sortedReferralBoard.length === 0) { referralLeaderboardListEl.innerHTML = '<li>Leaderboard is empty.</li>'; return; }
+            sortedReferralBoard.forEach(player => { const li = document.createElement('li'); li.innerHTML = `<span class="rank">#${player.referralRank}</span><span class="username">${player.username === currentUser.username ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="referrals-count">${player.referrals} Refs</span>`; if (player.username === currentUser.username) { li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)'; } referralLeaderboardListEl.appendChild(li); });
+        }
+
+
+        function updateWithdrawalFormUI() {
+            if (!withdrawMethodSelectEl || !withdrawAmountCoinsInputEl || !networkFeeDisplayEl || !finalAmountReceiveDisplayEl || !initiateWithdrawButtonEl || !withdrawAddressLabelEl || !withdrawAddressInputEl) { console.warn("Withdrawal UI elements not fully available for update."); return; }
+            const selectedMethod = withdrawMethodSelectEl.value; const config = WITHDRAWAL_CONFIG[selectedMethod];
+            if (config) {
+                withdrawAddressLabelEl.textContent = config.label; withdrawAddressInputEl.placeholder = config.placeholder;
+                let amountCoins = parseInt(withdrawAmountCoinsInputEl.value) || 0; let fee = config.fee; let netAmount = 0;
+                if (amountCoins > 0) { netAmount = amountCoins - fee; if (netAmount < 0) netAmount = 0; }
+                networkFeeDisplayEl.textContent = `${fee} Coins`; finalAmountReceiveDisplayEl.textContent = `${netAmount} Coins`;
+                const minWithdrawal = config.min; const hasEnoughReferrals = currentUser.referrals >= MIN_REFERRALS_FOR_WITHDRAWAL;
+                if (amountCoins >= minWithdrawal && hasEnoughReferrals && totalCoins >= amountCoins && amountCoins > 0) { initiateWithdrawButtonEl.disabled = false; initiateWithdrawButtonEl.textContent = "Withdraw"; }
+                else {
+                    initiateWithdrawButtonEl.disabled = true;
+                    if (!hasEnoughReferrals) { initiateWithdrawButtonEl.textContent = `Need ${MIN_REFERRALS_FOR_WITHDRAWAL} Referrals`; }
+                    else if (amountCoins > 0 && totalCoins < amountCoins) { initiateWithdrawButtonEl.textContent = "Insufficient Balance"; }
+                    else if (amountCoins > 0 && amountCoins < minWithdrawal) { initiateWithdrawButtonEl.textContent = `Min ${minWithdrawal} Coins`; }
+                    else if (amountCoins === 0 && initiateWithdrawButtonEl.textContent !== `Need ${MIN_REFERRALS_FOR_WITHDRAWAL} Referrals`) { initiateWithdrawButtonEl.textContent = "Enter Amount"; }
+                    else { initiateWithdrawButtonEl.textContent = "Withdraw"; }
+                }
+            } else { networkFeeDisplayEl.textContent = `0 Coins`; finalAmountReceiveDisplayEl.textContent = `0 Coins`; initiateWithdrawButtonEl.disabled = true; initiateWithdrawButtonEl.textContent = "Select Method"; }
+        }
+
+
+        function handleNewWithdraw() {
+            const selectedMethod = withdrawMethodSelectEl.value; const amountCoins = parseInt(withdrawAmountCoinsInputEl.value); const address = withdrawAddressInputEl.value.trim(); const config = WITHDRAWAL_CONFIG[selectedMethod];
+            if (!config) { alert("Invalid withdrawal method selected."); return; } if (!address) { alert(`Please enter your ${config.label.toLowerCase().replace(":", "")}.`); return; } if (isNaN(amountCoins) || amountCoins <= 0) { alert("Please enter a valid amount of coins."); return; } if (currentUser.referrals < MIN_REFERRALS_FOR_WITHDRAWAL) { alert(`You need at least ${MIN_REFERRALS_FOR_WITHDRAWAL} referrals to withdraw.`); return; } if (amountCoins < config.min) { alert(`Minimum withdrawal for ${selectedMethod} is ${config.min} coins.`); return; } if (totalCoins < amountCoins) { alert("You do not have enough coins for this withdrawal."); return; }
+            const netAmount = amountCoins - config.fee; if (netAmount <= 0) { alert("Amount after fee is too low to process."); return; }
+            console.log(`Withdrawal initiated: ${amountCoins} Coins via ${selectedMethod} to ${address}. Fee: ${config.fee}. Net: ${netAmount}`);
+            totalCoins -= amountCoins;
+            // platformStats.allTimeWithdrawals += amountCoins; // Removed
+            const newWithdrawal = { id: 'wd' + Date.now().toString().slice(-5), date: new Date().toISOString().split('T')[0], method: selectedMethod, amount: amountCoins, status: 'Pending', address: address };
+            withdrawalHistory.unshift(newWithdrawal);
+            updateWalletBalance(); updateProfileStats(); updatePlatformStatsDisplay(); populateWithdrawalHistory(); updateWithdrawalFormUI();
+            withdrawAmountCoinsInputEl.value = ''; withdrawAddressInputEl.value = '';
+            alert(`Withdrawal request for ${amountCoins} coins submitted! You will receive ${netAmount} (after ${config.fee} coin fee).`);
+            const successMsgEl = document.getElementById('withdraw-success-message');
+            if (successMsgEl) { successMsgEl.textContent = "Withdrawal request sent!"; successMsgEl.style.display = 'block'; setTimeout(() => { successMsgEl.style.display = 'none'; }, 3000); }
+        }
+
+        function populateWithdrawalHistory() { if (!withdrawalHistoryListEl) return; withdrawalHistoryListEl.innerHTML = ''; if (withdrawalHistory.length === 0) { withdrawalHistoryListEl.innerHTML = '<li>No withdrawal history yet.</li>'; return; } withdrawalHistory.forEach(item => { const li = document.createElement('li'); li.style.display = 'flex'; li.style.justifyContent = 'space-between'; li.style.padding = '8px 0'; li.style.borderBottom = '1px solid var(--game-panel-border)'; li.innerHTML = `<span style="flex-basis: 25%; font-size:0.9em;">${item.date}</span><span style="flex-basis: 15%;">${item.method}</span><span style="flex-basis: 20%; text-align:right;">${item.amount} C</span><span style="flex-basis: 30%; text-align:right; color: ${item.status === 'Completed' ? 'var(--game-accent-green)' : 'var(--game-title-yellow)'};">${item.status}</span>`; withdrawalHistoryListEl.appendChild(li); }); }
+        function copyReferralLink() { const referralLink = referralLinkDisplay.textContent; navigator.clipboard.writeText(referralLink).then(() => { const copyStatusEl = document.getElementById('copy-status'); if (copyStatusEl) { copyStatusEl.textContent = 'Link Copied!'; setTimeout(() => { copyStatusEl.textContent = ''; }, 2000); } }).catch(err => { console.error('Failed to copy referral link: ', err); const copyStatusEl = document.getElementById('copy-status'); if (copyStatusEl) copyStatusEl.textContent = 'Failed to copy!'; }); }
+
+
+        console.log("All functions defined. Script fully parsed. (Log 15)");
+    </script>
+
+</body>
+</html>
