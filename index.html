@@ -7,7 +7,6 @@
     <title>Short2Crypto - Earn Rewards!</title>
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src='//libtl.com/sdk.js' data-zone='9365298' data-sdk='show_9365298'></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script> 
     <style>
         @import url('://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
@@ -680,17 +679,11 @@
                     <summary class="clickable-sound">Withdrawal Rules</summary>
                     <div class="rules-list details-content">
                         <ul>
-                            <li>Minimum 5 referrals are needed for withdrawal.</li>
                             <li>For TON use TON Open Network.</li>
                             <li>For SOL use BEP20 address of SOL.</li>
                             <li>For INR use UPI ID.</li>
-                            <li>Minimum withdrawal amounts & fees:
-                                <ul>
-                                    <li>INR: 120 coins (20 coin fee)</li>
-                                    <li>TON: 200 coins (30 coin fee)</li>
-                                    <li>SOL: 250 coins (35 coin fee)</li>
-                                </ul>
-                            </li>
+                            <li>Minimum withdrawal amount: 1000 Coins (equivalent to $5.00).</li>
+                            <li>A flat fee of 60 Coins (equivalent to $0.30) applies to all withdrawals.</li>
                         </ul>
                     </div>
                 </details>
@@ -740,18 +733,13 @@
                     <div class="profile-stats">
                         <div class="stat-item"><span>Total Coins Earned:</span><span id="profile-total-coins">0.00</span></div>
                         <div class="stat-item"><span>Stage Reached (Session):</span><span id="profile-shortlinks-completed">0</span></div>
-                        <div class="stat-item"><span>Referrals:</span><span id="profile-referrals">0</span></div>
-                        <div class="stat-item"><span>Earnings from Referrals:</span><span id="profile-referral-earnings">0.00 Coins</span></div>
+                        <!-- Referrals and Earnings from Referrals removed -->
                     </div>
                     <div class="referral-link-container" style="text-align:center; margin-top: 20px;">
                         <h3 style="color: var(--game-primary-text); text-align:center;">Your Referral Link:</h3>
                         <div id="referral-link" style="font-family:var(--font-family-body); background-color:rgba(0,0,0,0.2); padding:10px; border-radius:var(--border-radius-sm); margin-bottom:10px; word-break: break-all;">https://t.me/Short_cryptoo_bot?start=ref_USERID</div>
                         <button class="button clickable-sound" onclick="copyReferralLink()">Copy Link</button>
                         <p id="copy-status" style="font-size:0.9em; margin-top:10px; color: var(--game-title-yellow);"></p>
-                    </div>
-                    <div class="referred-users-container card" style="margin-top: 20px; background-color: rgba(0,0,0,0.1);">
-                        <h3 style="color: var(--game-primary-text); text-align:center;">Your Referred Users</h3>
-                        <ul id="referred-users-list" class="profile-stats" style="padding: 0 10px;"></ul>
                     </div>
                 </div>
             </div>
@@ -804,14 +792,12 @@
                 <div class="card" style="padding-bottom: 10px;">
                 <div class="leaderboard-tabs">
                         <div class="leaderboard-tab active clickable-sound" data-tab="points">Points</div>
-                        <div class="leaderboard-tab clickable-sound" data-tab="referrals">Referrals</div>
+                        <!-- Referrals tab removed -->
                     </div>
                     <div id="leaderboard-points-content" class="leaderboard-tab-content active">
                         <ul id="leaderboard-list" class="leaderboard-list-style"></ul>
                     </div>
-                    <div id="leaderboard-referrals-content" class="leaderboard-tab-content">
-                        <ul id="referral-leaderboard-list" class="leaderboard-list-style"></ul>
-                    </div>
+                    <!-- Referral leaderboard content removed -->
                 </div>
         </div>
 
@@ -908,79 +894,84 @@
         // --- Supabase Initialization ---
         const SUPABASE_URL = 'https://avkrmnefouyltgrjddpi.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2a3JtbmVmb3V5bHRncmpkZHBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NjA1OTEsImV4cCI6MjA2MzUzNjU5MX0.5J6eROlL2HhdAVg-oFArD5ucEKZcf3Jc9vlFREPprUg';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); // Corrected initialization
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         console.log("Supabase client initialized. (Log 0)");
 
         // --- Main JavaScript Logic ---
         console.log("Main script block started. (Log 1)");
 
-        // const MOCK_USER_ID = 123456789;
-        // const MOCK_FIRST_NAME = "Mock";
-        // const MOCK_LAST_NAME = "Tester";
-        // const MOCK_USERNAME = "MockTester123";
+        const MOCK_USER_ID = 123456789;
+        const MOCK_FIRST_NAME = "Mock";
+        const MOCK_LAST_NAME = "Tester";
+        const MOCK_USERNAME = "MockTester123";
 
 
-        // if (typeof window.Telegram === 'undefined' || typeof window.Telegram.WebApp === 'undefined') {
-        //     window.Telegram = {
-        //         WebApp: {
-        //             initDataUnsafe: {
-        //                 user: {
-        //                     id: MOCK_USER_ID,
-        //                     first_name: MOCK_FIRST_NAME,
-        //                     last_name: MOCK_LAST_NAME,
-        //                     username: MOCK_USERNAME,
-        //                     language_code: "en"
-        //                 },
-        //                 start_param: null // Can simulate referral: 'ref_987654321'
-        //             },
-        //             ready: () => console.log("Mock Telegram WebApp is ready."),
-        //             expand: () => console.log("Mock Telegram WebApp expand called."),
-        //             close: () => console.log("Mock Telegram WebApp close called."),
-        //         }
-        //     };
-        //     console.log("Mock Telegram object created with constant data. (Log 2)");
-        // }
+        if (typeof window.Telegram === 'undefined' || typeof window.Telegram.WebApp === 'undefined') {
+            window.Telegram = {
+                WebApp: {
+                    initDataUnsafe: {
+                        user: {
+                            id: MOCK_USER_ID,
+                            first_name: MOCK_FIRST_NAME,
+                            last_name: MOCK_LAST_NAME,
+                            username: MOCK_USERNAME,
+                            language_code: "en"
+                        },
+                        start_param: null
+                    },
+                    ready: () => console.log("Mock Telegram WebApp is ready."),
+                    expand: () => console.log("Mock Telegram WebApp expand called."),
+                    close: () => console.log("Mock Telegram WebApp close called."),
+                }
+            };
+            console.log("Mock Telegram object created with constant data. (Log 2)");
+        }
 
-        let tgUser; // To store raw Telegram user object
-        let currentUserData = null; // To store data from 'users' table
-        let dailyActivityData = null; // To store data from 'daily_user_activity'
+        let tgUser;
+        let currentUserData = null;
+        let dailyActivityData = null;
 
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
             tgUser = window.Telegram.WebApp.initDataUnsafe.user;
-            console.log("tgUser initialized from Telegram WebApp:", tgUser, "(Log 3)");
         } else {
-            console.error("Telegram WebApp user data not found. App may not function correctly without user data. (Log 3 Error)");
-            // If tgUser is critical for the app to start, you might want to show an error message on the loading screen
-            // and prevent the app from fully initializing.
-            // For now, tgUser will be undefined, and subsequent checks (e.g., if (!currentUserData)) will handle this path.
+            tgUser = {
+                id: MOCK_USER_ID,
+                first_name: MOCK_FIRST_NAME,
+                last_name: MOCK_LAST_NAME,
+                username: MOCK_USERNAME,
+            };
+            console.warn("Telegram data not found, using constant fallback tgUser. (Log 2.1)");
         }
-        // console.log("tgUser initialized:", tgUser, "(Log 3)");
+        console.log("tgUser initialized:", tgUser, "(Log 3)");
 
 
         const COIN_VALUE_USD = 0.005;
-        const SHORTLINK_LIMIT = 100; // Max stages per day
+        const SHORTLINK_LIMIT = 100;
         const ADS_PER_SHORTLINK = 6;
         const AD_TIMER_DURATION_SECONDS = 15;
-        const COINS_PER_REFERRAL = 3;
-        const MIN_REFERRALS_FOR_WITHDRAWAL = 5;
         const COINS_PER_SHORTLINK_STAGE = 1.00;
 
-
-        // Watch Ad Feature constants (Simplified)
         const COINS_PER_WATCH_AD = 0.1;
 
+        const MIN_WITHDRAWAL_USD = 5;
+        const WITHDRAWAL_FEE_USD = 0.3;
+        const MIN_WITHDRAWAL_COINS = MIN_WITHDRAWAL_USD / COIN_VALUE_USD; // 1000 Coins
+        const WITHDRAWAL_FEE_COINS = WITHDRAWAL_FEE_USD / COIN_VALUE_USD; // 60 Coins
+
         const WITHDRAWAL_CONFIG = {
-            INR: { min: 120, fee: 20, label: "UPI ID / Bank Details:", placeholder: "yourname@upi or Account Number" },
-            SOL: { min: 250, fee: 35, label: "Solana (BEP20) Address:", placeholder: "Your SOL (BEP20) Wallet Address" },
-            TON: { min: 200, fee: 30, label: "TON Wallet Address:", placeholder: "Your TON Wallet Address" }
+            INR: { min: MIN_WITHDRAWAL_COINS, fee: WITHDRAWAL_FEE_COINS, label: "UPI ID / Bank Details:", placeholder: "yourname@upi or Account Number" },
+            SOL: { min: MIN_WITHDRAWAL_COINS, fee: WITHDRAWAL_FEE_COINS, label: "Solana (BEP20) Address:", placeholder: "Your SOL (BEP20) Wallet Address" },
+            TON: { min: MIN_WITHDRAWAL_COINS, fee: WITHDRAWAL_FEE_COINS, label: "TON Wallet Address:", placeholder: "Your TON Wallet Address" }
         };
 
         console.log("Constants initialized. (Log 4)");
+        console.log(`Min Withdrawal: ${MIN_WITHDRAWAL_COINS} Coins, Fee: ${WITHDRAWAL_FEE_COINS} Coins`);
 
-        let totalCoins = 0; // Will be initialized from currentUserData.current_coins_balance
-        let shortlinksCompletedThisSession = 0; // Will be init from dailyActivityData.shortlinks_completed
-        let miniGamesPlayedToday = 0; // Will be init from dailyActivityData.mini_game_plays
-        let adsWatchedToday = 0; // Will be init from dailyActivityData.watch_ads_completed
+
+        let totalCoins = 0;
+        let shortlinksCompletedThisSession = 0;
+        let miniGamesPlayedToday = 0;
+        let adsWatchedToday = 0;
 
         let currentAdStep = 0;
         let shortlinkProcessActive = false;
@@ -993,15 +984,15 @@
         const gameOverSound = document.getElementById('game-over-sound');
         let adTimerInterval = null;
 
-        let platformStats = { // Will be fetched from Supabase
+        let platformStats = {
             todayWithdrawalQuota: 15000
         };
-        let lastResetDate = new Date().toDateString(); // For client-side server time check, less critical with DB
+        let lastResetDate = new Date().toDateString();
         console.log("Global vars and platformStats initialized. (Log 5)");
 
         // Mini Game Variables
         const MAX_MINI_GAME_LIVES = 5;
-        const MINI_GAME_LIFE_REGEN_MS = 5 * 60 * 1000; // 5 minutes
+        const MINI_GAME_LIFE_REGEN_MS = 5 * 60 * 1000;
         const MINI_GAME_LIFE_COST_COINS = 0.05;
         const MINI_GAME_DURATION_S = 60;
         const SCORE_TO_COIN_CONVERSION_RATE = 0.001;
@@ -1012,9 +1003,9 @@
         const MINI_GAME_OBJECT_FALL_SPEED_VARIATION = 1;
 
 
-        let currentMiniGameLives = MAX_MINI_GAME_LIVES; // Will be init from currentUserData.mini_game_lives
-        let miniGameLifeRegenTimers = []; // For UI display
-        let globalLifeRegenInterval = null; // For UI display regen timer
+        let currentMiniGameLives = MAX_MINI_GAME_LIVES;
+        let miniGameLifeRegenTimers = [];
+        let globalLifeRegenInterval = null;
 
         let isMiniGameActive = false;
         let currentMiniGameScore = 0;
@@ -1023,17 +1014,17 @@
         let miniGameObjectSpawnerInterval = null;
         let activeFallingObjects = [];
         let miniGameAnimationFrameId = null;
-        let miniGameAwaitingAdReward = false; // for the modal
+        let miniGameAwaitingAdReward = false;
 
 
         let loadingScreen, appContainer, navItems, sections;
         let earnShortlinkButton, claimShortlinkRewardButton, shortlinkMessageEl;
         let gameHighscoreEl, currentStageDisplayEl, shortlinkLimitDisplayEl;
         let adViewingPage, adTopControls, adViewingTitle, adTimerDisplay, adBottomControls;
-        let profileUsernameDisplay, profileTotalCoinsEl, profileShortlinksCompletedEl, profileReferralsEl, profileReferralEarningsEl;
-        let referralLinkDisplay, referredUsersListEl;
+        let profileUsernameDisplay, profileTotalCoinsEl, profileShortlinksCompletedEl; // profileReferralsEl, profileReferralEarningsEl removed
+        let referralLinkDisplay;
         let serverTimeDisplayEl;
-        let leaderboardIconContainer, leaderboardSection, leaderboardListEl, referralLeaderboardListEl;
+        let leaderboardIconContainer, leaderboardSection, leaderboardListEl;
         let watchadIconContainer, watchadPageSection, closeWatchAdPageButton;
         let themeToggle, soundToggle;
         let closeLeaderboardButton;
@@ -1054,7 +1045,6 @@
 
         let currentActiveSectionId = 'earn-section';
 
-        // Helper to get today's date in YYYY-MM-DD format for Supabase
         function getTodayDateString() {
             const today = new Date();
             const year = today.getFullYear();
@@ -1064,19 +1054,6 @@
         }
 
         async function fetchOrCreateUser() {
-            if (!tgUser || !tgUser.id) { // Check if tgUser is defined and has an id
-                console.error("Cannot fetch or create user: Telegram user data (tgUser) is missing.");
-                const loadingScreenMsgEl = document.querySelector("#loading-screen p");
-                if (loadingScreenMsgEl) {
-                    loadingScreenMsgEl.innerHTML = "Error: Could not retrieve Telegram user information. Please try launching from Telegram again.";
-                    loadingScreenMsgEl.style.color = "red";
-                }
-                document.body.classList.remove('app-loaded');
-                if (appContainer) appContainer.style.display = 'none';
-                if (loadingScreen) loadingScreen.classList.remove('hidden');
-                return null;
-            }
-
             const telegramId = tgUser.id.toString();
             const username = tgUser.username || `${tgUser.first_name || ''}${tgUser.last_name || ''}`.replace(/\s+/g, '') || `User${telegramId.slice(-4)}`;
             const firstName = tgUser.first_name || '';
@@ -1085,18 +1062,17 @@
 
             let { data: user, error } = await supabase
                 .from('users')
-                .select('*') // Select all columns
+                .select('*')
                 .eq('telegram_id', parseInt(telegramId))
                 .single();
 
-            if (error && error.code !== 'PGRST116') { // PGRST116: single row not found
+            if (error && error.code !== 'PGRST116') {
                 console.error('Error fetching user:', error);
                 alert("Error fetching user data. Please try refreshing.");
                 return null;
             }
 
             if (user) {
-                // User exists, update last_seen_at
                 const { error: updateError } = await supabase
                     .from('users')
                     .update({ last_seen_at: now })
@@ -1104,7 +1080,6 @@
                 if (updateError) console.error('Error updating last_seen_at:', updateError);
                 currentUserData = user;
             } else {
-                // User does not exist, create new one
                 let referredByTelegramId = null;
                 const startParam = window.Telegram.WebApp.initDataUnsafe.start_param;
                 if (startParam && startParam.startsWith('ref_')) {
@@ -1116,7 +1091,7 @@
                     username: username,
                     first_name: firstName,
                     last_name: lastName,
-                    current_coins_balance: 0, // Corrected column name
+                    current_coins_balance: 0,
                     total_coins_ever_earned: 0,
                     referred_by_telegram_id: referredByTelegramId,
                     referrals_made_count: 0,
@@ -1137,33 +1112,8 @@
                     return null;
                 }
                 currentUserData = newUser;
-
-                // If referred, update referrer
-                if (referredByTelegramId) {
-                    const { data: referrer, error: fetchReferrerError } = await supabase
-                        .from('users')
-                        .select('referrals_made_count, current_coins_balance, total_coins_ever_earned') // Corrected column name
-                        .eq('telegram_id', referredByTelegramId)
-                        .single();
-
-                    if (referrer && !fetchReferrerError) {
-                        const { error: updateReferrerError } = await supabase
-                            .from('users')
-                            .update({
-                                referrals_made_count: (referrer.referrals_made_count || 0) + 1,
-                                current_coins_balance: (referrer.current_coins_balance || 0) + COINS_PER_REFERRAL, // Corrected
-                                total_coins_ever_earned: (referrer.total_coins_ever_earned || 0) + COINS_PER_REFERRAL
-                            })
-                            .eq('telegram_id', referredByTelegramId);
-                        if (updateReferrerError) console.error('Error updating referrer:', updateReferrerError);
-                        else console.log(`Referrer ${referredByTelegramId} updated.`);
-                    } else {
-                        console.warn('Referrer not found or error fetching:', fetchReferrerError);
-                    }
-                }
             }
-             // Calculate regenerated mini-game lives
-            if (currentUserData.mini_game_lives < MAX_MINI_GAME_LIVES && currentUserData.last_seen_at) {
+             if (currentUserData.mini_game_lives < MAX_MINI_GAME_LIVES && currentUserData.last_seen_at) {
                 const lastSeenDate = new Date(currentUserData.last_seen_at);
                 const timeDiffMs = Date.now() - lastSeenDate.getTime();
                 const livesToRegen = Math.floor(timeDiffMs / MINI_GAME_LIFE_REGEN_MS);
@@ -1209,7 +1159,7 @@
         async function fetchPlatformStats() {
             const { data, error } = await supabase
                 .from('platform_stats')
-                .select('today_withdrawal_quota_total_coins') // Corrected column name
+                .select('today_withdrawal_quota_total_coins')
                 .order('id', { ascending: false })
                 .limit(1)
                 .single();
@@ -1217,7 +1167,7 @@
             if (error && error.code !== 'PGRST116') {
                 console.error('Error fetching platform stats:', error);
             } else if (data) {
-                platformStats.todayWithdrawalQuota = data.today_withdrawal_quota_total_coins || 15000; // Corrected
+                platformStats.todayWithdrawalQuota = data.today_withdrawal_quota_total_coins || 15000;
             }
         }
 
@@ -1245,15 +1195,12 @@
                 profileUsernameDisplay = document.getElementById('profile-username-display');
                 profileTotalCoinsEl = document.getElementById('profile-total-coins');
                 profileShortlinksCompletedEl = document.getElementById('profile-shortlinks-completed');
-                profileReferralsEl = document.getElementById('profile-referrals');
-                profileReferralEarningsEl = document.getElementById('profile-referral-earnings');
+                // profileReferralsEl, profileReferralEarningsEl removed from DOM fetching
                 referralLinkDisplay = document.getElementById('referral-link');
-                referredUsersListEl = document.getElementById('referred-users-list');
                 serverTimeDisplayEl = document.getElementById('current-server-time');
                 leaderboardIconContainer = document.getElementById('leaderboard-icon-container');
                 leaderboardSection = document.getElementById('leaderboard-section');
                 leaderboardListEl = document.getElementById('leaderboard-list');
-                referralLeaderboardListEl = document.getElementById('referral-leaderboard-list');
                 themeToggle = document.getElementById('theme-toggle');
                 soundToggle = document.getElementById('sound-toggle');
                 closeLeaderboardButton = document.getElementById('close-leaderboard-button');
@@ -1301,29 +1248,16 @@
 
                 console.log("All DOM elements fetched. (Log 7.1)");
 
-                // Ensure Telegram WebApp is ready before fetching user data
-                if (window.Telegram && window.Telegram.WebApp) {
-                    window.Telegram.WebApp.ready(); // Inform Telegram the app is ready
-                    console.log("Telegram.WebApp.ready() called. (Log 7.0)");
-                }
-
-                await fetchOrCreateUser(); // This now depends on tgUser being set from real Telegram data
-                if (!currentUserData) { // If fetchOrCreateUser returned null (e.g., tgUser was missing)
-                    console.error("currentUserData is null after fetchOrCreateUser. Halting further initialization. (Log 7.1.1)");
-                    // Loading screen already shows error from fetchOrCreateUser if tgUser was missing
-                    return;
-                }
-
+                await fetchOrCreateUser();
                 await fetchDailyActivity();
                 await fetchPlatformStats();
 
-                // This check is now more crucial if tgUser was missing and fetchOrCreateUser couldn't proceed
                 if (!currentUserData) {
-                    loadingScreen.innerHTML = "<p>Failed to load user data. Please refresh or ensure you are opening this from Telegram.</p>";
+                    loadingScreen.innerHTML = "<p>Failed to load user data. Please refresh.</p>";
                     return;
                 }
 
-                totalCoins = currentUserData.current_coins_balance || 0; // Corrected
+                totalCoins = currentUserData.current_coins_balance || 0;
                 currentMiniGameLives = currentUserData.mini_game_lives !== undefined ? currentUserData.mini_game_lives : MAX_MINI_GAME_LIVES;
 
                 if (dailyActivityData) {
@@ -1350,7 +1284,6 @@
                 updateWithdrawalFormUI();
                 populateWithdrawalHistory();
                 updatePlatformStatsDisplay();
-                populateReferredUsersList();
                 initializeMiniGameSystem();
                 console.log("Initial UI updates done. (Log 9)");
 
@@ -1392,7 +1325,7 @@
                 console.log("All event listeners attached. (Log 13.1)");
 
                 if (window.Telegram && window.Telegram.WebApp) {
-                    // window.Telegram.WebApp.ready(); // Already called earlier
+                    window.Telegram.WebApp.ready();
                     window.Telegram.WebApp.expand();
                 }
 
@@ -1496,10 +1429,10 @@
             if (contentArea) contentArea.scrollTop = 0;
 
             if (newSectionId === 'more-section') startServerTimeUpdates(); else stopServerTimeUpdates();
-            if (newSectionId === 'leaderboard-section') { await populateLeaderboard(); await populateReferralLeaderboard(); }
+            if (newSectionId === 'leaderboard-section') { await populateLeaderboard(); }
             if (newSectionId === 'watchad-page-section') { updateWatchAdUI(); }
             if (newSectionId === 'withdraw-section') { updateWithdrawalFormUI(); await populateWithdrawalHistory(); updatePlatformStatsDisplay(); }
-            if (newSectionId === 'profile-section') { updateProfileStats(); await populateReferredUsersList(); }
+            if (newSectionId === 'profile-section') { updateProfileStats(); }
             if (newSectionId === 'earn-section') { updateShortlinkUI(); updateMiniGameLivesDisplay(); }
         }
 
@@ -1745,14 +1678,14 @@
             if (claimShortlinkRewardButton && claimShortlinkRewardButton.disabled) { alert("Button is disabled. Did you complete the ads?"); return; }
 
             totalCoins += COINS_PER_SHORTLINK_STAGE;
-            currentUserData.current_coins_balance = totalCoins; // Corrected
+            currentUserData.current_coins_balance = totalCoins;
             currentUserData.total_coins_ever_earned += COINS_PER_SHORTLINK_STAGE;
             shortlinksCompletedThisSession = (shortlinksCompletedThisSession || 0) + 1;
 
             const { error: userUpdateError } = await supabase
                 .from('users')
                 .update({
-                    current_coins_balance: currentUserData.current_coins_balance, // Corrected
+                    current_coins_balance: currentUserData.current_coins_balance,
                     total_coins_ever_earned: currentUserData.total_coins_ever_earned
                 })
                 .eq('telegram_id', currentUserData.telegram_id);
@@ -1805,14 +1738,14 @@
                     console.log("Watch Ad: Ad viewed/closed by user.");
 
                     totalCoins += COINS_PER_WATCH_AD;
-                    currentUserData.current_coins_balance = totalCoins; // Corrected
+                    currentUserData.current_coins_balance = totalCoins;
                     currentUserData.total_coins_ever_earned += COINS_PER_WATCH_AD;
                     adsWatchedToday = (adsWatchedToday || 0) + 1;
 
                     const { error: userUpdateError } = await supabase
                         .from('users')
                         .update({
-                            current_coins_balance: currentUserData.current_coins_balance, // Corrected
+                            current_coins_balance: currentUserData.current_coins_balance,
                             total_coins_ever_earned: currentUserData.total_coins_ever_earned
                         })
                         .eq('telegram_id', currentUserData.telegram_id);
@@ -1920,13 +1853,13 @@
                 totalCoins -= MINI_GAME_LIFE_COST_COINS;
                 currentMiniGameLives++;
 
-                currentUserData.current_coins_balance = totalCoins; // Corrected
+                currentUserData.current_coins_balance = totalCoins;
                 currentUserData.mini_game_lives = currentMiniGameLives;
 
                 const { error } = await supabase
                     .from('users')
                     .update({
-                        current_coins_balance: totalCoins, // Corrected
+                        current_coins_balance: totalCoins,
                         mini_game_lives: currentMiniGameLives
                     })
                     .eq('telegram_id', currentUserData.telegram_id);
@@ -1935,7 +1868,7 @@
                     console.error("Error buying life:", error);
                     totalCoins += MINI_GAME_LIFE_COST_COINS;
                     currentMiniGameLives--;
-                    currentUserData.current_coins_balance = totalCoins; // Corrected
+                    currentUserData.current_coins_balance = totalCoins;
                     currentUserData.mini_game_lives = currentMiniGameLives;
                     alert("Failed to buy life. Please try again.");
                 } else {
@@ -2199,13 +2132,13 @@
                     console.log("Mini Game: Ad viewed for reward.");
 
                     totalCoins += coinsEarned;
-                    currentUserData.current_coins_balance = totalCoins; // Corrected
+                    currentUserData.current_coins_balance = totalCoins;
                     currentUserData.total_coins_ever_earned += coinsEarned;
 
                     const { error: userUpdateError } = await supabase
                         .from('users')
                         .update({
-                            current_coins_balance: totalCoins, // Corrected
+                            current_coins_balance: totalCoins,
                             total_coins_ever_earned: currentUserData.total_coins_ever_earned
                         })
                         .eq('telegram_id', currentUserData.telegram_id);
@@ -2220,7 +2153,7 @@
                     if (userUpdateError || gamePlayUpdateError) {
                         console.error("Error claiming mini-game reward (DB):", userUpdateError, gamePlayUpdateError);
                         totalCoins -= coinsEarned;
-                        currentUserData.current_coins_balance = totalCoins; // Corrected
+                        currentUserData.current_coins_balance = totalCoins;
                         currentUserData.total_coins_ever_earned -= coinsEarned;
                         if (miniGameRewardMessageEl) miniGameRewardMessageEl.textContent = "Error claiming reward. Try again.";
                          if (watchAdForGameRewardButtonEl) { watchAdForGameRewardButtonEl.disabled = false; watchAdForGameRewardButtonEl.textContent = `Watch Ad for ${coinsEarned.toFixed(3)} Coins`;}
@@ -2254,49 +2187,12 @@
             if (walletUsdValueDisplayEl) walletUsdValueDisplayEl.textContent = (totalCoins * COIN_VALUE_USD).toFixed(3);
             if (gameHighscoreEl) gameHighscoreEl.textContent = totalCoins.toFixed(2);
         }
-        async function populateReferredUsersList() {
-            if (!referredUsersListEl || !currentUserData) return;
-            referredUsersListEl.innerHTML = '';
 
-            const { data: referredUsers, error } = await supabase
-                .from('users')
-                .select('username, first_seen_at')
-                .eq('referred_by_telegram_id', currentUserData.telegram_id)
-                .order('first_seen_at', {ascending: false});
-
-            if (error) {
-                console.error("Error fetching referred users:", error);
-                referredUsersListEl.innerHTML = '<li>Error loading referrals.</li>';
-                return;
-            }
-            if (referredUsers.length === 0) {
-                const li = document.createElement('li');
-                li.textContent = "You haven't referred anyone yet.";
-                li.style.textAlign = 'center';
-                li.style.color = 'var(--text-muted-dark-theme)';
-                referredUsersListEl.appendChild(li);
-                return;
-            }
-            referredUsers.forEach(user => {
-                const li = document.createElement('li');
-                li.classList.add('stat-item');
-                const usernameSpan = document.createElement('span');
-                usernameSpan.textContent = user.username || 'Unknown User';
-                const dateSpan = document.createElement('span');
-                dateSpan.textContent = `Joined: ${new Date(user.first_seen_at).toLocaleDateString()}`;
-                dateSpan.style.color = 'var(--text-muted-dark-theme)';
-                dateSpan.style.fontSize = '0.9em';
-                li.appendChild(usernameSpan);
-                li.appendChild(dateSpan);
-                referredUsersListEl.appendChild(li);
-            });
-        }
         function updateProfileStats() {
             if (!currentUserData) return;
             if (profileTotalCoinsEl) profileTotalCoinsEl.textContent = (currentUserData.total_coins_ever_earned || 0).toFixed(2);
             if (profileShortlinksCompletedEl) profileShortlinksCompletedEl.textContent = shortlinksCompletedThisSession || 0;
-            if (profileReferralsEl) profileReferralsEl.textContent = currentUserData.referrals_made_count || 0;
-            if (profileReferralEarningsEl) profileReferralEarningsEl.textContent = `${((currentUserData.referrals_made_count || 0) * COINS_PER_REFERRAL).toFixed(2)} Coins`;
+            // Referrals and referral earnings display logic removed
         }
         async function populateLeaderboard() {
             if (!leaderboardListEl || !currentUserData) return;
@@ -2304,8 +2200,8 @@
 
             const { data: leaderboardData, error } = await supabase
                 .from('users')
-                .select('username, current_coins_balance, telegram_id') // Corrected
-                .order('current_coins_balance', { ascending: false }) // Corrected
+                .select('username, current_coins_balance, telegram_id')
+                .order('current_coins_balance', { ascending: false })
                 .limit(10);
 
             if (error) {
@@ -2318,39 +2214,11 @@
 
             leaderboardData.forEach((player, index) => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span class="rank">#${index + 1}</span><span class="username">${player.telegram_id === currentUserData.telegram_id ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="coins">${(player.current_coins_balance || 0).toFixed(2)} Coins</span>`; // Corrected
+                li.innerHTML = `<span class="rank">#${index + 1}</span><span class="username">${player.telegram_id === currentUserData.telegram_id ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="coins">${(player.current_coins_balance || 0).toFixed(2)} Coins</span>`;
                 if (player.telegram_id === currentUserData.telegram_id) {
                     li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)';
                 }
                 leaderboardListEl.appendChild(li);
-            });
-        }
-        async function populateReferralLeaderboard() {
-            if (!referralLeaderboardListEl || !currentUserData) return;
-            referralLeaderboardListEl.innerHTML = '<li>Loading...</li>';
-
-            const { data: referralData, error } = await supabase
-                .from('users')
-                .select('username, referrals_made_count, telegram_id, current_coins_balance') // Added current_coins_balance for tie-breaking
-                .order('referrals_made_count', { ascending: false })
-                .order('current_coins_balance', { ascending: false }) // Corrected
-                .limit(10);
-
-            if (error) {
-                console.error("Error fetching referral leaderboard:", error);
-                referralLeaderboardListEl.innerHTML = '<li>Error loading leaderboard.</li>';
-                return;
-            }
-            referralLeaderboardListEl.innerHTML = '';
-            if (referralData.length === 0) { referralLeaderboardListEl.innerHTML = '<li>Leaderboard is empty.</li>'; return; }
-
-            referralData.forEach((player, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span class="rank">#${index + 1}</span><span class="username">${player.telegram_id === currentUserData.telegram_id ? `<strong>${player.username} (You)</strong>` : player.username}</span><span class="referrals-count">${player.referrals_made_count || 0} Refs</span>`;
-                if (player.telegram_id === currentUserData.telegram_id) {
-                    li.style.backgroundColor = 'rgba(255, 255, 100, 0.1)';
-                }
-                referralLeaderboardListEl.appendChild(li);
             });
         }
 
@@ -2363,14 +2231,14 @@
                 if (amountCoins > 0) { netAmount = amountCoins - fee; if (netAmount < 0) netAmount = 0; }
                 networkFeeDisplayEl.textContent = `${fee} Coins`; finalAmountReceiveDisplayEl.textContent = `${netAmount} Coins`;
                 const minWithdrawal = config.min;
-                const hasEnoughReferrals = (currentUserData.referrals_made_count || 0) >= MIN_REFERRALS_FOR_WITHDRAWAL;
-                if (amountCoins >= minWithdrawal && hasEnoughReferrals && totalCoins >= amountCoins && amountCoins > 0) { initiateWithdrawButtonEl.disabled = false; initiateWithdrawButtonEl.textContent = "Withdraw"; }
-                else {
+
+                if (amountCoins >= minWithdrawal && totalCoins >= amountCoins && amountCoins > 0) {
+                    initiateWithdrawButtonEl.disabled = false; initiateWithdrawButtonEl.textContent = "Withdraw";
+                } else {
                     initiateWithdrawButtonEl.disabled = true;
-                    if (!hasEnoughReferrals) { initiateWithdrawButtonEl.textContent = `Need ${MIN_REFERRALS_FOR_WITHDRAWAL} Referrals`; }
-                    else if (amountCoins > 0 && totalCoins < amountCoins) { initiateWithdrawButtonEl.textContent = "Insufficient Balance"; }
+                    if (amountCoins > 0 && totalCoins < amountCoins) { initiateWithdrawButtonEl.textContent = "Insufficient Balance"; }
                     else if (amountCoins > 0 && amountCoins < minWithdrawal) { initiateWithdrawButtonEl.textContent = `Min ${minWithdrawal} Coins`; }
-                    else if (amountCoins === 0 && initiateWithdrawButtonEl.textContent !== `Need ${MIN_REFERRALS_FOR_WITHDRAWAL} Referrals`) { initiateWithdrawButtonEl.textContent = "Enter Amount"; }
+                    else if (amountCoins === 0) { initiateWithdrawButtonEl.textContent = "Enter Amount"; }
                     else { initiateWithdrawButtonEl.textContent = "Withdraw"; }
                 }
             } else { networkFeeDisplayEl.textContent = `0 Coins`; finalAmountReceiveDisplayEl.textContent = `0 Coins`; initiateWithdrawButtonEl.disabled = true; initiateWithdrawButtonEl.textContent = "Select Method"; }
@@ -2378,7 +2246,8 @@
 
         async function handleNewWithdraw() {
             const selectedMethod = withdrawMethodSelectEl.value; const amountCoins = parseInt(withdrawAmountCoinsInputEl.value); const address = withdrawAddressInputEl.value.trim(); const config = WITHDRAWAL_CONFIG[selectedMethod];
-            if (!config) { alert("Invalid withdrawal method selected."); return; } if (!address) { alert(`Please enter your ${config.label.toLowerCase().replace(":", "")}.`); return; } if (isNaN(amountCoins) || amountCoins <= 0) { alert("Please enter a valid amount of coins."); return; } if ((currentUserData.referrals_made_count||0) < MIN_REFERRALS_FOR_WITHDRAWAL) { alert(`You need at least ${MIN_REFERRALS_FOR_WITHDRAWAL} referrals to withdraw.`); return; } if (amountCoins < config.min) { alert(`Minimum withdrawal for ${selectedMethod} is ${config.min} coins.`); return; } if (totalCoins < amountCoins) { alert("You do not have enough coins for this withdrawal."); return; }
+            if (!config) { alert("Invalid withdrawal method selected."); return; } if (!address) { alert(`Please enter your ${config.label.toLowerCase().replace(":", "")}.`); return; } if (isNaN(amountCoins) || amountCoins <= 0) { alert("Please enter a valid amount of coins."); return; }
+            if (amountCoins < config.min) { alert(`Minimum withdrawal for ${selectedMethod} is ${config.min} coins.`); return; } if (totalCoins < amountCoins) { alert("You do not have enough coins for this withdrawal."); return; }
             const netAmount = amountCoins - config.fee; if (netAmount <= 0) { alert("Amount after fee is too low to process."); return; }
 
             const withdrawalRecord = {
@@ -2404,11 +2273,11 @@
 
             console.log(`Withdrawal initiated: ${amountCoins} Coins via ${selectedMethod} to ${address}. Fee: ${config.fee}. Net: ${netAmount}`);
             totalCoins -= amountCoins;
-            currentUserData.current_coins_balance = totalCoins; // Corrected
+            currentUserData.current_coins_balance = totalCoins;
 
             const { error: userUpdateError } = await supabase
                 .from('users')
-                .update({ current_coins_balance: totalCoins }) // Corrected
+                .update({ current_coins_balance: totalCoins })
                 .eq('telegram_id', currentUserData.telegram_id);
 
             if (userUpdateError) {
