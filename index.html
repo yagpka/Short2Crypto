@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Short2Crypto - Earn Rewards!</title>
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script> <!-- Real Telegram Script Added -->
     <script src='//libtl.com/sdk.js' data-zone='9365298' data-sdk='show_9365298'></script>
     <style>
         @import url('://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -733,7 +734,7 @@
                     <div class="profile-stats">
                         <div class="stat-item"><span>Total Coins Earned:</span><span id="profile-total-coins">0.00</span></div>
                         <div class="stat-item"><span>Stage Reached (Session):</span><span id="profile-shortlinks-completed">0</span></div>
-                        <!-- Referrals and Earnings from Referrals removed -->
+                        <!-- Referrals and Earnings from Referrals removed from display -->
                     </div>
                     <div class="referral-link-container" style="text-align:center; margin-top: 20px;">
                         <h3 style="color: var(--game-primary-text); text-align:center;">Your Referral Link:</h3>
@@ -900,32 +901,9 @@
         // --- Main JavaScript Logic ---
         console.log("Main script block started. (Log 1)");
 
-        const MOCK_USER_ID = 123456789;
-        const MOCK_FIRST_NAME = "Mock";
-        const MOCK_LAST_NAME = "Tester";
-        const MOCK_USERNAME = "MockTester123";
-
-
-        if (typeof window.Telegram === 'undefined' || typeof window.Telegram.WebApp === 'undefined') {
-            window.Telegram = {
-                WebApp: {
-                    initDataUnsafe: {
-                        user: {
-                            id: MOCK_USER_ID,
-                            first_name: MOCK_FIRST_NAME,
-                            last_name: MOCK_LAST_NAME,
-                            username: MOCK_USERNAME,
-                            language_code: "en"
-                        },
-                        start_param: null
-                    },
-                    ready: () => console.log("Mock Telegram WebApp is ready."),
-                    expand: () => console.log("Mock Telegram WebApp expand called."),
-                    close: () => console.log("Mock Telegram WebApp close called."),
-                }
-            };
-            console.log("Mock Telegram object created with constant data. (Log 2)");
-        }
+        // Mock user data removed as per request for production.
+        // The app will now solely rely on window.Telegram.WebApp.initDataUnsafe.user
+        // provided by the Telegram client.
 
         let tgUser;
         let currentUserData = null;
@@ -934,15 +912,16 @@
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
             tgUser = window.Telegram.WebApp.initDataUnsafe.user;
         } else {
-            tgUser = {
-                id: MOCK_USER_ID,
-                first_name: MOCK_FIRST_NAME,
-                last_name: MOCK_LAST_NAME,
-                username: MOCK_USERNAME,
-            };
-            console.warn("Telegram data not found, using constant fallback tgUser. (Log 2.1)");
+            // This case should ideally not happen in production when run inside Telegram.
+            // Handling for graceful failure or alternative for non-Telegram environments
+            // might be needed if direct browser access is a possibility (though typically not for TG Web Apps).
+            console.error("Telegram.WebApp.initDataUnsafe.user is not available. App may not function correctly.");
+            // Display an error message to the user on the page, or disable functionality.
+            document.body.innerHTML = "<p style='color: red; text-align: center; padding-top: 50px;'>Error: Could not initialize Telegram User Data. Please run this app within Telegram.</p>";
+            // You might want to throw an error here to stop further script execution if tgUser is critical
+            // throw new Error("Telegram user data not available.");
         }
-        console.log("tgUser initialized:", tgUser, "(Log 3)");
+        console.log("tgUser initialized (or error logged if not):", tgUser, "(Log 3)");
 
 
         const COIN_VALUE_USD = 0.005;
@@ -953,8 +932,8 @@
 
         const COINS_PER_WATCH_AD = 0.1;
 
-        const MIN_WITHDRAWAL_USD = 5;
-        const WITHDRAWAL_FEE_USD = 0.3;
+        const MIN_WITHDRAWAL_USD = 5.00;
+        const WITHDRAWAL_FEE_USD = 0.30;
         const MIN_WITHDRAWAL_COINS = MIN_WITHDRAWAL_USD / COIN_VALUE_USD; // 1000 Coins
         const WITHDRAWAL_FEE_COINS = WITHDRAWAL_FEE_USD / COIN_VALUE_USD; // 60 Coins
 
@@ -1021,7 +1000,7 @@
         let earnShortlinkButton, claimShortlinkRewardButton, shortlinkMessageEl;
         let gameHighscoreEl, currentStageDisplayEl, shortlinkLimitDisplayEl;
         let adViewingPage, adTopControls, adViewingTitle, adTimerDisplay, adBottomControls;
-        let profileUsernameDisplay, profileTotalCoinsEl, profileShortlinksCompletedEl; // profileReferralsEl, profileReferralEarningsEl removed
+        let profileUsernameDisplay, profileTotalCoinsEl, profileShortlinksCompletedEl;
         let referralLinkDisplay;
         let serverTimeDisplayEl;
         let leaderboardIconContainer, leaderboardSection, leaderboardListEl;
@@ -1054,6 +1033,12 @@
         }
 
         async function fetchOrCreateUser() {
+            if (!tgUser || !tgUser.id) { // Added check for tgUser
+                console.error("Cannot fetch or create user: tgUser is not defined.");
+                alert("Critical error: User data from Telegram is missing. Please try restarting the app within Telegram.");
+                document.getElementById('loading-screen').innerHTML = "<p>Critical error: User data missing.</p>";
+                return null;
+            }
             const telegramId = tgUser.id.toString();
             const username = tgUser.username || `${tgUser.first_name || ''}${tgUser.last_name || ''}`.replace(/\s+/g, '') || `User${telegramId.slice(-4)}`;
             const firstName = tgUser.first_name || '';
@@ -1175,6 +1160,17 @@
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 console.log("DOMContentLoaded event fired. (Log 6)");
+
+                // Early exit if tgUser wasn't initialized (critical for production)
+                if (!tgUser) {
+                    console.error("DOMContentLoaded: tgUser not available. Aborting app initialization.");
+                    const loadingEl = document.getElementById('loading-screen');
+                    if (loadingEl) {
+                        loadingEl.innerHTML = "<p style='color: red; text-align:center; padding: 20px;'>Error: Telegram user data could not be loaded. Please ensure you are running this app within Telegram and try restarting.</p>";
+                    }
+                    return; // Stop further execution
+                }
+
                 document.body.classList.remove('app-loaded');
 
                 loadingScreen = document.getElementById('loading-screen');
@@ -1195,7 +1191,6 @@
                 profileUsernameDisplay = document.getElementById('profile-username-display');
                 profileTotalCoinsEl = document.getElementById('profile-total-coins');
                 profileShortlinksCompletedEl = document.getElementById('profile-shortlinks-completed');
-                // profileReferralsEl, profileReferralEarningsEl removed from DOM fetching
                 referralLinkDisplay = document.getElementById('referral-link');
                 serverTimeDisplayEl = document.getElementById('current-server-time');
                 leaderboardIconContainer = document.getElementById('leaderboard-icon-container');
@@ -2192,7 +2187,7 @@
             if (!currentUserData) return;
             if (profileTotalCoinsEl) profileTotalCoinsEl.textContent = (currentUserData.total_coins_ever_earned || 0).toFixed(2);
             if (profileShortlinksCompletedEl) profileShortlinksCompletedEl.textContent = shortlinksCompletedThisSession || 0;
-            // Referrals and referral earnings display logic removed
+            // Referral stats display functionality removed.
         }
         async function populateLeaderboard() {
             if (!leaderboardListEl || !currentUserData) return;
@@ -2237,7 +2232,7 @@
                 } else {
                     initiateWithdrawButtonEl.disabled = true;
                     if (amountCoins > 0 && totalCoins < amountCoins) { initiateWithdrawButtonEl.textContent = "Insufficient Balance"; }
-                    else if (amountCoins > 0 && amountCoins < minWithdrawal) { initiateWithdrawButtonEl.textContent = `Min ${minWithdrawal} Coins`; }
+                    else if (amountCoins > 0 && amountCoins < minWithdrawal) { initiateWithdrawButtonEl.textContent = `Min ${minWithdrawal.toFixed(0)} Coins`; }
                     else if (amountCoins === 0) { initiateWithdrawButtonEl.textContent = "Enter Amount"; }
                     else { initiateWithdrawButtonEl.textContent = "Withdraw"; }
                 }
@@ -2247,7 +2242,7 @@
         async function handleNewWithdraw() {
             const selectedMethod = withdrawMethodSelectEl.value; const amountCoins = parseInt(withdrawAmountCoinsInputEl.value); const address = withdrawAddressInputEl.value.trim(); const config = WITHDRAWAL_CONFIG[selectedMethod];
             if (!config) { alert("Invalid withdrawal method selected."); return; } if (!address) { alert(`Please enter your ${config.label.toLowerCase().replace(":", "")}.`); return; } if (isNaN(amountCoins) || amountCoins <= 0) { alert("Please enter a valid amount of coins."); return; }
-            if (amountCoins < config.min) { alert(`Minimum withdrawal for ${selectedMethod} is ${config.min} coins.`); return; } if (totalCoins < amountCoins) { alert("You do not have enough coins for this withdrawal."); return; }
+            if (amountCoins < config.min) { alert(`Minimum withdrawal for ${selectedMethod} is ${config.min.toFixed(0)} coins.`); return; } if (totalCoins < amountCoins) { alert("You do not have enough coins for this withdrawal."); return; }
             const netAmount = amountCoins - config.fee; if (netAmount <= 0) { alert("Amount after fee is too low to process."); return; }
 
             const withdrawalRecord = {
@@ -2286,7 +2281,7 @@
 
             updateWalletBalance(); updateProfileStats(); updatePlatformStatsDisplay(); populateWithdrawalHistory(); updateWithdrawalFormUI();
             withdrawAmountCoinsInputEl.value = ''; withdrawAddressInputEl.value = '';
-            alert(`Withdrawal request for ${amountCoins} coins submitted! You will receive ${netAmount} (after ${config.fee} coin fee).`);
+            alert(`Withdrawal request for ${amountCoins} coins submitted! You will receive ${netAmount.toFixed(2)} (after ${config.fee} coin fee).`);
             const successMsgEl = document.getElementById('withdraw-success-message');
             if (successMsgEl) { successMsgEl.textContent = "Withdrawal request sent!"; successMsgEl.style.display = 'block'; setTimeout(() => { successMsgEl.style.display = 'none'; }, 3000); }
         }
